@@ -1,0 +1,27 @@
+.indexbody {
+    margin-top:500px;
+    text-align:center;
+    margin:auto;
+    position:relative;
+  }
+.indexbutton{
+    margin-top:27px;
+    width:150px;
+    height:2.5rem;
+    padding:5px;
+    position:relative;
+    margin-left: 445px;
+    background:linear-gradient(45deg,#7e90df,#5149b0);
+    border:none;
+    border-radius:2rem;
+    font-weight:500;
+    cursor:pointer;
+    color:white;
+}
+.cdown{
+  transform:rotate(90deg);
+  transition: .3s ease-in-out;
+}
+.cright{
+  transition: .3s ease-in-out;
+}

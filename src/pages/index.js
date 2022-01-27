@@ -4,28 +4,49 @@ import { StaticImage } from "gatsby-plugin-image"
 
 import Layout from "../components/layout"
 import Seo from "../components/seo"
+import * as style from '../components/index.module.css'
+import InputTabs from "../components/inputtabs"
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Editor from "../components/editor";
 
-const IndexPage = () => (
+const TABS = [{name:"Sequence",
+                content:<TextField
+                    style={{width:`100%`,backgroundColor:`#fbfbfb`}}
+                    id="outlined-multiline-static"
+                    label="Paste your sequence here!"
+                    multiline
+                    rows={4}
+                    defaultValue=""></TextField>},
+              {name:"Upload",
+              content:<div>Upload File Here</div>},
+              {name:"Database",
+              content:<div>Select From Database Here</div>},
+              {name:"Examples",
+              content:<div>Examples Here</div>}]
+
+
+function IndexPage(){
+  const [annotate,setAnnotate] = React.useState(false);
+  return(
   <Layout>
     <Seo title="Home" />
-    <h1>Hi people</h1>
-    <p>Welcome to your new Gatsby site.</p>
-    <p>Now go build something great.</p>
-    <StaticImage
-      src="../images/gatsby-astronaut.png"
-      width={300}
-      quality={95}
-      formats={["auto", "webp", "avif"]}
-      alt="A Gatsby astronaut"
-      style={{ marginBottom: `1.45rem` }}
-    />
-    <p>
-      <Link to="/page-2/">Go to page 2</Link> <br />
-      <Link to="/using-typescript/">Go to "Using TypeScript"</Link> <br />
-      <Link to="/using-ssr">Go to "Using SSR"</Link> <br />
-      <Link to="/using-dsg">Go to "Using DSG"</Link>
+
+
+   
+    <p class={style.indexbody}>
+      <div style={{marginTop:`200px`}}></div>
+      <InputTabs tabs={TABS}></InputTabs>
+      <a href={'#annotate'}>
+        <Button  onMouseEnter={() => setAnnotate(true)} onMouseLeave={() => setAnnotate(false)} class={style.indexbutton} variant="contained">Annotate!  <i style={{right:`9px`,position:`absolute`,transform:`rotate(${annotate ? `90deg` : `-90deg`})`,transition: `.3s ease-in-out`}} class={"bi bi-chevron-right "}></i></Button>
+      </a>
+      <div style={{marginTop:`250px`}}></div>
+      <div id="annotate">
+        <Editor ></Editor>
+      </div>
+      
     </p>
   </Layout>
-)
+)}
 
 export default IndexPage

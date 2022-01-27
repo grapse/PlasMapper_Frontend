@@ -1,0 +1,36 @@
+.editor{
+    display:flex;
+    gap:20px;
+    flex-direction:row;
+    padding:70px 30px;
+    margin:20px;
+    box-shadow: 10px 10px 35px rgba(0,0,0,0.3);
+    border-radius:20px;
+}
+.options{
+    width:30%;
+}
+.heading{
+    color:#5149b0;
+    font-weight:400;
+}
+.drawing{
+    width:70%;
+    position:relative;
+    height:500px;
+    margin:0 auto;
+}
+.svgwrap{
+    position:relative;
+    width:500px;
+    border:1px solid black;
+    height:500px;
+
+}
+.insertsvg {
+    position:absolute;
+    left:0;
+}
+.bordercircle{
+    outline: 3px solid green; 
+}
