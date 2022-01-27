@@ -30,9 +30,6 @@ const Layout = ({ children }) => {
         <link rel="preconnect" href="https://fonts.googleapis.com"/>
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&family=Roboto&display=swap" rel="stylesheet"/>
-        <script src="https://d3js.org/d3.v7.min.js"></script>
-        <script src="cgview.min.js"></script>
-        <link rel="stylesheet" href="cgview.css"></link>
       </head>
       <Header siteTitle={data.site.siteMetadata?.title || `Title`} />
       <div
