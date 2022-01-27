@@ -17,7 +17,7 @@
 .drawing{
     width:70%;
     position:relative;
-    height:500px;
+    height:600px;
     margin:0 auto;
 }
 .svgwrap{
@@ -33,4 +33,39 @@
 }
 .bordercircle{
     outline: 3px solid green; 
+}
+.tabs{
+    width:16rem;
+    height:2.5rem;
+    padding:0.5rem 0;
+    margin-bottom:0.5rem;
+    display:flex;
+    position:relative;
+    flex-direction:row;
+    border-radius:2rem;
+    box-shadow: 5px 5px 10px rgba(0,0,0,0.2);
+}
+.navBefore{
+    content:"";
+    position:absolute;
+    background-color:#9198e5;
+    background:linear-gradient(45deg,#7e90df,#5149b0);
+    height:100%;
+    width:8rem;
+    z-index: -1;
+    transition: .3s ease-out;
+    border-radius:2rem;
+}
+.tab{
+    cursor:pointer;
+    width:8rem;
+    transition: .3s ease-out;
+    font-size:1rem;
+}
+.tabopen{
+    cursor:pointer;
+    width:8rem;
+    font-size:1rem;
+    transition: .3s ease-out;
+    color:white;
 }

@@ -10,6 +10,7 @@
     "@fluentui/react": "^8.51.1",
     "@mui/material": "^5.3.1",
     "bootstrap-icons": "^1.7.2",
+    "cgview": "^1.2.0",
     "gatsby": "^4.6.0",
     "gatsby-plugin-gatsby-cloud": "^4.6.0",
     "gatsby-plugin-image": "^2.6.0",

@@ -35,7 +35,7 @@ function IndexPage(){
 
    
     <p class={style.indexbody}>
-      <div style={{marginTop:`200px`}}></div>
+      <div style={{marginTop:`100px`}}></div>
       <InputTabs tabs={TABS}></InputTabs>
       <a href={'#annotate'}>
         <Button  onMouseEnter={() => setAnnotate(true)} onMouseLeave={() => setAnnotate(false)} class={style.indexbutton} variant="contained">Annotate!  <i style={{right:`9px`,position:`absolute`,transform:`rotate(${annotate ? `90deg` : `-90deg`})`,transition: `.3s ease-in-out`}} class={"bi bi-chevron-right "}></i></Button>

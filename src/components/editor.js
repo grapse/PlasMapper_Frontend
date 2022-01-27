@@ -1,6 +1,7 @@
 import * as React from "react"
 import * as style from "./editor.module.css"
 import { SwatchColorPicker } from '@fluentui/react/lib/SwatchColorPicker';
+const CGV = require('cgview');
 
 const colorCells = [
     { id: 'a', label: 'red', color: '#ff0000' },
@@ -19,10 +20,83 @@ const colorCells = [
 
 function Editor(props)  
   {
+   
+      
+    const [tab, setTab] = React.useState(0);
     const [color, setColor] = React.useState("#ff0000");
     const [color2, setColor2] = React.useState("#00ff00");
     const [color3, setColor3] = React.useState("#00ffff");
     const {sequence} = props;
+    React.useEffect(() => {
+        if (tab === 1){
+            const cgv = new CGV.Viewer('#my-viewer', {
+                height: 500,
+                width: 500,
+                sequence: {
+                  length: 1000
+                }
+              });
+              
+              
+              cgv.addFeatures({
+                type: 'CDS',
+                name: 'Feature',
+                start: 100,
+                stop: 250,
+                strand: 1,
+                source: 'genome-features',
+                legend: 'CDS'
+              });
+              
+              cgv.addFeatures({
+                type: 'CDS',
+                name: 'Another Feature',
+                start: 400,
+                stop: 750,
+                strand: -1,
+                source: 'genome-features',
+                legend: 'CDS'
+              });
+              
+              
+              var legendItem = cgv.legend.items(1);
+              legendItem.color = color;
+              legendItem.decoration = 'arrow';
+              
+              
+              var plot = new CGV.Plot(cgv, {
+                positions: [50, 200, 400, 500, 600, 800],
+                scores: [0.4, 0.75, 0.25, 0.5, 0.6, 0.1],
+                baseline: 0.5,
+                source: 'genome-plot',
+                legendPositive: new CGV.LegendItem(cgv.legend, {swatchColor: color2, name: 'Plot +'}),
+                legendNegative: new CGV.LegendItem(cgv.legend, {swatchColor: color3, name: 'Plot -'})
+              });
+              
+              
+              cgv.addTracks({
+                name: 'My Feature Track',
+                separateFeaturesBy: 'strand',
+                position: 'both',
+                dataType: 'feature',
+                dataMethod: 'source',
+                dataKeys: 'genome-features'
+              });
+              
+              
+              cgv.addTracks({
+                name: 'My Plot Track',
+                position: 'inside',
+                dataType: 'plot',
+                dataMethod: 'source',
+                dataKeys: 'genome-plot'
+              });
+            const myNode = document.getElementById("my-viewer");
+            myNode.removeChild(myNode.childNodes[0]);
+            cgv.draw()
+        }
+
+    })
     return(
         <>  
             <h1 class={style.heading}>Editor</h1>
@@ -54,8 +128,18 @@ function Editor(props)
                 />
                 </div>
                 <div class={style.drawing}>
+                    <div class={style.tabs}>
+                        {[{name:"SVG"},{name:"CGView"}].map((v,i) => {
+                            return(
+                                <div onClick={() => setTab(i)} id={i+"input"} class={tab === i ? style.tabopen : style.tab}>
+                                    {v.name}
+                                </div>
+                            )
+                        })}
+                        <div id="slider" className={style.navBefore} style={{inset:`0rem ${8*tab}rem`}}></div>
+                    </div>
                     <div class={style.svgwrap}>
-                        <svg class={style.insertsvg} viewBox="0 0 100 100">
+                        { tab === 0 ? <svg class={style.insertsvg} viewBox="0 0 100 100">
                             <defs>
                                 <filter id="shadow">
                                 <feDropShadow dx="0" dy="0" stdDeviation="0"
@@ -80,8 +164,10 @@ function Editor(props)
                                 stroke-dasharray="30 189.9"
                                 transform="translate(50,50) rotate(10.7)" />
                             <text x="37" y="50" style={{fontSize:`7px`}}>Plasmid</text>
-                        </svg>
+                        </svg> : <div id='my-viewer'><div></div></div>}
+                        
                     </div>
+                    
                     
                 </div>
             </div>

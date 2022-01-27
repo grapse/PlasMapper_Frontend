@@ -61,6 +61,13 @@ progress,
 video {
   display: inline-block;
 }
+canvas {
+  height:500px;
+  width:500px;
+  position:absolute;
+  transform: translateX(-50%);
+  border: 1px solid black;
+}
 audio:not([controls]) {
   display: none;
   height: 0;
