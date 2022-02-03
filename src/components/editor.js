@@ -33,7 +33,7 @@ function Editor(props)
                 height: 500,
                 width: 500,
                 sequence: {
-                  length: 1000
+                  seq:sequence
                 }
               });
               
@@ -93,6 +93,7 @@ function Editor(props)
               });
             const myNode = document.getElementById("my-viewer");
             myNode.removeChild(myNode.childNodes[0]);
+            console.log(sequence);
             cgv.draw()
         }
 

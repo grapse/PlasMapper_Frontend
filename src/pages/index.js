@@ -10,13 +10,20 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Editor from "../components/editor";
 
-const TABS = [{name:"Sequence",
+
+
+
+function IndexPage(){
+  const [annotate,setAnnotate] = React.useState(false);
+  const [sequence, setSequence] = React.useState("");
+  const TABS = [{name:"Sequence",
                 content:<TextField
                     style={{width:`100%`,backgroundColor:`#fbfbfb`}}
                     id="outlined-multiline-static"
                     label="Paste your sequence here!"
                     multiline
                     rows={4}
+                    onChange={e => setSequence(e.target.value)}
                     defaultValue=""></TextField>},
               {name:"Upload",
               content:<div>Upload File Here</div>},
@@ -24,16 +31,9 @@ const TABS = [{name:"Sequence",
               content:<div>Select From Database Here</div>},
               {name:"Examples",
               content:<div>Examples Here</div>}]
-
-
-function IndexPage(){
-  const [annotate,setAnnotate] = React.useState(false);
   return(
   <Layout>
     <Seo title="Home" />
-
-
-   
     <p class={style.indexbody}>
       <div style={{marginTop:`100px`}}></div>
       <InputTabs tabs={TABS}></InputTabs>
@@ -42,7 +42,7 @@ function IndexPage(){
       </a>
       <div style={{marginTop:`250px`}}></div>
       <div id="annotate">
-        <Editor ></Editor>
+        <Editor sequence={sequence}></Editor>
       </div>
       
     </p>
