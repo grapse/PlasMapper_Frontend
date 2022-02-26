@@ -1,0 +1,33 @@
+.searchbody {
+    margin-top:500px;
+    text-align:center;
+    margin:auto;
+    position:relative;
+    width:100%;
+  }
+
+.plasmidHolder{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap:20px;
+    width: 100%;
+}
+
+.plasmidCard{
+    width: 200px;
+    height: 200px;
+    background-color: white;
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    padding:20px;
+    border-radius:5px;
+    
+}
+
+.plasmidTitle{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

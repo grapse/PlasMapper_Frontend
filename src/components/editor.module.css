@@ -1,14 +1,14 @@
 .editor{
     display:flex;
+    width:100%;
     gap:20px;
     flex-direction:row;
     padding:70px 30px;
-    margin:20px;
+    margin-top:20px;
     box-shadow: 10px 10px 35px rgba(0,0,0,0.3);
-    border-radius:20px;
 }
 .options{
-    width:30%;
+    width:40%;
 }
 .heading{
     color:#5149b0;
@@ -22,10 +22,8 @@
 }
 .svgwrap{
     position:relative;
-    width:500px;
-    border:1px solid black;
+    width:800px;
     height:500px;
-
 }
 .insertsvg {
     position:absolute;
@@ -68,4 +66,17 @@
     font-size:1rem;
     transition: .3s ease-out;
     color:white;
+}
+.newFeature{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+    padding:20px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    background-color: #fefefe;
+}
+.cgvButtons{
+    display:flex;
+    gap:10px;
+    flex-direction: row;
 }

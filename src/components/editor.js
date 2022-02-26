@@ -1,146 +1,152 @@
 import * as React from "react"
+import { fetchFeatureTypes } from '../utils/FeatureUtils';
+import TextField from '@mui/material/TextField';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import './cgview.css';
 import * as style from "./editor.module.css"
-import { SwatchColorPicker } from '@fluentui/react/lib/SwatchColorPicker';
 const CGV = require('cgview');
 
-const colorCells = [
-    { id: 'a', label: 'red', color: '#ff0000' },
-    { id: 'b', label: 'orange', color: '#00ff00' },
-    { id: 'c', label: 'orangeYellow', color: '#00ffff' },
-    { id: 'd', label: 'yellowGreen', color: '#ff00ff' },
-    { id: 'e', label: 'green', color: '#ffff00' },
-    { id: 'f', label: 'cyan', color: '#038387' },
-    { id: 'g', label: 'cyanBlue', color: '#004e8c' },
-    { id: 'h', label: 'magenta', color: '#881798' },
-    { id: 'i', label: 'magentaPink', color: '#ec8633' },
-    { id: 'j', label: 'black', color: '#cceebb' },
-    { id: 'k', label: 'gray', color: '#ccddee' },
-    { id: 'l', label: 'gray20', color: '#e6b1b6' },
-  ];
+const featureData = fetchFeatureTypes();
+const legendItems = featureData.map((v,i) => {return {name:v.display,swatchColor:v.color,decoration:"arrow"}});
 
 function Editor(props)  
   {
-   
-      
     const [tab, setTab] = React.useState(0);
-    const [color, setColor] = React.useState("#ff0000");
-    const [color2, setColor2] = React.useState("#00ff00");
-    const [color3, setColor3] = React.useState("#00ffff");
-    const {sequence} = props;
-    React.useEffect(() => {
-        if (tab === 1){
-            const cgv = new CGV.Viewer('#my-viewer', {
-                height: 500,
-                width: 500,
-                sequence: {
-                  seq:sequence
-                }
-              });
-              
-              
-              cgv.addFeatures({
-                type: 'CDS',
-                name: 'Feature',
-                start: 100,
-                stop: 250,
-                strand: 1,
-                source: 'genome-features',
-                legend: 'CDS'
-              });
-              
-              cgv.addFeatures({
-                type: 'CDS',
-                name: 'Another Feature',
-                start: 400,
-                stop: 750,
-                strand: -1,
-                source: 'genome-features',
-                legend: 'CDS'
-              });
-              
-              
-              var legendItem = cgv.legend.items(1);
-              legendItem.color = color;
-              legendItem.decoration = 'arrow';
-              
-              
-              var plot = new CGV.Plot(cgv, {
-                positions: [50, 200, 400, 500, 600, 800],
-                scores: [0.4, 0.75, 0.25, 0.5, 0.6, 0.1],
-                baseline: 0.5,
-                source: 'genome-plot',
-                legendPositive: new CGV.LegendItem(cgv.legend, {swatchColor: color2, name: 'Plot +'}),
-                legendNegative: new CGV.LegendItem(cgv.legend, {swatchColor: color3, name: 'Plot -'})
-              });
-              
-              
-              cgv.addTracks({
-                name: 'My Feature Track',
-                separateFeaturesBy: 'strand',
+    const [initial, setInitial] = React.useState(true);
+    const [localData, setLocalData] = React.useState([]);
+    const [showData, setShowData] = React.useState([]);
+    const [addName, setAddName] = React.useState("New Feature");
+    const [addStart, setAddStart] = React.useState(0);
+    const [addStop, setAddStop] = React.useState(100);
+    const [addCategory, setAddCategory] = React.useState("User-defined");
+    const [cgvFormat, setCgvFormat] = React.useState("circular");
+    const [cgvDownload, setCgvDownload] = React.useState(false);
+    const {sequence, data} = props;
+    
+    const json = {
+        "cgview": {
+          "version": "1.1.0",
+          "sequence": {
+            seq:sequence
+          },
+          "features": localData.filter((v, i) => v.show === true && true),
+          "legend": {
+              // Maps the preset feature data from above into the legend
+            "items": legendItems
+          },
+          "tracks": [
+            {
+              "name": "Features",
+              "position": 'both',
+              "dataType": 'feature',
+              "dataMethod": 'source',
+              "dataKeys": 'json-feature'
+            },
+            {
+                name: "ORFs",
                 position: 'both',
                 dataType: 'feature',
-                dataMethod: 'source',
-                dataKeys: 'genome-features'
-              });
-              
-              
-              cgv.addTracks({
-                name: 'My Plot Track',
-                position: 'inside',
-                dataType: 'plot',
-                dataMethod: 'source',
-                dataKeys: 'genome-plot'
-              });
-            const myNode = document.getElementById("my-viewer");
-            myNode.removeChild(myNode.childNodes[0]);
-            console.log(sequence);
-            cgv.draw()
+                dataMethod: 'sequence',
+                dataKeys: 'orfs',
+                dataOptions: {
+                    start: 'ATG',
+                    stop: 'TAA,TAG,TGA',
+                    minORFLength: 100
+                }
+            }
+          ]
+        }
+      }
+
+    React.useEffect(() => {
+        // If it is currently getting fed a new plasmid
+        if (initial === true){
+            setLocalData(data);
+            setShowData(data.map(v => true))
+            console.log("changed");
         }
 
-    })
+    }, [data])
+
+    React.useEffect(() => {
+        // If we are currently on the CGV tab, draw CGView
+        if (tab === 0){
+            const cgv = new CGV.Viewer('#my-viewer', {
+                height: 500,
+                width: 800,
+              });
+              
+            cgv.io.loadJSON(json);
+            const myNode = document.getElementById("my-viewer");
+            myNode.removeChild(myNode.childNodes[0]);
+            cgv.settings.update({ format: cgvFormat });
+
+            cgv.draw()
+            if(cgvDownload){
+                setCgvDownload(false);
+                const height = 2000;
+                // Here we adjust the width to be proportional to the height
+                const width = cgv.width / cgv.height * height;
+                cgv.io.downloadImage(width, height, 'cgview_map.png');
+            }
+        }
+
+    },[localData, cgvFormat, cgvDownload])
+
+
+
     return(
         <>  
             <h1 class={style.heading}>Editor</h1>
             <div class={style.editor}>
                 <div class={style.options}>
-                <div>Choose the colours:</div>
-                <SwatchColorPicker
-                    defaultSelectedId="a"
-                    columnCount={4}
-                    cellShape={'circle'}
-                    colorCells={colorCells}
-                    onChange={(id, label, color) => setColor(color)}
-                />
-                <br/>
-                <SwatchColorPicker
-                    defaultSelectedId="b"
-                    columnCount={4}
-                    cellShape={'circle'}
-                    colorCells={colorCells}
-                    onChange={(id, label, color) => setColor2(color)}
-                />
-                <br/>
-                <SwatchColorPicker
-                    defaultSelectedId="c"
-                    columnCount={4}
-                    cellShape={'circle'}
-                    colorCells={colorCells}
-                    onChange={(id, label, color) => setColor3(color)}
-                />
+                <h2>Options</h2>
+                    {localData.map((v, i) => ["ORF","Restriction Sites"].includes(v.legend) ? null : <div>
+                                                <input onChange={() => {setLocalData(localData.map((v1,i1) => i === i1 ? {...v1,show:!v1.show} : v1))}} type="checkbox" name={`${v.name}-option`} value="Show" checked={localData[i].show}/>
+                                                <label for={`${v.name}-option`}> {`${v.name}`}</label>
+                                            </div>)}
+                    <div class={style.newFeature}>
+                        <button onClick={() => {
+                                                setLocalData([...localData,{name:addName,start:addStart,stop:addStop,legend:addCategory,source:"json-feature",show:true}])}}
+                                >Add Feature
+                        </button>
+                        <TextField onChange={(e) => setAddName(e.target.value)} id="add-name" label="Name" variant="standard" value={addName}/>
+                        <TextField onChange={(e) => setAddStart(e.target.value)} id="add-start" label="Start" variant="standard" type="number" value={addStart}/>
+                        <TextField onChange={(e) => setAddStop(e.target.value)} id="add-stop" label="Stop" variant="standard" type="number" value={addStop}/>
+                        <FormControl fullWidth>
+                            <InputLabel id="category-label">Category</InputLabel>
+                            <Select
+                                labelId="category-label"
+                                id="add-category"
+                                value={addCategory}
+                                label="Category"
+                                onChange={(e) => setAddCategory(e.target.value)}
+                            >
+                            {featureData.map((v,i) => {return <MenuItem value={v.display}>{v.display}</MenuItem>})}
+                            </Select>
+                        </FormControl>
+                        
+                    </div>
+
                 </div>
                 <div class={style.drawing}>
-                    <div class={style.tabs}>
-                        {[{name:"SVG"},{name:"CGView"}].map((v,i) => {
-                            return(
-                                <div onClick={() => setTab(i)} id={i+"input"} class={tab === i ? style.tabopen : style.tab}>
-                                    {v.name}
-                                </div>
-                            )
-                        })}
-                        <div id="slider" className={style.navBefore} style={{inset:`0rem ${8*tab}rem`}}></div>
-                    </div>
+                   
                     <div class={style.svgwrap}>
-                        { tab === 0 ? <svg class={style.insertsvg} viewBox="0 0 100 100">
+                        { tab === 0 ?  
+                            <>
+                                <div className={style.cgvMyViewer} id='my-viewer'><div></div></div>
+                                <div className={style.cgvButtons}>
+                                    <div onClick={() => setCgvDownload(true)} class="cgv-btn" id="btn-download" title="Download Map PNG"></div>
+                                    <div onClick={() => setCgvFormat((cgvFormat == 'circular') ? 'linear' : 'circular')} class="cgv-btn" id="btn-toggle-format" title="Toggle Linear/Circular Format"></div>
+                                </div>
+                                
+                            </>
+                            
+                            :
+                            <svg class={style.insertsvg} viewBox="0 0 100 100">
                             <defs>
                                 <filter id="shadow">
                                 <feDropShadow dx="0" dy="0" stdDeviation="0"
@@ -150,22 +156,23 @@ function Editor(props)
                             <circle cx="50" cy="50" r="35" stroke={"#000"} stroke-width="0.5" fill={"#fff"} />
 
                             <circle r="35" fill="transparent"
-                                stroke={color}
+                                stroke={"#00ffff"}
                                 stroke-width="10"
                                 stroke-dasharray="18.9 202"
                                 transform="translate(50,50) rotate(90.7)" />
                             <circle r="35" fill="transparent"
-                                stroke={color2}
+                                stroke={"#ff0000"}
                                 stroke-width="10"
                                 stroke-dasharray="50 169.9"
                                 transform="translate(50,50) rotate(190.7)" />
                             <circle r="35" fill="transparent"
-                                stroke={color3}
+                                stroke={"#ff00ff"}
                                 stroke-width="10"
                                 stroke-dasharray="30 189.9"
                                 transform="translate(50,50) rotate(10.7)" />
                             <text x="37" y="50" style={{fontSize:`7px`}}>Plasmid</text>
-                        </svg> : <div id='my-viewer'><div></div></div>}
+                        </svg>
+                        }
                         
                     </div>
                     

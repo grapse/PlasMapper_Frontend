@@ -3,6 +3,7 @@
     text-align:center;
     margin:auto;
     position:relative;
+    width:100%;
   }
 .indexbutton{
     margin-top:27px;
@@ -24,4 +25,19 @@
 }
 .cright{
   transition: .3s ease-in-out;
+}
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.rotate {
+  right:12px;
+  position:absolute;
+  color: white;
+  display:inline-block;
+  animation: rotating 1s linear infinite;
 }

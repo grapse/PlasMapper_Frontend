@@ -9,7 +9,10 @@ import Typography from '@mui/material/Typography';
 
 
 const CATCHPHRASE = "Generate and annotate plasmid maps.\nAll you need is the sequence."
-const NAVITEMS = [{name:"About",info:"PlasMapper is a webserver for mapping plasmids."},
+const NAVITEMS = [
+                  {name:"Home",info:<Link to="/">Home</Link>},
+                  {name:"Search",info:<Link to="/search">Search</Link>},
+                  {name:"About",info:"PlasMapper is a webserver for mapping plasmids."},
                   {name:"Help",info:"Paste your sequence into the box to get a plasmid map."},
                   {name:"Source Code",info:"You can see the source code here:\nInsert Repo Here"},
                   {name:"Citation",info:"You should cite the following:\nInsert Names Here, PlasMapper 3.0"}]
