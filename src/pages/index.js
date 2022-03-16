@@ -19,15 +19,34 @@ import LoopIcon from '@mui/icons-material/Loop';
 import { Link } from "gatsby"
 
 import axios from 'axios'
+import { fetchFeatures } from "../utils/FetchUtils";
 
 const featureData = fetchFeatureTypes();
 const samplePlasmids = fetchSamplePlasmids();
 
-function IndexPage(){
+function IndexPage(props){
   const [annotate,setAnnotate] = React.useState(false);
   const [sequence, setSequence] = React.useState("");
   const [loading, setLoading] = React.useState(false)
+  const [firstLoad, setFirstLoad] = React.useState(false);
   const [data, setData] = React.useState([]);
+  const {location} = props
+  React.useEffect(() => {
+    if(location.state?.nameSearch){
+    axios.get("http://localhost:3000/plasmids", {params: {name:location.state.nameSearch}}, {timeout: 1000})
+        .then(data => {
+                //console.log(data.data.plasmids);
+                
+                setSequence(data.data.sequence)
+            }
+        )
+        .catch(err =>{
+                console.log(err);
+            }
+        );
+  }
+  },[location, firstLoad])
+  
   // TODO: Move to separate components
   const TABS = [{name:"Sequence",
                 content:<TextField
@@ -40,7 +59,7 @@ function IndexPage(){
                     defaultValue=""></TextField>},
               {name:"Upload",
               content:<div>Upload File Here</div>},
-              {name:"Database",
+              {name:"Database", 
               content:<Link to={`/search`}>Select From Database Here</Link>},
               {name:"Examples",
               content:<FormControl>
@@ -67,21 +86,10 @@ function IndexPage(){
           setLoading(true);
           const strippedSequence = stripInput(sequence);
           //axios.get("http://localhost:3000/plasmids/meta").then(data => console.log(data));
-          axios.post("http://localhost:3000/features",{sequence:strippedSequence}, {timeout: 1000})
-               .then(data => {
+          fetchFeatures(featureData)
+               .then(featureTemp => {
                               // Map into desired array format for CGView
-                              const convert = data.data;
-                              var featureTemp = [];
-                              convert.user = [];
-                              convert.restrictionSites = [];
-                              for (let i = 0; i < featureData.length; i++){
-                                  featureTemp = [...featureTemp,...convert[featureData[i].id].map((v) => {
-                                                      return {name:v.name,start:v.start,stop:v.stop,legend:featureData[i].display,source:"json-feature",show:true}
-                                                  })
-                                                ]
-                              }
-                              console.log(strippedSequence);
-                              featureTemp = [...featureTemp, ...checkCommonEnzymes(strippedSequence)]
+                              
                               setData(featureTemp)
                               setLoading(false);
                               document.getElementById('annotate').scrollIntoView();})
@@ -92,7 +100,7 @@ function IndexPage(){
       </a>
       <div style={{marginTop:`250px`}}></div>
       <div id="annotate">
-        <Editor data={data} sequence={stripInput(sequence)}></Editor>
+        <Editor isEdit={true} data={data} sequence={stripInput(sequence)}></Editor>
       </div>
       
     </p>

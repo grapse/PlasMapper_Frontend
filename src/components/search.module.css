@@ -18,16 +18,20 @@
 
 .plasmidCard{
     width: 200px;
-    height: 200px;
+    height: 100px;
     background-color: white;
     box-shadow: 0 0 5px rgba(0,0,0,0.2);
-    padding:20px;
+    padding:10px;
     border-radius:5px;
-    
+    cursor:pointer;
 }
 
 .plasmidTitle{
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.searchBar{
+    margin:10px;
 }
