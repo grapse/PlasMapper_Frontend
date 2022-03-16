@@ -84,9 +84,8 @@ function IndexPage(props){
         onClick={() => {
           // TODO: Move to util file
           setLoading(true);
-          const strippedSequence = stripInput(sequence);
           //axios.get("http://localhost:3000/plasmids/meta").then(data => console.log(data));
-          fetchFeatures(featureData)
+          fetchFeatures(featureData, sequence)
                .then(featureTemp => {
                               // Map into desired array format for CGView
                               

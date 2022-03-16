@@ -1,4 +1,6 @@
 import api from "./api";
+import {stripInput} from "./FeatureUtils"
+
 /**
  * @returns {array} data The fetched json database
  */
@@ -14,12 +16,14 @@ export const fetchSearchData = (async() => {
 })
 
 /**
+ * Converts 
  * @param  {array} featureData The data related to feature types
  * @returns {array} featureTemp The array of features
  */
-export const fetchFeatures = (async(featureData) => {
+export const fetchFeatures = (async(featureData, sequence) => {
+    const strippedSequence = stripInput(sequence);
     console.log(api.baseURL)
-    return api.get(`features`)
+    return api.post(`features`,{sequence:strippedSequence})
         .then(async(response) => {
             const convert = response.data
             let featureTemp = [];
@@ -34,13 +38,13 @@ export const fetchFeatures = (async(featureData) => {
                             ]
             }
             const restrictionSites = convert?.restriction.map((v,i) => {
-            let start = v.locations[0][0];
-            let stop = v.locations[0][1];
-            let newFeature = {name:v.name,start:start,stop:stop,legend:"Restriction Sites",source:"json-feature",visible:v.count === 1,count:v.count};
-            if(stop < start){
-                newFeature.strand = -1;
-            }
-            return newFeature;
+                let start = v.locations[0][0];
+                let stop = v.locations[0][1];
+                let newFeature = {name:v.name,start:start,stop:stop,legend:"Restriction Sites",source:"json-feature",visible:v.count === 1,count:v.count};
+                if(stop < start){
+                    newFeature.strand = -1;
+                }
+                return newFeature;
             })
             console.log(restrictionSites);
             featureTemp = [...featureTemp, ...restrictionSites];
