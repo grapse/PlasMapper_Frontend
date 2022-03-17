@@ -46,6 +46,7 @@ function PageContent(props){
 
   React.useEffect(() => {
     if(location.state?.nameSearch){
+    console.log(location.state)
     setStartTab(2);
     fetchSequence(location.state.nameSearch)
         .then(data => {
