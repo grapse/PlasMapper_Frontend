@@ -60,15 +60,17 @@ const MaterialUISwitch = styled(Switch)(({ theme, palette }) => ({
 
 const CIRCUMFERENCE = 219.91;
 
-const NAVITEMS = [
-                  {name:"Search",info:<Link to="/search">Search</Link>},
-                  {name:"Help",info:"Paste your sequence into the box to get a plasmid map."},
-                  {name:"Source Code",info:"You can see the source code here:\nInsert Repo Here"},
-                  {name:"Citation",info:"You should cite the following:\nInsert Names Here, PlasMapper 3.0"}]
+
 
 function Header(props) 
   {
     const {theme, setTheme, language, setLanguage} = React.useContext(GlobalContext);
+
+    const NAVITEMS = [
+      {name:"Help",info:language.HELP},
+      {name: "About",info:language.ABOUT},
+      {name:"Source Code",info:language.SOURCE_CODE},
+      {name:"Citation",info:language.CITATION}]
 
     const [open, setOpen] = React.useState(0);
     const [pageProgress, setPageProgress] = React.useState(0);
@@ -129,7 +131,7 @@ function Header(props)
     </div>
       
     <div class={style.navbar} style={{"--font-color": theme.text}}>
-    
+    <div class={style.navbaritem} key={"search-link"}><Link to="/search">Search</Link></div>
       {NAVITEMS.map((v,i) => {
         return(
         <div id={i+"nav"} class={open === i + 1 ? style.navselected : style.navbaritem} onClick={() => setOpen(i+1)}>
@@ -147,7 +149,7 @@ function Header(props)
         onClose={() => setOpen(0)}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
-        style={{"--bg": theme.background}}
+        style={{"--bg": theme.background, "--text": theme.text}}
       >
         <Box class={style.modal}>
           <i onClick={() => setOpen(0)} class={"bi bi-x-lg "+style.closebutton}></i>

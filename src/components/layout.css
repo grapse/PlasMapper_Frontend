@@ -76,8 +76,8 @@ a {
   background-color: transparent;
   text-decoration: none;
   padding:inherit;
-  margin:inherit;
   -webkit-text-decoration-skip: objects;
+  color:inherit;
 }
 a:active,
 a:hover {
