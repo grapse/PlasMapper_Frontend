@@ -49,10 +49,8 @@ function PageContent(props){
     setStartTab(2);
     fetchSequence(location.state.nameSearch)
         .then(data => {
-                //console.log(data.data.plasmids);
-                
                 setSequence(data);
-                annotateSequence(data);
+                annotateSequenceLoad(data);
             }
         )
         .catch(err =>{
@@ -62,10 +60,26 @@ function PageContent(props){
   }
   },[location, firstLoad])
 
-  const annotateSequence = (sequence) => {
+  const annotateSequence = () => {
     {
+      console.log(sequence)
       setLoading(true);
       fetchFeatures(sequence)
+           .then(featureTemp => {
+                          setData(featureTemp)
+                          setLoading(false);
+                          document.getElementById('annotate').scrollIntoView();})
+           .catch(err => console.log(err))
+           
+    }
+  }
+
+  const annotateSequenceLoad = (seq) => {
+    {
+      console.log("search")
+      console.log(seq)
+      setLoading(true);
+      fetchFeatures(seq)
            .then(featureTemp => {
                           setData(featureTemp)
                           setLoading(false);
