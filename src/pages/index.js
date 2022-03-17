@@ -16,28 +16,43 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import LoopIcon from '@mui/icons-material/Loop';
+import GlobalContext from "../context/optionContext";
+
 import { Link } from "gatsby"
 
 import axios from 'axios'
-import { fetchFeatures } from "../utils/FetchUtils";
+import { fetchFeatures, fetchSequence } from "../utils/FetchUtils";
 
 const featureData = fetchFeatureTypes();
 const samplePlasmids = fetchSamplePlasmids();
 
-function IndexPage(props){
+export default function IndexPage(props){
+  return(
+    <Layout>
+      <PageContent {...props}/>
+    </Layout>
+  )
+}
+
+function PageContent(props){
+  const {theme, setTheme, language, setLanguage} = React.useContext(GlobalContext);
   const [annotate,setAnnotate] = React.useState(false);
   const [sequence, setSequence] = React.useState("");
   const [loading, setLoading] = React.useState(false)
   const [firstLoad, setFirstLoad] = React.useState(false);
   const [data, setData] = React.useState([]);
   const {location} = props
+  const [startTab, setStartTab] = React.useState(0);
+
   React.useEffect(() => {
     if(location.state?.nameSearch){
-    axios.get("http://localhost:3000/plasmids", {params: {name:location.state.nameSearch}}, {timeout: 1000})
+    setStartTab(2);
+    fetchSequence(location.state.nameSearch)
         .then(data => {
                 //console.log(data.data.plasmids);
                 
-                setSequence(data.data.sequence)
+                setSequence(data);
+                annotateSequence(data);
             }
         )
         .catch(err =>{
@@ -46,6 +61,19 @@ function IndexPage(props){
         );
   }
   },[location, firstLoad])
+
+  const annotateSequence = (sequence) => {
+    {
+      setLoading(true);
+      fetchFeatures(sequence)
+           .then(featureTemp => {
+                          setData(featureTemp)
+                          setLoading(false);
+                          document.getElementById('annotate').scrollIntoView();})
+           .catch(err => console.log(err))
+           
+    }
+  }
   
   // TODO: Move to separate components
   const TABS = [{name:"Sequence",
@@ -74,27 +102,69 @@ function IndexPage(props){
                         </RadioGroup>
                       </FormControl>}]
   return(
-  <Layout>
+  <>
     <Seo title="Home" />
+    <div class={style.test}>
+      <div class={style.circle1}>
+      <div class={style.circleinner}>
+        <svg class={style.insertsvg} height="100%" viewBox="0 0 100 100">
+                                <circle r="22" fill="transparent"
+                                    class={style.circleI1}
+                                    stroke={theme.plasmid1}
+                                    transform={`translate(50,50) rotate(90)`} />
+                                <circle r="26" fill="transparent"
+                                    class={style.circleI2}
+                                    stroke={theme.plasmid2}
+                                    transform={`translate(50,50) rotate(60)`} />
+                                <circle r="30" fill="transparent"
+                                    class={style.circleI2}
+                                    stroke={theme.plasmid3}
+                                    transform={`translate(50,50) rotate(130)`} />
+                                <circle r="18" fill="transparent"
+                                    class={style.circleI3}
+                                    stroke={theme.plasmid4}
+                                    transform={`translate(50,50) rotate(10)`} />
+                            </svg>
+      </div>
+    </div>
+    <div class={style.circle2}>
+      <div class={style.circleinner}>
+        <svg class={style.insertsvg} height="100%" viewBox="0 0 100 100">
+                                <circle r="22" fill="transparent"
+                                    class={style.circleI2}
+                                    stroke={theme.plasmid1}
+                                    transform={`translate(50,50) rotate(190)`} />
+                                <circle r="26" fill="transparent"
+                                    class={style.circleI1}
+                                    stroke={theme.plasmid2}
+                                    transform={`translate(50,50) rotate(160)`} />
+                                <circle r="30" fill="transparent"
+                                    class={style.circleI2}
+                                    stroke={theme.plasmid3}
+                                    transform={`translate(50,50) rotate(-130)`} />
+                                <circle r="18" fill="transparent"
+                                    class={style.circleI3}
+                                    stroke={theme.plasmid4}
+                                    transform={`translate(50,50) rotate(110)`} />
+                                <circle r="14" fill="transparent"
+                                    class={style.circleI3}
+                                    stroke={theme.plasmid5}
+                                    transform={`translate(50,50) rotate(100)`} />
+                            </svg>
+      </div>
+    </div>
+    </div>
+    
+    <div style={{width:"100px", height:"150px"}}></div>
+    
     <p class={style.indexbody}>
+    <div class={style.logodiv}><p class={style.logotitle}>PlasMapper <span class={style.logosmall}>3.0</span></p>
+      <p class={style.catchphrase}>{language.CATCHPHRASE}</p></div>
       <div style={{marginTop:`100px`}}></div>
-      <InputTabs tabs={TABS}></InputTabs>
+      <InputTabs start={startTab} tabs={TABS}></InputTabs>
       <a >
         <Button  
-        onClick={() => {
-          // TODO: Move to util file
-          setLoading(true);
-          //axios.get("http://localhost:3000/plasmids/meta").then(data => console.log(data));
-          fetchFeatures(featureData, sequence)
-               .then(featureTemp => {
-                              // Map into desired array format for CGView
-                              
-                              setData(featureTemp)
-                              setLoading(false);
-                              document.getElementById('annotate').scrollIntoView();})
-               .catch(err => console.log(err))
-               
-        }} 
+        onClick={annotateSequence} 
         onMouseEnter={() => setAnnotate(true)} onMouseLeave={() => setAnnotate(false)} class={style.indexbutton} variant="contained">Annotate!  {loading ? <i class={`${style.rotate} bi bi-arrow-repeat`}></i> : <i style={{right:`12px`,position:`absolute`,transform:`rotate(${annotate ? `90deg` : `0deg`})`,transition: `.3s ease-in-out`}} class={"bi bi-chevron-right "}></i>}</Button>
       </a>
       <div style={{marginTop:`250px`}}></div>
@@ -103,7 +173,6 @@ function IndexPage(props){
       </div>
       
     </p>
-  </Layout>
+  </>
 )}
 
-export default IndexPage

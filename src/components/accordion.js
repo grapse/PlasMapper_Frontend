@@ -26,15 +26,28 @@ const featureData = fetchFeatureTypes();
 export default function OptionAccordion(props){
     const {localData, handleFeatureUpdate, panel, handleClickOption} = props;
     const [currentName, setCurrentName] = React.useState("");
-
+    
+    /**
+     * Changes the name of a feature for the plasmid
+     * @param  {int} index The index of the feature to change
+     * @param  {object} item The object associated with the feature 
+     * @param  {str} name The new name to change
+     */
     const handleClickSave = (index, item, name) => {
-        handleFeatureUpdate(index,{name:name});
+        if(name){
+            handleFeatureUpdate(index,{name:name});
+        }
       };
     
     const handleMouseDown = (event) => {
         event.preventDefault();
     };
 
+    /**
+     * Swaps the strand of a given feature
+     * @param  {int} index The index of the feature to change
+     * @param  {object} item The object associated with the feature
+     */
     const handleStrandSwap = (index, item) => {
         handleFeatureUpdate(index,{strand:item.strand === -1 ? 1 : -1});
     }

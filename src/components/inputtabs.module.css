@@ -2,7 +2,7 @@
     width:600px;
     margin:auto;
     position:relative;
-    
+    background: rgba(0,0,0,0);    
 }
 .tabs{
     width:32rem;
@@ -12,7 +12,7 @@
     position:relative;
     flex-direction:row;
     border-radius:2rem;
-    
+    background: rgba(0,0,0,0);    
     box-shadow: 5px 5px 10px rgba(0,0,0,0.2);
 }
 .navBefore{
@@ -22,21 +22,24 @@
     background:linear-gradient(45deg,#7e90df,#5149b0);
     height:100%;
     width:8rem;
-    z-index: -1;
     transition: .3s ease-out;
     border-radius:2rem;
 }
 .tab{
     cursor:pointer;
     width:8rem;
+    background: rgba(0,0,0,0);    
     transition: .3s ease-out;
+    z-index:2;
     font-size:1rem;
 }
 .tabopen{
     cursor:pointer;
     width:8rem;
+    z-index:2;
     font-size:1rem;
     transition: .3s ease-out;
+    background: rgba(0,0,0,0);    
     color:white;
 }
 .tabcontent{
@@ -44,5 +47,6 @@
     margin-top:20px;
     padding:20px;
     border-radius:20px;
+    background: rgba(0,0,0,0);    
     box-shadow: 10px 10px 25px rgba(0,0,0,0.3);
 }

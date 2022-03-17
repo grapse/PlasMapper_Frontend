@@ -1,12 +1,9 @@
 import * as React from "react"
 import { fetchFeatureTypes } from '../utils/FeatureUtils';
-import TextField from '@mui/material/TextField';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+
 import { Link } from "gatsby";
 import './cgview.css';
+import {fetchFeatures} from '../utils/FetchUtils';
 import * as style from "./editor.module.css"
 const CGV = require('cgview');
 
@@ -15,15 +12,10 @@ const legendItems = featureData.map((v,i) => {return {name:v.display,swatchColor
 
 function MiniEditor(props)  
   {
-    const {isEdit} = props;
     const [tab, setTab] = React.useState(0);
     const [initial, setInitial] = React.useState(true);
     const [localData, setLocalData] = React.useState([]);
-    const [showData, setShowData] = React.useState([]);
-    const [addName, setAddName] = React.useState("New Feature");
-    const [addStart, setAddStart] = React.useState(0);
-    const [addStop, setAddStop] = React.useState(100);
-    const [addCategory, setAddCategory] = React.useState("User-defined");
+    
     const [cgvFormat, setCgvFormat] = React.useState("circular");
     const [cgvDownload, setCgvDownload] = React.useState(false);
     const {sequence, data, nameSearch} = props;
@@ -34,7 +26,7 @@ function MiniEditor(props)
           "sequence": {
             seq:sequence
           },
-          "features": localData.filter((v, i) => v.show === true && true),
+          "features": localData,
           "legend": {
               // Maps the preset feature data from above into the legend
             "items": []
@@ -47,18 +39,7 @@ function MiniEditor(props)
               "dataMethod": 'source',
               "dataKeys": 'json-feature'
             },
-            {
-                name: "ORFs",
-                position: 'both',
-                dataType: 'feature',
-                dataMethod: 'sequence',
-                dataKeys: 'orfs',
-                dataOptions: {
-                    start: 'ATG',
-                    stop: 'TAA,TAG,TGA',
-                    minORFLength: 100
-                }
-            }
+            
           ]
         }
       }
@@ -66,12 +47,16 @@ function MiniEditor(props)
     React.useEffect(() => {
         // If it is currently getting fed a new plasmid
         if (initial === true){
-            setLocalData(data);
-            setShowData(data.map(v => true))
-            console.log("changed");
+            fetchFeatures(sequence)
+                .then(featureTemp => {
+                    setLocalData(featureTemp);
+                    console.log("changed");
+                }
+                )
+                .catch(err => console.log(err))
         }
 
-    }, [data])
+    }, [])
 
     React.useEffect(() => {
         // If we are currently on the CGV tab, draw CGView

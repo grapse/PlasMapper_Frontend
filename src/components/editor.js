@@ -301,7 +301,7 @@ function Editor(props)
                             id="add-name" label="Plasmid Name" variant="standard" 
                             value={plasmidName}
                             />
-                        <Typography>Legend</Typography>
+                        {/* <Typography>Legend</Typography>
                         <div class={style.legendMap}>
                             {legendItems.map((v,i) => {
                                 return(
@@ -311,7 +311,7 @@ function Editor(props)
                                     />
                                 )
                             })} 
-                        </div>
+                        </div> */}
                         
                     </div>
                     }

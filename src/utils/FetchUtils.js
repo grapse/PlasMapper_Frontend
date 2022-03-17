@@ -1,7 +1,10 @@
-import api from "./api";
-import {stripInput} from "./FeatureUtils"
+import api from "../config/api";
+import {stripInput, fetchFeatureTypes} from "./FeatureUtils"
+const featureData = fetchFeatureTypes();
+
 
 /**
+ * Fetches the json metadata for the plasmid database
  * @returns {array} data The fetched json database
  */
 export const fetchSearchData = (async() => {
@@ -16,11 +19,27 @@ export const fetchSearchData = (async() => {
 })
 
 /**
- * Converts 
- * @param  {array} featureData The data related to feature types
+ * Fetches the json metadata for the plasmid database
+ * @param {str} name The name of the plasmid
+ * @returns {str} data The fetched plasmid sequence
+ */
+ export const fetchSequence = (async(name) => {
+    return api.get(`plasmids`, {params: {name:name}})
+        .then(async(response) => {
+            const data = await response.data.sequence;
+            if (response.status !== 200){
+                return Promise.reject(response.statusText);
+            }
+            return data;
+        })
+})
+
+/**
+ * Converts the returned feature data into the format CGView uses
+ * @param  {str} sequence The DNA sequence
  * @returns {array} featureTemp The array of features
  */
-export const fetchFeatures = (async(featureData, sequence) => {
+export const fetchFeatures = (async(sequence) => {
     const strippedSequence = stripInput(sequence);
     console.log(api.baseURL)
     return api.post(`features`,{sequence:strippedSequence})

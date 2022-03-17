@@ -1,13 +1,11 @@
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
 import * as React from "react"
 import * as style from "./inputtabs.module.css"
 
 
 function InputTabs(props) 
   {
-    const {tabs} = props;
-    const [tab, setTab] = React.useState(0);
+    const {tabs, start} = props;
+    const [tab, setTab] = React.useState(start);
     return(
         <>
             <div class={style.tabholder}>

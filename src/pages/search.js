@@ -1,12 +1,10 @@
 import * as React from "react"
-import { Link } from "gatsby"
-import {Autocomplete, OutlinedInput, InputLabel, Select, MenuItem, TextField, Box, Checkbox, FormControlLabel, FormControl, Modal, Typography, Chip, Radio, RadioGroup, Button } from '@mui/material';
-import axios from 'axios'
+import {Skeleton, Autocomplete, TextField,  Modal, } from '@mui/material';
 import Layout from "../components/layout"
 import Seo from "../components/seo"
 import * as style from '../components/search.module.css'
 import MiniEditor from '../components/minieditor'
-import { fetchSearchData } from "../utils/FetchUtils";
+import { fetchSearchData, fetchSequence } from "../utils/FetchUtils";
 import { getFeatureNames, getCommonEnzymes } from "../utils/FeatureUtils";
 
 const featureNames = getFeatureNames();
@@ -32,6 +30,7 @@ function SearchPage(){
                 .then(data => {
                         setPlasmids(data);
                         setFilteredPlasmids(data);
+                        console.log(data);
                         setFirstLoad(false);
                     }
                 )
@@ -64,20 +63,20 @@ function SearchPage(){
     )
 
     function openModal(name, idx){
-        axios.get("http://localhost:3000/plasmids", {params: {name:name}}, {timeout: 1000})
-        .then(data => {
-                //console.log(data.data.plasmids);
-                
-                setSequence(data.data.sequence)
-                setCurrentPlasmid(name)
-                setModalState(idx)
-            }
-        )
-        .catch(err =>{
-                console.log(err);
-                setModalState(idx)
-            }
-        );
+        fetchSequence(name)
+            .then(data => {
+                    //console.log(data.data.plasmids);
+                    
+                    setSequence(data)
+                    setCurrentPlasmid(name)
+                    setModalState(idx)
+                }
+            )
+            .catch(err =>{
+                    console.log(err);
+                    setModalState(idx)
+                }
+            );
     }
 
     return(
@@ -94,6 +93,7 @@ function SearchPage(){
                         onChange={(e) => setNameSearch(e.target.value)} 
                         value={nameSearch} id="input-name" 
                         label="Search Name" 
+                        size="small"
                         variant="standard" />
             </div>
             <div
@@ -103,6 +103,7 @@ function SearchPage(){
                         multiple
                         inputProps={{ "data-testid": "search-feature" }} 
                         disablePortal
+                        size="small"
                         freeSolo
                         onChange={(e, newVal) => setFeatureSearch(newVal)} 
                         value={featureSearch} 
@@ -121,6 +122,7 @@ function SearchPage(){
                         multiple
                         inputProps={{ "data-testid": "search-restriction" }} 
                         disablePortal
+                        size="small"
                         freeSolo
                         sx={{ width: 300 }}
                         id="input-feature" 
@@ -130,11 +132,14 @@ function SearchPage(){
                             />} 
                         />
             </div>
-                <TextField
+                
+            </div>
+            <TextField
                     id="outlined-number"
                     value={lengthMin}
                     onChange={(e) => setLengthMin(e.target.value)} 
                     label="Min"
+                    size="small"
                     type="number"
                     InputLabelProps={{
                         shrink: true,
@@ -145,12 +150,12 @@ function SearchPage(){
                     value={lengthMax}
                     onChange={(e) => setLengthMax(e.target.value)} 
                     label="Max"
+                    size="small"
                     type="number"
                     InputLabelProps={{
                         shrink: true,
                     }}
                     />
-            </div>
             
             <div
                         class={style.searchBar}
@@ -159,7 +164,9 @@ function SearchPage(){
             <div class={style.plasmidHolder}
                  
             >
-                {filteredPlasmids.map((plasmid, idx) => {
+                {firstLoad ? 
+                    <Skeleton variant="rectangular" width={210} height={118} />
+                 : filteredPlasmids.map((plasmid, idx) => {
                     return(
                         <div onClick={() => openModal(plasmid?.name, idx)} class={style.plasmidCard} key={`${idx}-plasmid`}>
                             <div class={style.plasmidTitle}>{plasmid?.name || `Plasmid ${idx}`}</div>
