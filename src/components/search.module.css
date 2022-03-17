@@ -35,3 +35,7 @@
 .searchBar{
     margin:10px;
 }
+
+.modal{
+    overflow:auto;
+}

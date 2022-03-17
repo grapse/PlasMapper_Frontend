@@ -50,7 +50,7 @@
   font-size:1rem;
 }
 .logodiv{
-  color:#1b204f;
+  color:var(--title);
   margin:auto;
   text-align:center;
   z-index:2;

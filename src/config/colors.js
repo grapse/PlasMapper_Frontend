@@ -6,6 +6,7 @@ export default({
     light:{
         name: 'light',
         background: '#fff',
+        title: '#1b204f',
         mid: '#888',
         text: '#000',
         tint: '#efefee',
@@ -19,6 +20,7 @@ export default({
         name: 'dark',
         background: '#11111b',
         mid: '#888',
+        title: '#fff',
         text: '#fff',
         tint: '#33333b',
         plasmid1: '#fc5364',

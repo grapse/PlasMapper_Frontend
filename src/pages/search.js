@@ -181,6 +181,7 @@ function SearchPage(){
                     onClose={() => setModalState(-1)}
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
+                    sx={{overflow:"auto"}}
                 >
                     <div style={{width:"100%",height:"500px"}}>
                         <MiniEditor isEdit={false} data={[]} sequence={sequence} nameSearch={currentPlasmid}></MiniEditor>

@@ -173,7 +173,7 @@ function PageContent(props){
     <div style={{width:"100px", height:"150px"}}></div>
     
     <p class={style.indexbody}>
-    <div class={style.logodiv}><p class={style.logotitle}>PlasMapper <span class={style.logosmall}>3.0</span></p>
+    <div class={style.logodiv} style={{"--title":theme.title}}><p class={style.logotitle}>PlasMapper <span class={style.logosmall}>3.0</span></p>
       <p class={style.catchphrase}>{language.CATCHPHRASE}</p></div>
       <div style={{marginTop:`100px`}}></div>
       <InputTabs start={startTab} tabs={TABS}></InputTabs>
