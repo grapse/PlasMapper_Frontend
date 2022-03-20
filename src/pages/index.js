@@ -3,9 +3,9 @@ import Layout from "../components/layout"
 import Seo from "../components/seo"
  
 import Editor from "../components/editor";
-import { fetchFeatureTypes, stripInput, checkCommonEnzymes } from '../utils/FeatureUtils';
+import { stripInput } from '../utils/FeatureUtils';
 import { fetchSamplePlasmids } from "../utils/SamplePlasmids";
-import * as style from '../components/index.module.css'
+import * as style from '../styles/index.module.css'
 
 import InputTabs from "../components/inputtabs"
 import TextField from '@mui/material/TextField';
@@ -15,15 +15,13 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-import LoopIcon from '@mui/icons-material/Loop';
 import GlobalContext from "../context/optionContext";
 
 import { Link } from "gatsby"
+import BackgroundDrawing from "../components/background";
 
-import axios from 'axios'
 import { fetchFeatures, fetchSequence } from "../utils/FetchUtils";
 
-const featureData = fetchFeatureTypes();
 const samplePlasmids = fetchSamplePlasmids();
 
 export default function IndexPage(props){
@@ -45,6 +43,10 @@ function PageContent(props){
   const [startTab, setStartTab] = React.useState(0);
 
   React.useEffect(() => {
+    /**
+     * Only used if the user clicked in from the search page
+     * Makes it so it automatically annotates and scrolls to plasmid editor
+     */
     if(location.state?.nameSearch){
     console.log(location.state)
     setStartTab(2);
@@ -61,6 +63,9 @@ function PageContent(props){
   }
   },[location, firstLoad])
 
+  /**
+   * Annotates the provided DNA sequence
+   */
   const annotateSequence = () => {
     {
       console.log(sequence)
@@ -74,7 +79,10 @@ function PageContent(props){
            
     }
   }
-
+  /**
+   * Annotates the provided DNA sequence (from the search page)
+   * @param  {str} seq The sequence provided by the search page
+   */
   const annotateSequenceLoad = (seq) => {
     {
       console.log("search")
@@ -93,19 +101,20 @@ function PageContent(props){
   // TODO: Move to separate components
   const TABS = [{name:"Sequence",
                 content:<TextField
-                    style={{width:`100%`,backgroundColor:`#fbfbfb`}}
+                    style={{width:`100%`,backgroundColor:theme['--background'],}}
                     id="outlined-multiline-static"
                     label="Paste your sequence here!"
+                    sx={{color:theme['--text']}}
                     multiline
                     rows={4}
                     onChange={e => setSequence(e.target.value)}
                     defaultValue=""></TextField>},
               {name:"Upload",
-              content:<div>Upload File Here</div>},
+              content:<><div style={{color:theme['--text']}}>Upload File Here</div><input type="file" name="file" /></>},
               {name:"Database", 
-              content:<Link to={`/search`}>Select From Database Here</Link>},
+              content:<Link style={{color:theme['--text']}} to={`/search`}>Select From Database Here</Link>},
               {name:"Examples",
-              content:<FormControl>
+              content:<FormControl style={{color:theme['--text']}}>
                         <FormLabel >Sequence</FormLabel>
                         <RadioGroup
                           value={sequence}
@@ -117,63 +126,12 @@ function PageContent(props){
                         </RadioGroup>
                       </FormControl>}]
   return(
-  <>
+  <div style={{...theme}}>
     <Seo title="Home" />
-    <div class={style.test}>
-      <div class={style.circle1}>
-      <div class={style.circleinner}>
-        <svg class={style.insertsvg} height="100%" viewBox="0 0 100 100">
-                                <circle r="22" fill="transparent"
-                                    class={style.circleI1}
-                                    stroke={theme.plasmid1}
-                                    transform={`translate(50,50) rotate(90)`} />
-                                <circle r="26" fill="transparent"
-                                    class={style.circleI2}
-                                    stroke={theme.plasmid2}
-                                    transform={`translate(50,50) rotate(60)`} />
-                                <circle r="30" fill="transparent"
-                                    class={style.circleI2}
-                                    stroke={theme.plasmid3}
-                                    transform={`translate(50,50) rotate(130)`} />
-                                <circle r="18" fill="transparent"
-                                    class={style.circleI3}
-                                    stroke={theme.plasmid4}
-                                    transform={`translate(50,50) rotate(10)`} />
-                            </svg>
-      </div>
-    </div>
-    <div class={style.circle2}>
-      <div class={style.circleinner}>
-        <svg class={style.insertsvg} height="100%" viewBox="0 0 100 100">
-                                <circle r="22" fill="transparent"
-                                    class={style.circleI2}
-                                    stroke={theme.plasmid1}
-                                    transform={`translate(50,50) rotate(190)`} />
-                                <circle r="26" fill="transparent"
-                                    class={style.circleI1}
-                                    stroke={theme.plasmid2}
-                                    transform={`translate(50,50) rotate(160)`} />
-                                <circle r="30" fill="transparent"
-                                    class={style.circleI2}
-                                    stroke={theme.plasmid3}
-                                    transform={`translate(50,50) rotate(-130)`} />
-                                <circle r="18" fill="transparent"
-                                    class={style.circleI3}
-                                    stroke={theme.plasmid4}
-                                    transform={`translate(50,50) rotate(110)`} />
-                                <circle r="14" fill="transparent"
-                                    class={style.circleI3}
-                                    stroke={theme.plasmid5}
-                                    transform={`translate(50,50) rotate(100)`} />
-                            </svg>
-      </div>
-    </div>
-    </div>
-    
+    <BackgroundDrawing/>
     <div style={{width:"100px", height:"150px"}}></div>
-    
     <p class={style.indexbody}>
-    <div class={style.logodiv} style={{"--title":theme.title}}><p class={style.logotitle}>PlasMapper <span class={style.logosmall}>3.0</span></p>
+    <div class={style.logodiv}><p class={style.logotitle}>PlasMapper <span class={style.logosmall}>3.0</span></p>
       <p class={style.catchphrase}>{language.CATCHPHRASE}</p></div>
       <div style={{marginTop:`100px`}}></div>
       <InputTabs start={startTab} tabs={TABS}></InputTabs>
@@ -188,6 +146,6 @@ function PageContent(props){
       </div>
       
     </p>
-  </>
+  </div>
 )}
 

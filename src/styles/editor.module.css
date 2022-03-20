@@ -3,9 +3,10 @@
     width:100%;
     gap:20px;
     flex-direction:row;
-    background-color:#fff;
+    background-color:var(--background);
     padding:70px 30px;
     margin-top:20px;
+    color: var(--text);
     box-shadow: 10px 10px 35px rgba(0,0,0,0.3);
 }
 .options{

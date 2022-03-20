@@ -10,12 +10,9 @@ import PropTypes from "prop-types"
 import { useStaticQuery, graphql } from "gatsby"
 
 import Header from "./header"
-import "./layout.css"
+import "../styles/layout.css"
 
-import writing from "../config/writing"
-import colors from "../config/colors"
-
-import {ThemeProvider, GlobalContext} from "../context/optionContext"
+import {ThemeProvider} from "../context/optionContext"
 import LayoutContent from "./layoutContent"
 
 const Layout = ({ children }) => {  
@@ -37,9 +34,9 @@ const Layout = ({ children }) => {
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&family=Roboto&display=swap" rel="stylesheet"/>
       </head>
-        <Header siteTitle={data.site.siteMetadata?.title || `Title`} />
-        <LayoutContent>{children}</LayoutContent>
-      </ThemeProvider>
+      <Header siteTitle={data.site.siteMetadata?.title || `Title`} />
+      <LayoutContent>{children}</LayoutContent>
+    </ThemeProvider>
   )
 }
 

@@ -2,7 +2,7 @@ import * as React from "react"
 import {Skeleton, Autocomplete, TextField,  Modal, } from '@mui/material';
 import Layout from "../components/layout"
 import Seo from "../components/seo"
-import * as style from '../components/search.module.css'
+import * as style from '../styles/search.module.css'
 import MiniEditor from '../components/minieditor'
 import { fetchSearchData, fetchSequence } from "../utils/FetchUtils";
 import { getFeatureNames, getCommonEnzymes } from "../utils/FeatureUtils";
@@ -25,7 +25,7 @@ function SearchPage(){
 
     React.useEffect(() => {
         if(firstLoad){
-            // TODO: Change to local file
+            // Upon loading in, fetch the plasmid metadata database from backend
             fetchSearchData()
                 .then(data => {
                         setPlasmids(data);
@@ -40,7 +40,7 @@ function SearchPage(){
                     }
                 );
         }
-        console.log(commonEnzymes)
+        // Filter the data based on user-selected filters
         setFilteredPlasmids(
             plasmids.filter(plasmid =>
                     `${plasmid.name}`.toLowerCase().indexOf(nameSearch.toLowerCase()) >= 0 
@@ -62,11 +62,14 @@ function SearchPage(){
     [firstLoad, nameSearch, featureSearch, lengthMax, lengthMin]
     )
 
+    /**
+     * Opens the modal
+     * @param  {str} name Name of plasmid to query backend with
+     * @param  {int} idx Index of the plasmid to open modal with
+     */
     function openModal(name, idx){
         fetchSequence(name)
             .then(data => {
-                    //console.log(data.data.plasmids);
-                    
                     setSequence(data)
                     setCurrentPlasmid(name)
                     setModalState(idx)
@@ -82,7 +85,6 @@ function SearchPage(){
     return(
     <Layout>
         <Seo title="Plasmid Searcher" />
-        
         <div class={style.searchbody}>
             <div style={{fontWeight:"400",fontSize:"3em", marginBottom:"100px"}}>{"Plasmid Searcher"}</div>
             <div style={{display:"flex", margin:"50px",flexWrap:"wrap"}}>

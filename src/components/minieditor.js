@@ -1,14 +1,10 @@
 import * as React from "react"
-import { fetchFeatureTypes } from '../utils/FeatureUtils';
 
 import { Link } from "gatsby";
-import './cgview.css';
+import '../styles/cgview.css';
 import {fetchFeatures} from '../utils/FetchUtils';
-import * as style from "./editor.module.css"
+import * as style from "../styles/editor.module.css"
 const CGV = require('cgview');
-
-const featureData = fetchFeatureTypes();
-const legendItems = featureData.map((v,i) => {return {name:v.display,swatchColor:v.color,decoration:"arrow"}});
 
 function MiniEditor(props)  
   {
@@ -90,47 +86,11 @@ function MiniEditor(props)
             <div style={{display:"flex",width:"90%",gap:"20px",flexDirection:"row","backgroundColor":"#fff",padding:"70px 30px",margin:"20px",boxShadow:"10px 10px 35px rgba(0,0,0,0.3)",alignItems:"center",justifyContent:"center"}}>
                 <div class={style.drawing}>
                     <div >
-                        { tab === 0 ?  
-                            <>
-                                <div className={style.cgvMyViewer} id='my-viewer'><div></div></div>
-                                <div className={style.cgvButtons}>
-                                    <div onClick={() => setCgvDownload(true)} class="cgv-btn" id="btn-download" title="Download Map PNG"></div>
-                                    <div onClick={() => setCgvFormat((cgvFormat == 'circular') ? 'linear' : 'circular')} class="cgv-btn" id="btn-toggle-format" title="Toggle Linear/Circular Format"></div>
-                                </div>
-                                <div style={{height:"200px",overflow:"auto",marginBottom:"20px"}}>{`Sequence:\n${sequence}`}</div>
-                                <Link to={`/`} state={{ nameSearch: nameSearch }}>Open in Editor</Link>
-                                
-                            </>
-                            
-                            :
-                            <svg class={style.insertsvg} viewBox="0 0 100 100">
-                            <defs>
-                                <filter id="shadow">
-                                <feDropShadow dx="0" dy="0" stdDeviation="0"
-                                    flood-color="black"/>
-                                </filter>
-                            </defs>
-                            <circle cx="50" cy="50" r="35" stroke={"#000"} stroke-width="0.5" fill={"#fff"} />
-
-                            <circle r="35" fill="transparent"
-                                stroke={"#00ffff"}
-                                stroke-width="10"
-                                stroke-dasharray="18.9 202"
-                                transform="translate(50,50) rotate(90.7)" />
-                            <circle r="35" fill="transparent"
-                                stroke={"#ff0000"}
-                                stroke-width="10"
-                                stroke-dasharray="50 169.9"
-                                transform="translate(50,50) rotate(190.7)" />
-                            <circle r="35" fill="transparent"
-                                stroke={"#ff00ff"}
-                                stroke-width="10"
-                                stroke-dasharray="30 189.9"
-                                transform="translate(50,50) rotate(10.7)" />
-                            <text x="37" y="50" style={{fontSize:`7px`}}>Plasmid</text>
-                        </svg>
-                        }
-                        
+                        <div className={style.cgvMyViewer} id='my-viewer'><div></div></div>
+                        <div style={{height:"200px",overflow:"auto",marginBottom:"20px"}}>
+                            {`Sequence:\n${sequence}`}
+                        </div>
+                        <Link to={`/`} state={{ nameSearch: nameSearch }}>Open in Editor</Link>
                     </div>
                     
                     

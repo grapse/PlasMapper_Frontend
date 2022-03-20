@@ -15,9 +15,9 @@ import SaveIcon from '@mui/icons-material/Save';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { fetchFeatureTypes } from "../utils/FeatureUtils";
-import './cgview.css';
+import '../styles/cgview.css';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
-import * as style from "./accordion.module.css"
+import * as style from "../styles/accordion.module.css"
 
 const strands = ["Forward", "Reverse"]
 

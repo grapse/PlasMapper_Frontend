@@ -1,7 +1,7 @@
 import * as React from "react"
 import PropTypes from "prop-types"
 import { Link } from "gatsby"
-import * as style from "./header.module.css"
+import * as style from "../styles/header.module.css"
 import Modal from '@mui/material/Modal'
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -11,8 +11,9 @@ import colors from "../config/colors";
 import { styled } from '@mui/material/styles';
 import Switch from '@mui/material/Switch';
 
-const MaterialUISwitch = styled(Switch)(({ theme, palette }) => ({
-  width: 62,
+// Night mode switch
+const LightDarkSwitch = styled(Switch)(({ theme, palette }) => ({
+  width: 62, 
   height: 34,
   padding: 7,
   '& .MuiSwitch-switchBase': {
@@ -83,9 +84,12 @@ function Header(props)
           window.removeEventListener('scroll', handleScroll);
       }
     }, [])
-
+    
+    /**
+     * Handles progress to be used in progress bar
+     * @param  {scrollEvent} event The scroll event
+     */
     const handleScroll = (event) => {
-      // Calculates the progress to be used in the progress plasmid
       let scrollTop = window.scrollY;
       let docHeight = document.body.offsetHeight;
       let winHeight = window.innerHeight;
@@ -99,70 +103,73 @@ function Header(props)
     }
 
     return(
-  <header
-    class={style.header} style={{"--bg": theme.background}}
-  >
-    <div class={style.svgholder}>
-    <svg class={style.insertsvg} height="100%" viewBox="0 0 100 100">
-                            <defs>
-                                <filter id="shadow">
-                                <feDropShadow dx="0" dy="0" stdDeviation="0"
-                                    flood-color="black"/>
-                                </filter>
-                            </defs>
-                            <circle r="22" fill="transparent"
-                                stroke={theme.plasmid1}
-                                stroke-width="9"
-                                stroke-dasharray={`35 ${CIRCUMFERENCE}`}
-                                transform={`translate(50,50) rotate(${pageProgress*2})`} />
-                            <circle r="9" fill="transparent"
-                                stroke={theme.plasmid2}
-                                stroke-width="9"
-                                stroke-dasharray={`44 ${CIRCUMFERENCE}`}
-                                transform={`translate(50,50) rotate(${10+pageProgress/2})`} />
-                            
-                            <circle r="35" fill="transparent"
-                                stroke={theme.plasmid3}
-                                stroke-width="9"
-                                stroke-dasharray={`${20+pageProgress} ${CIRCUMFERENCE}`}
-                                transform="translate(50,50) rotate(-90)" />
-                            
-                        </svg>
-    </div>
-      
-    <div class={style.navbar} style={{"--font-color": theme.text}}>
-    <div class={style.navbaritem} key={"search-link"}><Link to="/search">Search</Link></div>
-      {NAVITEMS.map((v,i) => {
-        return(
-        <div id={i+"nav"} class={open === i + 1 ? style.navselected : style.navbaritem} onClick={() => setOpen(i+1)}>
-          {v.name}
-        </div>)
-      })}
-      <div><MaterialUISwitch 
-            checked={darkMode}
-            onChange={handleChange}
-            style={{"--bg1": theme.text, "--bg3": theme.text, "--bg2": theme.mid}}></MaterialUISwitch></div>
-    </div>
-    <div style={{position:`relative`}}>
-      <Modal
-        open={open}
-        onClose={() => setOpen(0)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-        style={{"--bg": theme.background, "--text": theme.text}}
+      <header
+        class={style.header} style={{...theme}}
       >
-        <Box class={style.modal}>
-          <i onClick={() => setOpen(0)} class={"bi bi-x-lg "+style.closebutton}></i>
-          <Typography id="keep-mounted-modal-title" variant="h6" component="h2">
-            {open === 0 ? null : NAVITEMS[open - 1].name}
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            {open === 0 ? null : NAVITEMS[open - 1].info}
-          </Typography>
-        </Box>
-      </Modal>
-    </div>
-  </header>
+        <div class={style.svgholder}>
+        <svg class={style.insertsvg} height="100%" viewBox="0 0 100 100">
+                                <defs>
+                                    <filter id="shadow">
+                                    <feDropShadow dx="0" dy="0" stdDeviation="0"
+                                        flood-color="black"/>
+                                    </filter>
+                                </defs>
+                                <circle r="22" fill="transparent"
+                                    stroke={theme['--plasmid1']}
+                                    stroke-width="9"
+                                    stroke-dasharray={`35 ${CIRCUMFERENCE}`}
+                                    transform={`translate(50,50) rotate(${pageProgress*2})`} />
+                                <circle r="9" fill="transparent"
+                                    stroke={theme['--plasmid2']}
+                                    stroke-width="9"
+                                    stroke-dasharray={`44 ${CIRCUMFERENCE}`}
+                                    transform={`translate(50,50) rotate(${10+pageProgress/2})`} />
+                                
+                                <circle r="35" fill="transparent"
+                                    stroke={theme['--plasmid3']}
+                                    stroke-width="9"
+                                    stroke-dasharray={`${20+pageProgress} ${CIRCUMFERENCE}`}
+                                    transform="translate(50,50) rotate(-90)" />
+                                
+                            </svg>
+        </div>
+          
+        <div class={style.navbar} style={{"--font-color": theme.text}}>
+        <div class={style.navbaritem} key={"search-link"}><Link to="/search">Search</Link></div>
+          {NAVITEMS.map((v,i) => {
+            return(
+            <div id={i+"nav"} class={open === i + 1 ? style.navselected : style.navbaritem} onClick={() => setOpen(i+1)}>
+              {v.name}
+            </div>)
+          })}
+          <div>
+            <LightDarkSwitch 
+              checked={darkMode}
+              onChange={handleChange}
+              style={{"--bg1": theme['--text'], "--bg3": theme['--text'], "--bg2": theme['--mid']}}>
+            </LightDarkSwitch>
+          </div>
+        </div>
+        <div style={{position:`relative`}}>
+          <Modal
+            open={open}
+            style={{...theme}}
+            onClose={() => setOpen(0)}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box class={style.modal}>
+              <i onClick={() => setOpen(0)} class={"bi bi-x-lg "+style.closebutton}></i>
+              <Typography id="keep-mounted-modal-title" variant="h6" component="h2">
+                {open === 0 ? null : NAVITEMS[open - 1].name}
+              </Typography>
+              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                {open === 0 ? null : NAVITEMS[open - 1].info}
+              </Typography>
+            </Box>
+          </Modal>
+        </div>
+      </header>
 )}
 
 Header.propTypes = {

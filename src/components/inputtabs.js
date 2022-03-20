@@ -1,14 +1,16 @@
 import * as React from "react"
-import * as style from "./inputtabs.module.css"
+import * as style from "../styles/inputtabs.module.css"
 
+import GlobalContext from "../context/optionContext";
 
 function InputTabs(props) 
   {
+    const {theme} = React.useContext(GlobalContext);
     const {tabs, start} = props;
     const [tab, setTab] = React.useState(start);
     return(
         <>
-            <div class={style.tabholder}>
+            <div class={style.tabholder} style={{...theme}}>
                 <div class={style.tabs}>
                     {tabs.map((v,i) => {
                         return(

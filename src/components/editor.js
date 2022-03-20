@@ -6,17 +6,14 @@ import MenuItem from '@mui/material/MenuItem';
 import IconButton from "@mui/material/IconButton";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import Typography from '@mui/material/Typography';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import TouchAppIcon from '@mui/icons-material/TouchApp';
 import InputAdornment from '@mui/material/InputAdornment';
 import OptionAccordion from "./accordion";
-import './cgview.css';
-import * as style from "./editor.module.css"
+import GlobalContext from "../context/optionContext";
+import '../styles/cgview.css';
+import * as style from "../styles/editor.module.css"
 const CGV = require('cgview');
 
 const tabs = ["Features", "Add Feature", "Restriction Sites","Other"]
@@ -57,6 +54,7 @@ const featureData = fetchFeatureTypes();
 
 function Editor(props)  
   {
+    const {theme, setTheme, language, setLanguage} = React.useContext(GlobalContext);
     const {isEdit} = props;
     const [tab, setTab] = React.useState(0);
     const [initial, setInitial] = React.useState(true);
@@ -193,11 +191,11 @@ function Editor(props)
     },[localData, cgvFormat, cgvDownload, panel, isAddStart, isAddStop, plasmidName, showLegend, showOrf, legendItems])
 
 
-
+    // TODO: move tabs to separate components
     return(
         <>  
             <h1 class={style.heading}>Editor</h1>
-            <div class={style.editor}>
+            <div style={{...theme}} class={style.editor}>
                 {isEdit && <div class={style.options}>
                 {<div class={style.optionTabs}>{
                     tabs.map((v,i) => <div class={`${style.option} ${tab === i && style.select}`} 

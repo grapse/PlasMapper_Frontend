@@ -9,7 +9,8 @@ export const ThemeProvider = ({children}) => {
     const [language, setLanguage] = useState(writing.en);
 
     return(
-        <GlobalContext.Provider value={{theme, setTheme, language, setLanguage}}>
+        <GlobalContext.Provider value={{theme, setTheme, language, setLanguage}} 
+                                style={{...theme}}>
             {children}
         </GlobalContext.Provider>
     )
