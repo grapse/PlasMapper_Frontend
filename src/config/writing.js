@@ -12,7 +12,7 @@ export const languages = [
 
 export default({
     en:{
-        CATCHPHRASE: "Generate and annotate plasmid maps.\nProvide a sequence or browse our database.",
+        CATCHPHRASE: "Generate and annotate plasmid maps.",
         ABOUT: "The PlasMapper server automatically generates and annotates plasmid maps using only the plasmid DNA sequence as input. \n\
                 Automatically annotated features are taken from a curated database of common plasmid features and users can add their own custom features to any map. The server also provides an interface to search for commercial plasmids based on numerous criteria such as desired features, sequence length, expression type, and supplier. Plasmid maps are downloadable in PNG and SVG format.",
         SEARCH: "Search our specially curated database.\n",

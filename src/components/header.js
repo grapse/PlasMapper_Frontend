@@ -1,6 +1,6 @@
 import * as React from "react"
 import PropTypes from "prop-types"
-import { Link } from "gatsby"
+import { Link, navigate } from "gatsby"
 import * as style from "../styles/header.module.css"
 import Modal from '@mui/material/Modal'
 import Box from '@mui/material/Box';
@@ -106,8 +106,10 @@ function Header(props)
       <header
         class={style.header} style={{...theme}}
       >
+        <Link to="/">
         <div class={style.svgholder}>
-        <svg class={style.insertsvg} height="100%" viewBox="0 0 100 100">
+          
+          <svg class={style.insertsvg} height="100%" viewBox="0 0 100 100">
                                 <defs>
                                     <filter id="shadow">
                                     <feDropShadow dx="0" dy="0" stdDeviation="0"
@@ -133,9 +135,10 @@ function Header(props)
                                 
                             </svg>
         </div>
+        </Link>
           
         <div class={style.navbar} style={{"--font-color": theme.text}}>
-        <div class={style.navbaritem} key={"search-link"}><Link to="/search">Search</Link></div>
+        <div class={style.navbaremphasizeditem} key={"search-link"}><Link to="/search">Search</Link></div>
           {NAVITEMS.map((v,i) => {
             return(
             <div id={i+"nav"} class={open === i + 1 ? style.navselected : style.navbaritem} onClick={() => setOpen(i+1)}>
