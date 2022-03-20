@@ -4,6 +4,7 @@ import Layout from "../components/layout"
 import Seo from "../components/seo"
 import * as style from '../styles/search.module.css'
 import MiniEditor from '../components/minieditor'
+import GlobalContext from "../context/optionContext";
 import { fetchSearchData, fetchSequence } from "../utils/FetchUtils";
 import { getFeatureNames, getCommonEnzymes } from "../utils/FeatureUtils";
 
@@ -84,17 +85,21 @@ function SearchPage(){
 
     return(
     <Layout>
-        <Seo title="Plasmid Searcher" />
+        <Seo title="Browse Plasmids" />
         <div class={style.searchbody}>
-            <div style={{fontWeight:"400",fontSize:"3em", marginBottom:"100px"}}>{"Plasmid Searcher"}</div>
-            <div style={{display:"flex", margin:"50px",flexWrap:"wrap"}}>
+            <div style={{height:"12px"}}></div>
+            <div style={{padding:"20px", marginTop:"40px", background:"linear-gradient(#e3dff2, #f1f1f1)"}}>
+            <div style={{fontWeight:"400px", fontSize:"2.5em", textAlign:"left", marginTop:"30px", marginLeft:"30px"}}>Browse Plasmids</div>
+            <p style={{fontSize:"1.2em", margin:"35px", textAlign:"left"}}>Quickly find the plasmid you are looking for in our database by filtering for various fields.</p>
+            <div style={{fontSize:"1.5em", marginTop:"20px"}}>Filter By:</div>
+            <div style={{display:"flex", margin:"10px", flexWrap:"wrap", justifyContent:"center"}}>
             <div
                         class={style.searchBar}
             >
                 <TextField inputProps={{ "data-testid": "search-name" }} 
                         onChange={(e) => setNameSearch(e.target.value)} 
                         value={nameSearch} id="input-name" 
-                        label="Search Name" 
+                        label="Plasmid Name" 
                         size="small"
                         variant="standard" />
             </div>
@@ -113,7 +118,7 @@ function SearchPage(){
                         id="input-feature" 
                         options={featureNames}
                         renderInput={(params) => 
-                            <TextField {...params} variant="standard" label="Features" 
+                            <TextField {...params} variant="standard" label="Sequence Features" 
                             />} 
                         />
             </div>
@@ -136,33 +141,39 @@ function SearchPage(){
             </div>
                 
             </div>
-            <TextField
+            <div style={{display:"flex", margin:"10px", flexWrap:"wrap", justifyContent:"center"}}>
+            <div class={style.numberSearchBar}>
+                <TextField
                     id="outlined-number"
                     value={lengthMin}
                     onChange={(e) => setLengthMin(e.target.value)} 
-                    label="Min"
+                    label="Minimum Sequence Length"
                     size="small"
+                    sx={{ width: 300 }}
                     type="number"
                     InputLabelProps={{
                         shrink: true,
                     }}
                     />
+            </div>
+            <div class={style.numberSearchBar}>
                 <TextField
                     id="outlined-number"
                     value={lengthMax}
                     onChange={(e) => setLengthMax(e.target.value)} 
-                    label="Max"
+                    label="Maximum Sequence Length"
                     size="small"
+                    sx={{ width: 300 }}
                     type="number"
                     InputLabelProps={{
                         shrink: true,
                     }}
                     />
-            
-            <div
-                        class={style.searchBar}
-            >
             </div>
+            </div>
+            </div>
+            
+            <div style={{margin:"25px", marginTop:"40px", fontSize:"1.5em"}}>Results:</div>
             <div class={style.plasmidHolder}
                  
             >

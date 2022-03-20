@@ -15,7 +15,7 @@ export default({
         CATCHPHRASE: "Generate and annotate plasmid maps.",
         ABOUT: "The PlasMapper server automatically generates and annotates plasmid maps using only the plasmid DNA sequence as input. \n\
                 Automatically annotated features are taken from a curated database of common plasmid features and users can add their own custom features to any map. The server also provides an interface to search for commercial plasmids based on numerous criteria such as desired features, sequence length, expression type, and supplier. Plasmid maps are downloadable in PNG and SVG format.",
-        SEARCH: "Search our specially curated database.\n",
+        SEARCH: "Quickly find the plasmid you are looking for in our database by filtering for various fields.\n",
         HELP: "Paste your sequence directly, or search our database for the plasmid you need.\n\n\
                 Click on the features to change visibility, name, category, location, or strand. You can also click directly on the map to open feature options.\n\n\
                 You can add features by clicking directly on the map.\n\n\
