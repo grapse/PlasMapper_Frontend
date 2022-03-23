@@ -35,6 +35,8 @@ export default function IndexPage(props){
 function PageContent(props){
   const {theme, setTheme, language, setLanguage} = React.useContext(GlobalContext);
   const [annotate,setAnnotate] = React.useState(false);
+  const [example,setExample] = React.useState(-1);
+  const [exampleLoading,setExampleLoading] = React.useState(-1);
   const [sequence, setSequence] = React.useState("");
   const [loading, setLoading] = React.useState(false)
   const [firstLoad, setFirstLoad] = React.useState(false);
@@ -80,6 +82,22 @@ function PageContent(props){
     }
   }
   /**
+   * Annotates the example DNA sequence
+   */
+   const annotateExampleSequence = (i) => {
+    {
+      console.log(sequence)
+      setExampleLoading(i);
+      fetchFeatures(sequence)
+           .then(featureTemp => {
+                          setData(featureTemp)
+                          setExampleLoading(-1);
+                          document.getElementById('annotate').scrollIntoView();})
+           .catch(err => console.log(err))
+           
+    }
+  }
+  /**
    * Annotates the provided DNA sequence (from the search page)
    * @param  {str} seq The sequence provided by the search page
    */
@@ -99,7 +117,7 @@ function PageContent(props){
   }
   
   // TODO: Move to separate components
-  const TABS = [{name:"Sequence",
+  const TABS = [{name:"Enter Text",
                 content:<TextField
                     style={{width:`100%`,backgroundColor:theme['--background'],}}
                     id="outlined-multiline-static"
@@ -109,22 +127,10 @@ function PageContent(props){
                     rows={4}
                     onChange={e => setSequence(e.target.value)}
                     defaultValue=""></TextField>},
-              {name:"Upload",
-              content:<><div style={{color:theme['--text']}}>Upload File Here</div><input type="file" name="file" /></>},
-              {name:"Database", 
-              content:<Link style={{color:theme['--text']}} to={`/search`}>Select From Database Here</Link>},
-              {name:"Examples",
-              content:<FormControl style={{color:theme['--text']}}>
-                        <FormLabel >Sequence</FormLabel>
-                        <RadioGroup
-                          value={sequence}
-                          onChange={e => setSequence(e.target.value)}
-                        >
-                          {samplePlasmids.map(v => {
-                            return(<FormControlLabel id={`sample-plasmid-${v.name}`} value ={v.sequence} control={<Radio sx={{color:'#5149b0','&.Mui-checked':{color: '#5149b0'}}} />} label={v.name}/>)
-                          })}
-                        </RadioGroup>
-                      </FormControl>}]
+              {name:"Upload File",
+              content:<><div style={{color:theme['--text']}}>Upload Sequence File Here</div><input type="file" name="file" /></>},
+              {name:"Browse Plasmids", 
+              content:<Link style={{color:theme['--text']}} to={`/search`}>Click to Browse Database</Link>}]
   return(
   <div style={{...theme}}>
     <Seo title="Home" />
@@ -134,6 +140,15 @@ function PageContent(props){
     <div class={style.logodiv}><p class={style.logotitle}>PlasMapper <span class={style.logosmall}>3.0</span></p>
       <p class={style.catchphrase}>{language.CATCHPHRASE}</p></div>
       <div style={{marginTop:`100px`}}></div>
+      <label style={{color:theme['--text']}}>Try our example plasmids:</label>
+      <div class={style.examplecontainer} style={{color:theme['--text']}}>
+        {samplePlasmids.map((v, i) => {
+          return(<Button  
+            onClick={() => {annotateExampleSequence(i);}} 
+            onMouseEnter={() => {setExample(i); setSequence(v.sequence);}} onMouseLeave={() => {setExample(-1); setSequence("");}} class={style.indexexamplebutton} variant="contained">{v.name}  {(exampleLoading == i) ? <i class={`${style.rotate} bi bi-arrow-repeat`}></i> : <i style={{right:`12px`,position:`absolute`,transform:`rotate(${(example == i) ? `90deg` : `0deg`})`,transition: `.3s ease-in-out`}} class={"bi bi-chevron-right "}></i>}</Button>)
+        })}
+      </div>
+      <div style={{marginTop:`60px`}}></div>
       <InputTabs start={startTab} tabs={TABS}></InputTabs>
       <a >
         <Button  
