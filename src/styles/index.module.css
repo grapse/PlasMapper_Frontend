@@ -76,6 +76,17 @@
   100% {stroke-dasharray: 35 300;}
 }
 
+@keyframes line{
+  0% {stroke-dasharray: 0 300;}
+  100% {stroke-dasharray: 200 300;}
+}
+
+.label{
+  stroke-dasharray: 0 200;
+  animation: 0.9s ease-in-out 0.9s 1 line;
+  animation-fill-mode: forwards;
+}
+
 .circleI1{
   stroke-dasharray: 120 300;
   animation: 0.9s ease-in-out 0s 1 circle1anim;
