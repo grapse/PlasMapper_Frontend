@@ -7,7 +7,7 @@ import * as style from '../styles/search.module.css'
 import MiniEditor from '../components/minieditor'
 import { DataGrid } from '@mui/x-data-grid';
 import GlobalContext from "../context/optionContext";
-import { fetchSearchData, fetchSequence } from "../utils/FetchUtils";
+import { fetchSearchData, fetchSequence, incrementPopularity } from "../utils/FetchUtils";
 import { getFeatureNames, getCommonEnzymes } from "../utils/FeatureUtils";
 import { TableColumns } from "../utils/SearchUtils";
 
@@ -102,6 +102,7 @@ function SearchPage(){
                     console.log(err);
                 }
             );
+        incrementPopularity(name);
     }
 
     return(

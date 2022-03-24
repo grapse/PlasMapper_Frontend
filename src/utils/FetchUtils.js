@@ -2,6 +2,17 @@ import api from "../config/api";
 import {stripInput, fetchFeatureTypes} from "./FeatureUtils"
 const featureData = fetchFeatureTypes();
 
+/**
+ * Calls the increment popularity endpoint with a given plasmid name
+ */
+ export const incrementPopularity = (async(name) => {
+    return api.post(`plasmids/popularity`, {"name":name})
+        .then(async(response) => {
+            if (response.status !== 200){
+                return Promise.reject(response.statusText);
+            }
+        })
+})
 
 /**
  * Fetches the json metadata for the plasmid database
