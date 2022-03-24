@@ -34,6 +34,7 @@ function SearchPage(){
     const [sequence, setSequence] = React.useState("");
     const [restrictionSearch, setRestrictionSearch] = React.useState([]);
     const [nameSearch, setNameSearch] = React.useState("");
+    const [expressionSearch, setExpressionSearch] = React.useState("");
     const [featureSearch, setFeatureSearch] = React.useState([]);
     const [lengthMin, setLengthMin] = React.useState(0);
     const [lengthMax, setLengthMax] = React.useState(20000);
@@ -64,6 +65,8 @@ function SearchPage(){
             plasmids.filter(plasmid =>
                     `${plasmid.name}`.toLowerCase().indexOf(nameSearch.toLowerCase()) >= 0 
                     &&
+                    `${plasmid.expression}`.toLowerCase().indexOf(expressionSearch.toLowerCase()) >= 0 
+                    &&
                     (featureSearch.length > 0 ? 
                         plasmid.features.split(',').some(r => featureSearch.includes(r)) 
                     : true)
@@ -78,7 +81,7 @@ function SearchPage(){
                 )
         )
     },
-    [firstLoad, nameSearch, featureSearch, lengthMax, lengthMin]
+    [firstLoad, nameSearch, featureSearch, lengthMax, lengthMin, expressionSearch]
     )
 
     /**
@@ -154,18 +157,12 @@ function SearchPage(){
                 <div
                             class={style.searchBar}
                 >
-                    <Autocomplete 
-                            multiple
-                            inputProps={{ "data-testid": "search-expression" }} 
-                            disablePortal
+                    <TextField inputProps={{ "data-testid": "search-expression" }} 
+                            onChange={(e) => setExpressionSearch(e.target.value)} 
+                            value={expressionSearch} id="input-expression" 
+                            label="Expression Type" 
                             size="small"
-                            freeSolo
-                            id="input-expression" 
-                            options={commonEnzymes.map(v => v.name)}
-                            renderInput={(params) => 
-                                <TextField {...params} variant="standard" label="Expression" 
-                                />} 
-                            />
+                            variant="standard" />
                 </div>
                 <div class={style.numberSearchBar}>
                     <TextField

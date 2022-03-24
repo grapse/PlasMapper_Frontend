@@ -125,7 +125,7 @@ function Header(props)
                                     stroke={theme['--plasmid2']}
                                     stroke-width="9"
                                     stroke-dasharray={`44 ${CIRCUMFERENCE}`}
-                                    transform={`translate(50,50) rotate(${10+pageProgress/2})`} />
+                                    transform={`translate(50,50) rotate(${180+pageProgress/2})`} />
                                 
                                 <circle r="35" fill="transparent"
                                     stroke={theme['--plasmid3']}
