@@ -26,7 +26,7 @@ export default({
         OPEN_LINK: "Browse Plasmid Database",
         OPEN_FILE: "Choose File",
         EXAMPLES: "Try our example plasmids:",
-        PASTE_SEQ: "Paste your DNA sequence here",
+        PASTE_SEQ: "Paste your plasmid DNA sequence here",
         SEQ_DETAILS: "FASTA or raw DNA sequence. Non-ACTG inputs will be ignored.",
         SEQ_WARNING: "Load times may be slow for sequences >200kb",
         SEQ_ERROR: "Sequences that exceed 500kb will be truncated to 500kb",
