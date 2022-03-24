@@ -5,5 +5,5 @@ export const TableColumns = [
     {field:'features',headerName:'Features',width:200},
     {field:'name',headerName:'Name',width:200},
     {field:'sequenceLength',headerName:'Length',width:70},
-    {field:'supplier',headerName:'Supplier',width:200},
+    {field:'supplier',headerName:'Supplier',width:100},
 ]
