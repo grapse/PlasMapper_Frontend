@@ -3,7 +3,7 @@
     text-align:center;
     margin:auto;
     position:relative;
-    width:100%;
+    width:calc(100vw - 300px);
   }
 
 .plasmidHolder{
@@ -34,7 +34,6 @@
 
 .searchBar{
     margin:10px;
-    background-color: white;
     border-radius: 10px;
     padding:10px;
     padding-bottom:15px;
@@ -42,11 +41,28 @@
 
 .numberSearchBar{
     margin:10px;
-    background-color: white;
     border-radius: 10px;
     padding:10px;
 }
 
 .modal{
     overflow:auto;
+}
+
+.searchHolder{
+    display:flex;
+}
+
+.filterBar{
+    background-color: white;
+    width:300px;
+    box-shadow: 0px 0px 15px #888888;
+    z-index:2;
+    padding:100px 20px 0 20px;
+    display:flex;
+    height:100vh;
+    position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+    flex-direction:column;
 }

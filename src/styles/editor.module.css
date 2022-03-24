@@ -119,3 +119,28 @@
     flex-direction: column;
     gap:5px;
 }
+
+.sequence{
+    height:200px;
+    overflow:auto;
+    width:300px;
+    white-space:pre-line;
+    margin-bottom: 20px;
+    color:var(--mid);
+}
+.sidebarholder{
+    padding:35px;
+    display:flex;
+    flex-direction: column;
+    gap:10px
+
+}
+
+.openlink{
+    color:var(--plasmid3);
+    text-decoration: underline;
+}
+
+.openlink :hover{
+    color:var(--plasmid2);
+}

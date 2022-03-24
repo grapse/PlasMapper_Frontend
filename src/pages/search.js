@@ -2,16 +2,30 @@ import * as React from "react"
 import {Skeleton, Autocomplete, TextField,  Modal, } from '@mui/material';
 import Layout from "../components/layout"
 import Seo from "../components/seo"
+import Drawer from '@mui/material/Drawer';
 import * as style from '../styles/search.module.css'
 import MiniEditor from '../components/minieditor'
+import { DataGrid } from '@mui/x-data-grid';
 import GlobalContext from "../context/optionContext";
 import { fetchSearchData, fetchSequence } from "../utils/FetchUtils";
 import { getFeatureNames, getCommonEnzymes } from "../utils/FeatureUtils";
+import { TableColumns } from "../utils/SearchUtils";
+
+/**
+ * Makes the rows to display the preview table.
+ * Definition of the rows are in SearchUtils
+ */
+
+ const formRows = ((data) => {
+    return data.map((v, i) => {return({id:i, ...v})});
+})
 
 const featureNames = getFeatureNames();
 const commonEnzymes = getCommonEnzymes();
 
 function SearchPage(){
+    const {theme} = React.useContext(GlobalContext);
+
     const [firstLoad, setFirstLoad] = React.useState(true);
     const [plasmids, setPlasmids] = React.useState([]);
     const [filteredPlasmids, setFilteredPlasmids] = React.useState([]);
@@ -23,6 +37,8 @@ function SearchPage(){
     const [featureSearch, setFeatureSearch] = React.useState([]);
     const [lengthMin, setLengthMin] = React.useState(0);
     const [lengthMax, setLengthMax] = React.useState(20000);
+    const [detailDrawer, setDetailDrawer] = React.useState(false);
+    const [filterDrawer, setFilterDrawer] = React.useState(false);
 
     React.useEffect(() => {
         if(firstLoad){
@@ -31,7 +47,6 @@ function SearchPage(){
                 .then(data => {
                         setPlasmids(data);
                         setFilteredPlasmids(data);
-                        console.log(data);
                         setFirstLoad(false);
                     }
                 )
@@ -41,6 +56,9 @@ function SearchPage(){
                     }
                 );
         }
+
+        
+
         // Filter the data based on user-selected filters
         setFilteredPlasmids(
             plasmids.filter(plasmid =>
@@ -71,14 +89,14 @@ function SearchPage(){
     function openModal(name, idx){
         fetchSequence(name)
             .then(data => {
+                    console.log("data",data)
                     setSequence(data)
                     setCurrentPlasmid(name)
-                    setModalState(idx)
+                    setDetailDrawer(true)
                 }
             )
             .catch(err =>{
                     console.log(err);
-                    setModalState(idx)
                 }
             );
     }
@@ -86,121 +104,139 @@ function SearchPage(){
     return(
     <Layout>
         <Seo title="Browse Plasmids" />
-        <div class={style.searchbody}>
-            <div style={{height:"12px"}}></div>
-            <div style={{padding:"20px", marginTop:"40px", background:"linear-gradient(#e3dff2, #f1f1f1)"}}>
-            <div style={{fontWeight:"400px", fontSize:"2.5em", textAlign:"left", marginTop:"30px", marginLeft:"30px"}}>Browse Plasmids</div>
-            <p style={{fontSize:"1.2em", margin:"35px", textAlign:"left"}}>Quickly find the plasmid you are looking for in our database by filtering for various fields.</p>
-            <div style={{fontSize:"1.5em", marginTop:"20px"}}>Filter By:</div>
-            <div style={{display:"flex", margin:"10px", flexWrap:"wrap", justifyContent:"center"}}>
-            <div
-                        class={style.searchBar}
-            >
-                <TextField inputProps={{ "data-testid": "search-name" }} 
-                        onChange={(e) => setNameSearch(e.target.value)} 
-                        value={nameSearch} id="input-name" 
-                        label="Plasmid Name" 
-                        size="small"
-                        variant="standard" />
-            </div>
-            <div
-                        class={style.searchBar}
-            >
-                <Autocomplete 
-                        multiple
-                        inputProps={{ "data-testid": "search-feature" }} 
-                        disablePortal
-                        size="small"
-                        freeSolo
-                        onChange={(e, newVal) => setFeatureSearch(newVal)} 
-                        value={featureSearch} 
-                        sx={{ width: 300 }}
-                        id="input-feature" 
-                        options={featureNames}
-                        renderInput={(params) => 
-                            <TextField {...params} variant="standard" label="Sequence Features" 
-                            />} 
-                        />
-            </div>
-            <div
-                        class={style.searchBar}
-            >
-                <Autocomplete 
-                        multiple
-                        inputProps={{ "data-testid": "search-restriction" }} 
-                        disablePortal
-                        size="small"
-                        freeSolo
-                        sx={{ width: 300 }}
-                        id="input-feature" 
-                        options={commonEnzymes.map(v => v.name)}
-                        renderInput={(params) => 
-                            <TextField {...params} variant="standard" label="Restriction Sites" 
-                            />} 
-                        />
-            </div>
-                
-            </div>
-            <div style={{display:"flex", margin:"10px", flexWrap:"wrap", justifyContent:"center"}}>
-            <div class={style.numberSearchBar}>
-                <TextField
-                    id="outlined-number"
-                    value={lengthMin}
-                    onChange={(e) => setLengthMin(e.target.value)} 
-                    label="Minimum Sequence Length"
-                    size="small"
-                    sx={{ width: 300 }}
-                    type="number"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    />
-            </div>
-            <div class={style.numberSearchBar}>
-                <TextField
-                    id="outlined-number"
-                    value={lengthMax}
-                    onChange={(e) => setLengthMax(e.target.value)} 
-                    label="Maximum Sequence Length"
-                    size="small"
-                    sx={{ width: 300 }}
-                    type="number"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    />
-            </div>
-            </div>
-            </div>
-            
-            <div style={{margin:"25px", marginTop:"40px", fontSize:"1.5em"}}>Results:</div>
-            <div class={style.plasmidHolder}
-                 
-            >
-                {firstLoad ? 
-                    <Skeleton variant="rectangular" width={210} height={118} />
-                 : filteredPlasmids.map((plasmid, idx) => {
-                    return(
-                        <div onClick={() => openModal(plasmid?.name, idx)} class={style.plasmidCard} key={`${idx}-plasmid`}>
-                            <div class={style.plasmidTitle}>{plasmid?.name || `Plasmid ${idx}`}</div>
-                            {/* <div class={style.plasmidTitle}>{plasmid?.description || "No description"}</div> */}
-                            <div class={style.plasmidTitle}>{`Length: ${plasmid?.sequenceLength || "-"} bp`}</div>
-                        </div>
-                    )
-                })}
-            </div>
-            <Modal
-                    open={modalState > -1}
-                    onClose={() => setModalState(-1)}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                    sx={{overflow:"auto"}}
+        <div class={style.searchHolder} style={{...theme}}>
+            <div class={style.filterBar}>
+                <div style={{fontSize:"1.5em", marginTop:"20px"}}>Filter By:</div>
+                <div
+                            class={style.searchBar}
                 >
-                    <div style={{width:"100%",height:"500px"}}>
-                        <MiniEditor isEdit={false} data={[]} sequence={sequence} nameSearch={currentPlasmid}></MiniEditor>
-                        
+                    <TextField inputProps={{ "data-testid": "search-name" }} 
+                            onChange={(e) => setNameSearch(e.target.value)} 
+                            value={nameSearch} id="input-name" 
+                            label="Plasmid Name" 
+                            size="small"
+                            variant="standard" />
+                </div>
+                <div
+                            class={style.searchBar}
+                >
+                    <Autocomplete 
+                            multiple
+                            inputProps={{ "data-testid": "search-feature" }} 
+                            disablePortal
+                            size="small"
+                            freeSolo
+                            onChange={(e, newVal) => setFeatureSearch(newVal)} 
+                            value={featureSearch} 
+                            id="input-feature" 
+                            options={featureNames}
+                            renderInput={(params) => 
+                                <TextField {...params} variant="standard" label="Sequence Features" 
+                                />} 
+                            />
+                </div>
+                <div
+                            class={style.searchBar}
+                >
+                    <Autocomplete 
+                            multiple
+                            inputProps={{ "data-testid": "search-restriction" }} 
+                            disablePortal
+                            size="small"
+                            freeSolo
+                            id="input-feature" 
+                            options={commonEnzymes.map(v => v.name)}
+                            renderInput={(params) => 
+                                <TextField {...params} variant="standard" label="Restriction Sites" 
+                                />} 
+                            />
+                </div>
+                <div
+                            class={style.searchBar}
+                >
+                    <Autocomplete 
+                            multiple
+                            inputProps={{ "data-testid": "search-expression" }} 
+                            disablePortal
+                            size="small"
+                            freeSolo
+                            id="input-expression" 
+                            options={commonEnzymes.map(v => v.name)}
+                            renderInput={(params) => 
+                                <TextField {...params} variant="standard" label="Expression" 
+                                />} 
+                            />
+                </div>
+                <div class={style.numberSearchBar}>
+                    <TextField
+                        id="outlined-number"
+                        value={lengthMin}
+                        onChange={(e) => setLengthMin(e.target.value)} 
+                        label="Minimum Sequence Length"
+                        size="small"
+                        type="number"
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        />
+                </div>
+                <div class={style.numberSearchBar}>
+                    <TextField
+                        id="outlined-number"
+                        value={lengthMax}
+                        onChange={(e) => setLengthMax(e.target.value)} 
+                        label="Maximum Sequence Length"
+                        size="small"
+                        type="number"
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        />
+                </div>
+                    
+                </div>
+               
+            <div class={style.searchbody}>
+                <div style={{height:"12px"}}></div>
+                <div style={{padding:"20px", marginTop:"40px", background:"linear-gradient(#e3dff2, #f1f1f1)"}}>
+                <div style={{fontWeight:"400px", fontSize:"2.5em", textAlign:"left", marginTop:"30px", marginLeft:"30px"}}>Browse Plasmids</div>
+                <p style={{fontSize:"1.2em", margin:"35px", textAlign:"left"}}>Quickly find the plasmid you are looking for in our database by filtering for various fields.</p>
+                
+                </div>
+                
+                <div style={{margin:"25px", marginTop:"40px", fontSize:"1.5em"}}>Results:</div>
+                <div class={style.plasmidHolder}
+                    
+                >
+                    {firstLoad ? 
+                        [...Array(20)].map((v,i) => {
+                            return(<Skeleton variant="rectangular" key={`skeleton-${i}`} width={200} height={100} />)
+                        })
+                    : 
+                    <DataGrid
+                            sx={{height:52*100+200,backgroundColor:"white",margin:"0 100px"}}
+                            rows={formRows(filteredPlasmids)}
+                            columns={TableColumns}
+                            pageSize={100}
+                            onRowClick={(rowData) => openModal(rowData.row.name, rowData.row.id)}
+                            rowsPerPageOptions={[100]}
+                        />
+                    }
+                </div>
+                <Drawer
+                    anchor={"right"}
+                    open={detailDrawer}
+                    onClose={() => setDetailDrawer(false)}
+                >
+                    <div >
+                        <MiniEditor isEdit={false} 
+                                    sequence={sequence} 
+                                    nameSearch={currentPlasmid}>
+                                    </MiniEditor>
                     </div>
-            </Modal>
+                </Drawer>
+               
+            </div>
         </div>
     </Layout>
     )

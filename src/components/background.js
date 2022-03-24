@@ -37,6 +37,16 @@ function PageContent(props){
                         class={style.circleI3}
                         stroke={theme['--plasmid4']}
                         transform={`translate(50,50) rotate(10)`} />
+                    <polyline points="72,50 80,55 250,55"
+                        class={style.label}
+                        fill="transparent"
+                        stroke={theme['--plasmid1']}
+                        stroke-width={1} />
+                    <polyline points="50,76 45,81 32,81"
+                        class={style.label}
+                        fill="transparent"
+                        stroke={theme['--plasmid2']}
+                        stroke-width={1} />
                 </svg>
             </div>
     </div>
@@ -63,6 +73,11 @@ function PageContent(props){
                         class={style.circleI3}
                         stroke={theme['--plasmid5']}
                         transform={`translate(50,50) rotate(100)`} />
+                    <polyline points="50,20 40,10 10,10"
+                        class={style.label}
+                        fill="transparent"
+                        stroke={theme['--plasmid3']}
+                        stroke-width={0.5} />
                 </svg>
             </div>
         </div>

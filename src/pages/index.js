@@ -7,22 +7,16 @@ import { stripInput } from '../utils/FeatureUtils';
 import { fetchSamplePlasmids } from "../utils/SamplePlasmids";
 import * as style from '../styles/index.module.css'
 
-import InputTabs from "../components/inputtabs"
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
+
 import GlobalContext from "../context/optionContext";
 
 import { Link } from "gatsby"
 import BackgroundDrawing from "../components/background";
 
 import { fetchFeatures, fetchSequence } from "../utils/FetchUtils";
+import SequenceUpload from "../components/sequenceupload";
 
-const samplePlasmids = fetchSamplePlasmids();
 
 export default function IndexPage(props){
   return(
@@ -108,7 +102,8 @@ function PageContent(props){
       setLoading(true);
       fetchFeatures(seq)
            .then(featureTemp => {
-                          setData(featureTemp)
+                          setData(featureTemp);
+                          setSequence(seq);
                           setLoading(false);
                           document.getElementById('annotate').scrollIntoView();})
            .catch(err => console.log(err))
@@ -139,8 +134,8 @@ function PageContent(props){
     <p class={style.indexbody}>
     <div class={style.logodiv}><p class={style.logotitle}>PlasMapper <span class={style.logosmall}>3.0</span></p>
       <p class={style.catchphrase}>{language.CATCHPHRASE}</p></div>
-      <div style={{marginTop:`100px`}}></div>
-      <label style={{color:theme['--text']}}>Try our example plasmids:</label>
+      <SequenceUpload annotate={annotateSequenceLoad} loading={loading}/>
+      {/* <label style={{color:theme['--text']}}>Try our example plasmids:</label>
       <div class={style.examplecontainer} style={{color:theme['--text']}}>
         {samplePlasmids.map((v, i) => {
           return(<Button  
@@ -154,7 +149,8 @@ function PageContent(props){
         <Button  
         onClick={annotateSequence} 
         onMouseEnter={() => setAnnotate(true)} onMouseLeave={() => setAnnotate(false)} class={style.indexbutton} variant="contained">Annotate!  {loading ? <i class={`${style.rotate} bi bi-arrow-repeat`}></i> : <i style={{right:`12px`,position:`absolute`,transform:`rotate(${annotate ? `90deg` : `0deg`})`,transition: `.3s ease-in-out`}} class={"bi bi-chevron-right "}></i>}</Button>
-      </a>
+      </a> */}
+      
       <div style={{marginTop:`250px`}}></div>
       <div id="annotate">
         <Editor isEdit={true} data={data} sequence={stripInput(sequence)}></Editor>

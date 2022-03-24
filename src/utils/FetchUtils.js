@@ -40,9 +40,7 @@ export const fetchSearchData = (async() => {
  * @returns {array} featureTemp The array of features
  */
 export const fetchFeatures = (async(sequence) => {
-    console.log(sequence);
     const strippedSequence = stripInput(sequence);
-    console.log(api.baseURL)
     return api.post(`features`,{sequence:strippedSequence})
         .then(async(response) => {
             const convert = response.data
@@ -66,7 +64,7 @@ export const fetchFeatures = (async(sequence) => {
                 }
                 return newFeature;
             })
-            console.log(restrictionSites);
+            console.log("here")
             featureTemp = [...featureTemp, ...restrictionSites];
             return featureTemp;
         })
