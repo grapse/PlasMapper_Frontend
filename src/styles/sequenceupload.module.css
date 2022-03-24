@@ -1,0 +1,98 @@
+.box{
+    height: 500px;
+    width: min(600px, 90%);
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    padding:20px;
+    align-items:flex-start;
+}
+
+.linkref{
+    padding:0px;
+    display:inline;
+    color:var(--plasmid3);
+    text-decoration: underline;
+    vertical-align: middle;
+}
+
+.linkref :hover{
+    color: var(--plasmid2);
+    text-decoration: underline;
+}
+
+.divholder{
+    margin: 10px 20px;
+}
+
+.or{
+    color: var(--plasmid3);
+    font-weight: 900;
+}
+
+.connect{
+    width: 2px;
+    background-color: var(--plasmid3);
+    height:20px;
+    margin:auto;
+}
+
+.textbox{
+    width:100%;
+    height:200px;
+    background-color: var(--background);
+}
+
+.buttonUpload{
+    background-color: var(--plasmid3)
+}
+
+.buttonholder{
+    margin:10px 0;
+    display:flex;
+    gap: 20px;
+}
+
+.exampleButton{
+    border: 2px solid var(--plasmid3);
+    border-top-right-radius: 20px 20px;
+    border-bottom-left-radius: 20px 20px;
+    font-size: 0.9em;
+    transition: 0.2s ease-in-out;
+    padding:8px;
+}
+
+.exampleButton:hover{
+    cursor:pointer;
+    background-color: var(--plasmid3);
+    color: white;
+    transition: 0.2s ease-in-out;
+}
+
+.exampleSelected{
+    background-color: var(--plasmid3);
+    transition: 0.2s ease-in-out;
+    color: white;
+}
+
+.annotateButton{
+    align-self: flex-end;
+    margin-top:27px;
+    width:150px;
+    height:2.5rem;
+    padding:5px;
+    position:relative;
+    margin-left: 445px;
+    margin-right: 25px;
+    background:linear-gradient(45deg,var(--plasmid2),var(--plasmid3));
+    border:none;
+    border-radius:2rem;
+    font-weight:500;
+    cursor:pointer;
+    color:white;
+}
+
+.annotatebutton{
+    margin:20px;
+    align-self: flex-end;
+}

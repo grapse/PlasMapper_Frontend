@@ -77,7 +77,7 @@ function PageContent(props){
                         class={style.label}
                         fill="transparent"
                         stroke={theme['--plasmid3']}
-                        stroke-width={1} />
+                        stroke-width={0.5} />
                 </svg>
             </div>
         </div>

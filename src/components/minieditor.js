@@ -3,11 +3,18 @@ import * as React from "react"
 import { Link } from "gatsby";
 import '../styles/cgview.css';
 import {fetchFeatures} from '../utils/FetchUtils';
-import * as style from "../styles/editor.module.css"
+import * as style from "../styles/editor.module.css";
+import LinkIcon from '@mui/icons-material/Link';
+import GlobalContext from "../context/optionContext";
 const CGV = require('cgview');
+
+function CustomLinkIcon(){
+  return(<LinkIcon sx={{transform:"rotate(-30deg)", "vertical-align": "middle", "margin-left": "5px"}}/>)
+}
 
 function MiniEditor(props)  
   {
+    const {theme} = React.useContext(GlobalContext);
     const [tab, setTab] = React.useState(0);
     const [initial, setInitial] = React.useState(true);
     const [localData, setLocalData] = React.useState([]);
@@ -25,7 +32,8 @@ function MiniEditor(props)
           "features": localData,
           "legend": {
               // Maps the preset feature data from above into the legend
-            "items": []
+            "items": [],
+            "visible" : false
           },
           "tracks": [
             {
@@ -55,8 +63,6 @@ function MiniEditor(props)
     }, [])
 
     React.useEffect(() => {
-        // If we are currently on the CGV tab, draw CGView
-        if (tab === 0){
             const cgv = new CGV.Viewer('#my-viewer', {
                 height: 300,
                 width: 300,
@@ -75,7 +81,6 @@ function MiniEditor(props)
                 const width = cgv.width / cgv.height * height;
                 cgv.io.downloadImage(width, height, 'cgview_map.png');
             }
-        }
 
     },[localData, cgvFormat, cgvDownload])
 
@@ -83,19 +88,14 @@ function MiniEditor(props)
 
     return(
         <>  
-            <div style={{display:"flex",width:"90%",gap:"20px",flexDirection:"row","backgroundColor":"#fff",padding:"70px 30px",margin:"20px",boxShadow:"10px 10px 35px rgba(0,0,0,0.3)",alignItems:"center",justifyContent:"center"}}>
-                <div class={style.drawing}>
-                    <div >
-                        <div className={style.cgvMyViewer} id='my-viewer'><div></div></div>
-                        <div style={{height:"200px",overflow:"auto",marginBottom:"20px"}}>
-                            {`Sequence:\n${sequence}`}
-                        </div>
-                        <Link to={`/`} state={{ nameSearch: nameSearch }}>Open in Editor</Link>
-                    </div>
-                    
-                    
-                </div>
-            </div>
+          <div class={style.sidebarholder} style={{...theme}}>
+                  <div id='my-viewer'><div></div></div>
+                  <div>{`Sequence:`}</div>
+                  <div class={style.sequence}>
+                      {sequence}
+                  </div>
+                  <Link to={`/`} state={{ nameSearch: nameSearch }} class={style.openlink}>Open in Editor<CustomLinkIcon/></Link>
+          </div>
         </>
     )
 }

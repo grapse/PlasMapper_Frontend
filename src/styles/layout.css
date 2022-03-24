@@ -73,15 +73,8 @@ template {
   display: none;
 }
 a {
-  background-color: transparent;
-  text-decoration: none;
-  padding:inherit;
-  -webkit-text-decoration-skip: objects;
+  text-decoration:inherit;
   color:inherit;
-}
-a:active,
-a:hover {
-  outline-width: 0;
 }
 abbr[title] {
   border-bottom: 1px dotted hsla(0, 0%, 0%, 0.5);

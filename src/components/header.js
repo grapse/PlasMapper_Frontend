@@ -68,7 +68,7 @@ function Header(props)
     const {theme, setTheme, language, setLanguage} = React.useContext(GlobalContext);
 
     const NAVITEMS = [
-      {name:"Help",info:language.HELP},
+      {name:"Help",info:language.HELPBLURB},
       {name: "About",info:language.ABOUT},
       {name:"Source Code",info:language.SOURCE_CODE},
       {name:"Citation",info:language.CITATION}]
