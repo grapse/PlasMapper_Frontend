@@ -198,7 +198,7 @@ function SearchPage(){
                 <div style={{height:"12px"}}></div>
                 <div style={{padding:"20px", marginTop:"40px", background:"linear-gradient(#e3dff2, #f1f1f1)"}}>
                 <div style={{fontWeight:"400px", fontSize:"2.5em", textAlign:"left", marginTop:"30px", marginLeft:"30px"}}>Browse Plasmids</div>
-                <p style={{fontSize:"1.2em", margin:"35px", textAlign:"left"}}>Quickly find the plasmid you are looking for in our database by filtering for various fields.</p>
+                <p style={{fontSize:"1.2em", margin:"35px", textAlign:"left"}}>Quickly find the plasmid you are looking for in our database by filtering for various fields.<br></br>Click on a column header to view more options for that column, including sorting.</p>
                 
                 </div>
                 
@@ -218,6 +218,11 @@ function SearchPage(){
                             pageSize={100}
                             onRowClick={(rowData) => openModal(rowData.row.name, rowData.row.id)}
                             rowsPerPageOptions={[100]}
+                            initialState={{
+                                sorting: {
+                                  sortModel: [{ field: 'popularity', sort: 'desc' }],
+                                },
+                              }}
                         />
                     }
                 </div>

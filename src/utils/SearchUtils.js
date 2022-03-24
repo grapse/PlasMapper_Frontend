@@ -1,5 +1,5 @@
 export const TableColumns = [
-    {field:'popularity',headerName:'Popularity',width:100},
+    {field:'popularity',headerName:'Popularity',width:150},
     {field:'backbone',headerName:'Backbone',width:150},
     {field:'expression',headerName:'Expression',width:200},
     {field:'features',headerName:'Features',width:200},
