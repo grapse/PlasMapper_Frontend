@@ -1,6 +1,6 @@
 export const TableColumns = [
-    {field:'id',headerName:'ID',width:70},
-    {field:'backbone',headerName:'Backbone',width:200},
+    {field:'popularity',headerName:'Popularity',width:100},
+    {field:'backbone',headerName:'Backbone',width:150},
     {field:'expression',headerName:'Expression',width:200},
     {field:'features',headerName:'Features',width:200},
     {field:'name',headerName:'Name',width:200},

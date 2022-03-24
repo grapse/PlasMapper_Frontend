@@ -211,7 +211,7 @@ function SearchPage(){
                         })
                     : 
                     <DataGrid
-                            sx={{height:52*100+200,backgroundColor:"white",margin:"0 100px"}}
+                            sx={{height:52*100+200,backgroundColor:"white",margin:"0 90px"}}
                             rows={formRows(filteredPlasmids)}
                             columns={TableColumns}
                             pageSize={100}
