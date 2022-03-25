@@ -145,7 +145,6 @@ function Editor(props)
     React.useEffect(() => {
         // Modify legend colours
         setLegendItems(legendItems.map((v,i) => {return {...v, swatchColor:v.bwColor, bwColor:v.swatchColor}}))
-
     }, [isBw])
 
     React.useEffect(() => {
@@ -179,7 +178,19 @@ function Editor(props)
         myNode.removeChild(myNode.childNodes[0]);
         cgv.settings.update({ format: cgvFormat });
 
-        cgv.draw()
+        if (isBw == true){
+            setTimeout(function (){
+            var orfLegendItem = cgv.legend.items()[cgv.legend.items().length - 1];
+            orfLegendItem["swatchColor"] = "#001";
+            cgv.legend.updateItems(orfLegendItem);
+            console.log("NEW", orfLegendItem);
+            console.log("NEW2", cgv.legend.items());
+            cgv.draw();
+            }, 1000)
+        } else{
+            cgv.draw();
+        }
+        
         if(cgvDownload){
             setCgvDownload(false);
             const height = 2000;
