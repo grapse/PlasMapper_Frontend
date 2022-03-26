@@ -106,8 +106,7 @@ function Header(props)
       >
         <Link to="/">
         <div class={style.svgholder}>
-          
-          <svg class={style.insertsvg} height="100%" viewBox="0 0 100 100">
+          <svg class={style.insertsvg} height="100%" viewBox="4 0 100 100">
                                 <defs>
                                     <filter id="shadow">
                                     <feDropShadow dx="0" dy="0" stdDeviation="0"
@@ -118,7 +117,8 @@ function Header(props)
                                     stroke={theme['--plasmid1']}
                                     stroke-width="9"
                                     stroke-dasharray={`35 ${CIRCUMFERENCE}`}
-                                    transform={`translate(50,50) rotate(${pageProgress*2})`} />
+                                    transform={`translate(50,50) rotate(${pageProgress*2})`} >
+                                </circle>
                                 <circle r="9" fill="transparent"
                                     stroke={theme['--plasmid2']}
                                     stroke-width="9"
