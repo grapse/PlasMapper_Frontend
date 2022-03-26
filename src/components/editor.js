@@ -14,6 +14,9 @@ import OptionAccordion from "./accordion";
 import GlobalContext from "../context/optionContext";
 import '../styles/cgview.css';
 import * as style from "../styles/editor.module.css"
+import ZoomInIcon from '@mui/icons-material/ZoomIn';
+import PanToolIcon from '@mui/icons-material/PanTool';
+import { Typography } from "@mui/material";
 const CGV = require('cgview');
 
 const tabs = ["Features", "Add Feature", "Restriction Sites","Other"]
@@ -328,6 +331,12 @@ function Editor(props)
                 <div class={style.drawing}>
                     <div class={style.svgwrap}>
                             <>
+                                <span style={{"display":"flex", "flex-direction":"row", "margin-bottom":"2px"}}>
+                                    <ZoomInIcon sx={{height:'0.75em', width:'0.75em', marginLeft:'5px'}}></ZoomInIcon>
+                                    <Typography sx={{fontSize:'small', marginLeft:'2px'}}>Zoom with mouse wheel</Typography>
+                                    <PanToolIcon sx={{height:'0.75em', width:'0.75em', marginLeft:'10px'}}></PanToolIcon>
+                                    <Typography sx={{fontSize:'small', marginLeft:'3px'}}>Drag to change position</Typography>
+                                </span>
                                 <div className={style.cgvMyViewer} id='my-viewer'><div></div></div>
                                 <div className={style.cgvButtons}>
                                     <div onClick={() => setCgvDownload(true)} class="cgv-btn" id="btn-download" title="Download Map PNG"></div>
