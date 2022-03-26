@@ -22,7 +22,8 @@ export default({
                 Only restriction sites that appear once are shown by default, but you optionally show others.\n\n\
                 You can change the map name, or toggle ORFs, the legend, or greyscale mode in the Other tab.",
         CITATION: "Credit the following:",
-        SOURCE_CODE: "Frontend: https://github.com/grapse/PlasMapper_Frontend\nBackend: https://github.com/Jacques857/PlasMapper_API",
+        SOURCE_CODE_FRONTEND: "https://github.com/grapse/PlasMapper_Frontend",
+        SOURCE_CODE_BACKEND: "https://github.com/Jacques857/PlasMapper_API",
         OPEN_LINK: "Browse Plasmid Database",
         OPEN_FILE: "Choose File",
         EXAMPLES: "Try our example plasmids:",

@@ -128,3 +128,7 @@
 .catchphrase{
     color:#ee615f;
 }
+.externallink{
+    text-decoration:underline;
+    color:steelblue;
+}
