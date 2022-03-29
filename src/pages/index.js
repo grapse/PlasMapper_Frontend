@@ -32,6 +32,7 @@ function PageContent(props){
   const [example,setExample] = React.useState(-1);
   const [exampleLoading,setExampleLoading] = React.useState(-1);
   const [sequence, setSequence] = React.useState("");
+  const [plasmidName, setPlasmidName] = React.useState("Plasmid");
   const [loading, setLoading] = React.useState(false)
   const [firstLoad, setFirstLoad] = React.useState(false);
   const [data, setData] = React.useState([]);
@@ -46,10 +47,11 @@ function PageContent(props){
     if(location.state?.nameSearch){
     console.log(location.state)
     setStartTab(2);
+    setPlasmidName(location.state.nameSearch);
     fetchSequence(location.state.nameSearch)
         .then(data => {
                 setSequence(data);
-                annotateSequenceLoad(data);
+                annotateSequenceLoad(plasmidName, sequence);
             }
         )
         .catch(err =>{
@@ -95,10 +97,11 @@ function PageContent(props){
    * Annotates the provided DNA sequence (from the search page)
    * @param  {str} seq The sequence provided by the search page
    */
-  const annotateSequenceLoad = (seq) => {
+  const annotateSequenceLoad = (name, seq) => {
     {
       console.log("search")
       console.log(seq)
+      setPlasmidName(name);
       setLoading(true);
       fetchFeatures(seq)
            .then(featureTemp => {
@@ -133,7 +136,7 @@ function PageContent(props){
     <p class={style.indexbody}>
     <div class={style.logodiv}><p class={style.logotitle}>PlasMapper <span class={style.logosmall}>3.0</span></p>
       <p class={style.catchphrase}>{language.CATCHPHRASE}</p></div>
-      <SequenceUpload annotate={annotateSequenceLoad} loading={loading}/>
+      <SequenceUpload annotate={annotateSequenceLoad} loading={loading} name={plasmidName}/>
       {/* <label style={{color:theme['--text']}}>Try our example plasmids:</label>
       <div class={style.examplecontainer} style={{color:theme['--text']}}>
         {samplePlasmids.map((v, i) => {
@@ -152,7 +155,7 @@ function PageContent(props){
       
       <div style={{marginTop:`250px`}}></div>
       <div id="annotate">
-        <Editor isEdit={true} data={data} sequence={stripInput(sequence)}></Editor>
+        <Editor isEdit={true} data={data} sequence={stripInput(sequence)} name={plasmidName}></Editor>
       </div>
       
     </p>

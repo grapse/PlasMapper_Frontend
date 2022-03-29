@@ -71,10 +71,10 @@ function Editor(props)
     const [showOrf, setShowOrf] = React.useState(false);
     const [showLegend, setShowLegend] = React.useState(true);
     const [panel, setPanel] = React.useState(false);
-    const [plasmidName, setPlasmidName] = React.useState("Plasmid");
+    const {sequence, data, name} = props;
+    const [plasmidName, setPlasmidName] = React.useState(props.name);
     const [isAddStart, setIsAddStart] = React.useState(false);
     const [isAddStop, setIsAddStop] = React.useState(false);
-    const {sequence, data} = props;
     const [legendItems, setLegendItems] = React.useState([]);
     const [isBw, setIsBw] = React.useState(false);
 
@@ -112,7 +112,7 @@ function Editor(props)
     const json = {
         "cgview": {
           "version": "1.1.0",
-          "name": "Plasmid",
+          "name": plasmidName,
           "captions": [
             {
                 "backgroundColor": "rgba(255,255,255,0.4)",
@@ -134,6 +134,9 @@ function Editor(props)
           "tracks": showOrf ? orfTracks : defaultTracks
         }
       }
+
+    console.log("PLASMIDNAMEAFTERJSON", plasmidName)
+    console.log(json)
 
     React.useEffect(() => {
         // If it is currently getting fed a new plasmid
