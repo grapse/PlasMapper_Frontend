@@ -114,10 +114,9 @@ function PageContent(props){
   // TODO: Move to separate components
   const TABS = [{name:"Enter Text",
                 content:<TextField
-                    style={{width:`100%`,backgroundColor:theme['--background'],}}
+                    style={{width:`100%`,backgroundColor:theme['--background'],color:theme['--text']}}
                     id="outlined-multiline-static"
                     label="Paste your sequence here!"
-                    sx={{color:theme['--text']}}
                     multiline
                     rows={4}
                     onChange={e => setSequence(e.target.value)}
