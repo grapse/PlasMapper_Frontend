@@ -66,7 +66,6 @@ function PageContent(props){
    */
   const annotateSequence = () => {
     {
-      console.log(sequence)
       setLoading(true);
       fetchFeatures(sequence)
            .then(featureTemp => {
@@ -100,7 +99,6 @@ function PageContent(props){
   const annotateSequenceLoad = (seq) => {
     {
       console.log("search")
-      console.log(seq)
       setLoading(true);
       fetchFeatures(seq)
            .then(featureTemp => {

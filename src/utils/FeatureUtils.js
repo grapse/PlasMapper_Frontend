@@ -134,8 +134,9 @@ export const getFeatureNames = (() => {
  *  If it is a FASTA file, removes the first line
  *  Removes all non ATCG characters from the body
  * @param  {str} input The DNA sequence
+ * @param  {bool} upperCase Whether or not to return the uppercase sequence 
  */
-export const stripInput = ((input) => {
+export const stripInput = ((input, upperCase = false) => {
     var stripped = input.trim();
     if(stripped[0] === '>'){
         stripped = stripped.substring(stripped.indexOf("\n") + 1);
@@ -143,7 +144,7 @@ export const stripInput = ((input) => {
     // Remove non actg input
     const checkDNA = /[^atcg]/gi;
     stripped = stripped.replace(checkDNA, '');
-    return stripped.toLowerCase();
+    return upperCase ? stripped.toUpperCase() : stripped.toLowerCase();
 })
 
 export const getCommonEnzymes = (() => {
