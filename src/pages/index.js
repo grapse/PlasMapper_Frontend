@@ -36,6 +36,7 @@ function PageContent(props){
   const [firstLoad, setFirstLoad] = React.useState(false);
   const [data, setData] = React.useState([]);
   const {location} = props
+  const [plasmidName, setPlasmidName] = React.useState("Plasmid");
   const [startTab, setStartTab] = React.useState(0);
 
   React.useEffect(() => {
@@ -46,6 +47,7 @@ function PageContent(props){
     if(location.state?.nameSearch){
     console.log(location.state)
     setStartTab(2);
+    setPlasmidName(location.state.nameSearch);
     fetchSequence(location.state.nameSearch)
         .then(data => {
                 setSequence(data);
@@ -153,7 +155,7 @@ function PageContent(props){
       
       <div style={{marginTop:`250px`}}></div>
       <div id="annotate">
-        <Editor isEdit={true} data={data} sequence={stripInput(sequence)}></Editor>
+        <Editor isEdit={true} data={data} name={plasmidName} sequence={stripInput(sequence)}></Editor>
       </div>
       
     </p>

@@ -13,6 +13,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import OptionAccordion from "./accordion";
 import GlobalContext from "../context/optionContext";
 import '../styles/cgview.css';
+import SequenceEditor from "./sequenceEditor";
 import * as style from "../styles/editor.module.css"
 const CGV = require('cgview');
 
@@ -68,10 +69,10 @@ function Editor(props)
     const [showOrf, setShowOrf] = React.useState(false);
     const [showLegend, setShowLegend] = React.useState(true);
     const [panel, setPanel] = React.useState(false);
-    const [plasmidName, setPlasmidName] = React.useState("Plasmid");
+    const {sequence, data, name} = props;
+    const [plasmidName, setPlasmidName] = React.useState(name || "Plasmid");
     const [isAddStart, setIsAddStart] = React.useState(false);
     const [isAddStop, setIsAddStop] = React.useState(false);
-    const {sequence, data} = props;
     const [legendItems, setLegendItems] = React.useState([]);
     const [isBw, setIsBw] = React.useState(false);
 
@@ -147,6 +148,11 @@ function Editor(props)
         setLegendItems(legendItems.map((v,i) => {return {...v, swatchColor:v.bwColor, bwColor:v.swatchColor}}))
 
     }, [isBw])
+
+    React.useEffect(() => {
+        // Change the name based on the inputted prop
+        setPlasmidName(name);
+    }, [name])
 
     React.useEffect(() => {
         // If we are currently on the CGV tab, draw CGView
@@ -322,6 +328,7 @@ function Editor(props)
                                     <div onClick={() => setCgvDownload(true)} class="cgv-btn" id="btn-download" title="Download Map PNG"></div>
                                     <div onClick={() => setCgvFormat((cgvFormat == 'circular') ? 'linear' : 'circular')} class="cgv-btn" id="btn-toggle-format" title="Toggle Linear/Circular Format"></div>
                                 </div>
+                                <SequenceEditor></SequenceEditor>
                             </>
                     </div>
                 </div>

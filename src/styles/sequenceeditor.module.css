@@ -1,0 +1,39 @@
+.seqHolder{
+    margin:50px;
+    position:relative;
+    text-align:left;
+    font-family:Courier, monospace;
+    line-height: 4em;
+}
+
+.seqBaseHolder{
+    margin-top: var(--offset);
+    width: 100%;
+}
+.seqBaseHolderAbs{
+    position:absolute;
+    top: var(--offset);
+    width: 100%;
+}
+
+.seqBase{
+    color: var(--highlight);
+}
+
+/* .seqBase::after{
+    content: attr(reverse);
+    top:1em;
+    width: 100%;
+    left: 0;
+    text-decoration: line-through;
+} */
+
+.seqPosition{
+    position:absolute;
+    width:100%;
+    top: var(--offset);
+    z-index: var(--order);
+}
+
+
+
