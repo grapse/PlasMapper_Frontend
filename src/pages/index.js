@@ -32,6 +32,7 @@ function PageContent(props){
   const [example,setExample] = React.useState(-1);
   const [exampleLoading,setExampleLoading] = React.useState(-1);
   const [sequence, setSequence] = React.useState("");
+  const [plasmidName, setPlasmidName] = React.useState("Plasmid");
   const [loading, setLoading] = React.useState(false)
   const [firstLoad, setFirstLoad] = React.useState(false);
   const [data, setData] = React.useState([]);
@@ -65,9 +66,11 @@ function PageContent(props){
    * Annotates the provided DNA sequence (from the search page)
    * @param  {str} seq The sequence provided by the search page
    */
-  const annotateSequenceLoad = (seq) => {
+  const annotateSequenceLoad = (name, seq) => {
     {
       console.log("search")
+      console.log(seq)
+      setPlasmidName(name);
       setLoading(true);
       fetchFeatures(seq)
            .then(featureTemp => {
@@ -91,7 +94,7 @@ function PageContent(props){
       <p class={style.indexbody}>
       <div class={style.logodiv}><p class={style.logotitle}>PlasMapper <span class={style.logosmall}>3.0</span></p>
         <p class={style.catchphrase}>{language.CATCHPHRASE}</p></div>
-        <SequenceUpload annotate={annotateSequenceLoad} loading={loading}/>
+        <SequenceUpload annotate={annotateSequenceLoad} loading={loading} name={plasmidName}/>
         
         <div style={{marginTop:`250px`}}></div>
         <Link to={`editor`}
