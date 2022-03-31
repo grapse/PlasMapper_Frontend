@@ -39,15 +39,15 @@ function averageColors(colors, alpha){
 
 // TODO: For testing purposes
 const pageLength = 500;
-const sample = fetchSamplePlasmids()[0].sequence;
-const TEST = sample.slice(0,1000);
-const TEST_FEATURE = [
-    {start: 50, stop: 100, name: "Feature 1", legend:"Restriction Sites", strand: 1},
-    {start: 110, stop: 200, name: "Feature 2", legend:"Promoters", strand: -1 },
-    {start: 250, stop: 270, name: "Feature 3", legend:"Replication Origins", strand: 1},
-    {start: 460, stop: 467, name: "Feature 4", legend:"Selectable Markers", strand: 1},
-    {start: 450, stop: 470, name: "Feature 5", legend:"Genes", strand: 1},
-]
+// const sample = fetchSamplePlasmids()[0].sequence;
+// const TEST = sample.slice(0,1000);
+// const TEST_FEATURE = [
+//     {start: 50, stop: 100, name: "Feature 1", legend:"Restriction Sites", strand: 1},
+//     {start: 110, stop: 200, name: "Feature 2", legend:"Promoters", strand: -1 },
+//     {start: 250, stop: 270, name: "Feature 3", legend:"Replication Origins", strand: 1},
+//     {start: 460, stop: 467, name: "Feature 4", legend:"Selectable Markers", strand: 1},
+//     {start: 450, stop: 470, name: "Feature 5", legend:"Genes", strand: 1},
+// ]
 
 /**
  * Reverses the DNA strand
