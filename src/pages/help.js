@@ -5,12 +5,6 @@ import Seo from "../components/seo"
 import GlobalContext from "../context/optionContext";
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
-const images = [
-    'https://i.imgur.com/P4XguNh.png',
-    'https://i.imgur.com/IGz3tWY.png',
-    'https://i.imgur.com/ecqq4QY.png'
-]
-
 function HelpPage(){
     return(
     <Layout>
@@ -36,11 +30,13 @@ function TutorialItem(props){
         <div class={style.tutorialholder} {...props}>
             <TitleText text={title} />
             <div class={style.sideholder}>
-                <img
-                    src={image}
-                    height={500}
-                ></img>
-                {text} 
+                <div class={style.imgholder}>
+                    <img
+                        src={image}
+                        class={style.helpimg}
+                    ></img>
+                </div>
+                <div class={style.helptext}>{text}</div>
             </div>
         </div>
     )
@@ -69,7 +65,7 @@ function PageContent(props){
                             <TutorialItem
                                 title={v.title}
                                 text={v.content}
-                                image={images[i]}
+                                image={v?.image}
                             />
                             </>
                         )

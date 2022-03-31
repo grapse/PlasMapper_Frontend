@@ -12,8 +12,15 @@ After cloning the repository:
 You may have to run this beforehand:
 `npm install -g gatsby-cli`
 
-__Setup (hosting):__
+__Setup/deployment (hosting):__
 
 Navigate to the frontend folder inside `project`
+Re-pull from this directory `git pull origin main`
 Run `gatsby build`
 Run `sudo systemctl restart nginx`
+
+__Modifying textual content and Help page:__
+
+Go to `src/config/writing.js`
+Follow the instructions there
+Follow the above instructions to re-deploy

@@ -70,7 +70,6 @@ function PageContent(props){
     {
       console.log("search")
       setPlasmidName(name);
-      console.log(seq.substring(0,15))
       setLoading(true);
       fetchFeatures(seq)
            .then(featureTemp => {
