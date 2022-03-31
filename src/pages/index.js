@@ -37,7 +37,6 @@ function PageContent(props){
   const [firstLoad, setFirstLoad] = React.useState(false);
   const [data, setData] = React.useState([]);
   const {location} = props
-  const [plasmidName, setPlasmidName] = React.useState("Plasmid");
   const [startTab, setStartTab] = React.useState(0);
 
   React.useEffect(() => {
@@ -45,6 +44,7 @@ function PageContent(props){
      * Only used if the user clicked in from the search page
      * Makes it so it automatically annotates and scrolls to plasmid editor
      */
+    console.log("here")
     if(location.state?.nameSearch){
     console.log(location.state)
     setStartTab(2);
@@ -52,7 +52,7 @@ function PageContent(props){
     fetchSequence(location.state.nameSearch)
         .then(data => {
                 setSequence(stripInput(data, true));
-                annotateSequenceLoad(data);
+                annotateSequenceLoad(location.state.nameSearch, data);
             }
         )
         .catch(err =>{
@@ -69,8 +69,8 @@ function PageContent(props){
   const annotateSequenceLoad = (name, seq) => {
     {
       console.log("search")
-      console.log(seq)
       setPlasmidName(name);
+      console.log(seq.substring(0,15))
       setLoading(true);
       fetchFeatures(seq)
            .then(featureTemp => {

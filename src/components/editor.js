@@ -76,8 +76,6 @@ function Editor(props)
     const [showOrf, setShowOrf] = React.useState(false);
     const [showLegend, setShowLegend] = React.useState(true);
     const [panel, setPanel] = React.useState(false);
-    const {sequence, data, name} = props;
-    const [plasmidName, setPlasmidName] = React.useState(props.name);
     const [plasmidName, setPlasmidName] = React.useState(name || "Plasmid");
     const [isAddStart, setIsAddStart] = React.useState(false);
     const [isAddStop, setIsAddStop] = React.useState(false);
@@ -144,8 +142,6 @@ function Editor(props)
         }
       }
 
-    console.log("PLASMIDNAMEAFTERJSON", plasmidName)
-    console.log(json)
 
     React.useEffect(() => {
         // If it is currently getting fed a new plasmid
