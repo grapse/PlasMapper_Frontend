@@ -65,7 +65,7 @@ function MiniEditor(props)
     React.useEffect(() => {
             const cgv = new CGV.Viewer('#my-viewer', {
                 height: 300,
-                width: 300,
+                width: 600,
               });
               
             cgv.io.loadJSON(json);

@@ -68,9 +68,7 @@ function Header(props)
     const {theme, setTheme, language, setLanguage} = React.useContext(GlobalContext);
 
     const NAVITEMS = [
-      {name:"Help",info:language.HELPBLURB},
-      {name: "About",info:language.ABOUT},
-      {name:"Source Code",info:language.SOURCE_CODE},
+      {name:"Source Code",info:[language.SOURCE_CODE_FRONTEND, language.SOURCE_CODE_BACKEND]},
       {name:"Citation",info:language.CITATION}]
 
     const [open, setOpen] = React.useState(0);
@@ -108,8 +106,7 @@ function Header(props)
       >
         <Link to="/">
         <div class={style.svgholder}>
-          
-          <svg class={style.insertsvg} height="100%" viewBox="0 0 100 100">
+          <svg class={style.insertsvg} height="100%" viewBox="4 0 100 100">
                                 <defs>
                                     <filter id="shadow">
                                     <feDropShadow dx="0" dy="0" stdDeviation="0"
@@ -120,7 +117,8 @@ function Header(props)
                                     stroke={theme['--plasmid1']}
                                     stroke-width="9"
                                     stroke-dasharray={`35 ${CIRCUMFERENCE}`}
-                                    transform={`translate(50,50) rotate(${pageProgress*2})`} />
+                                    transform={`translate(50,50) rotate(${pageProgress*2})`} >
+                                </circle>
                                 <circle r="9" fill="transparent"
                                     stroke={theme['--plasmid2']}
                                     stroke-width="9"
@@ -139,6 +137,8 @@ function Header(props)
           
         <div class={style.navbar} style={{"--font-color": theme.text}}>
         <div class={style.navbaremphasizeditem} key={"search-link"}><Link to="/search">Search</Link></div>
+        <div class={style.navbaritem} key={"help-link"}><Link to="/help">Help</Link></div>
+        <div class={style.navbaritem} key={"about-link"}><Link to="/about">About</Link></div>
           {NAVITEMS.map((v,i) => {
             return(
             <div id={i+"nav"} class={open === i + 1 ? style.navselected : style.navbaritem} onClick={() => setOpen(i+1)}>
@@ -167,7 +167,20 @@ function Header(props)
                 {open === 0 ? null : NAVITEMS[open - 1].name}
               </Typography>
               <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                {open === 0 ? null : NAVITEMS[open - 1].info}
+                {open === 0 ? null : 
+                  (NAVITEMS[open - 1].name == "Source Code" ? 
+                    //Source code
+                    <>
+                    <br></br>
+                    <a class={style.externallink} href={NAVITEMS[open - 1].info[0]}>Frontend</a>
+                    <br></br><br></br>
+                    <a class={style.externallink} href={NAVITEMS[open - 1].info[1]}>Backend</a>
+                    </>
+                  : 
+                    //Citation
+                    NAVITEMS[open - 1].info
+                  )
+                }
               </Typography>
             </Box>
           </Modal>

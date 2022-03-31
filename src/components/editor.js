@@ -15,6 +15,9 @@ import GlobalContext from "../context/optionContext";
 import '../styles/cgview.css';
 import SequenceEditor from "./sequenceEditor";
 import * as style from "../styles/editor.module.css"
+import ZoomInIcon from '@mui/icons-material/ZoomIn';
+import PanToolIcon from '@mui/icons-material/PanTool';
+import { Typography } from "@mui/material";
 const CGV = require('cgview');
 
 const tabs = ["Features", "Add Feature", "Restriction Sites","Other"]
@@ -146,7 +149,6 @@ function Editor(props)
     React.useEffect(() => {
         // Modify legend colours
         setLegendItems(legendItems.map((v,i) => {return {...v, swatchColor:v.bwColor, bwColor:v.swatchColor}}))
-
     }, [isBw])
 
     React.useEffect(() => {
@@ -185,7 +187,19 @@ function Editor(props)
         myNode.removeChild(myNode.childNodes[0]);
         cgv.settings.update({ format: cgvFormat });
 
-        cgv.draw()
+        if (isBw == true){
+            setTimeout(function (){
+            var orfLegendItem = cgv.legend.items()[cgv.legend.items().length - 1];
+            orfLegendItem["swatchColor"] = "#001";
+            cgv.legend.updateItems(orfLegendItem);
+            console.log("NEW", orfLegendItem);
+            console.log("NEW2", cgv.legend.items());
+            cgv.draw();
+            }, 1000)
+        } else{
+            cgv.draw();
+        }
+        
         if(cgvDownload){
             setCgvDownload(false);
             const height = 2000;
@@ -323,6 +337,12 @@ function Editor(props)
                 <div class={style.drawing}>
                     <div class={style.svgwrap}>
                             <>
+                                <span style={{"display":"flex", "flex-direction":"row", "margin-bottom":"2px"}}>
+                                    <ZoomInIcon sx={{height:'0.75em', width:'0.75em', marginLeft:'5px'}}></ZoomInIcon>
+                                    <Typography sx={{fontSize:'small', marginLeft:'2px'}}>Zoom with mouse wheel</Typography>
+                                    <PanToolIcon sx={{height:'0.75em', width:'0.75em', marginLeft:'10px'}}></PanToolIcon>
+                                    <Typography sx={{fontSize:'small', marginLeft:'3px'}}>Drag to change position</Typography>
+                                </span>
                                 <div className={style.cgvMyViewer} id='my-viewer'><div></div></div>
                                 <div className={style.cgvButtons}>
                                     <div onClick={() => setCgvDownload(true)} class="cgv-btn" id="btn-download" title="Download Map PNG"></div>

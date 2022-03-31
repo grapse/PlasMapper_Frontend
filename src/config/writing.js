@@ -15,18 +15,19 @@ export default({
         CATCHPHRASE: "Generate and annotate plasmid maps.",
         ABOUT: "The PlasMapper server automatically generates and annotates plasmid maps using only the plasmid DNA sequence as input. \n\
                 Automatically annotated features are taken from a curated database of common plasmid features and users can add their own custom features to any map. The server also provides an interface to search for commercial plasmids based on numerous criteria such as desired features, sequence length, expression type, and supplier. Plasmid maps are downloadable in PNG and SVG format.",
-        SEARCH: "Quickly find the plasmid you are looking for in our database by filtering for various fields.\n",
+        SEARCH: "Quickly find the plasmid you are looking for in our database by filtering for various fields.\nClick on a column header to view more options for that column, including sorting.",
         HELPBLURB: "Paste your sequence directly, or search our database for the plasmid you need.\n\n\
                 Click on the features to change visibility, name, category, location, or strand. You can also click directly on the map to open feature options.\n\n\
                 You can add features by clicking directly on the map.\n\n\
                 Only restriction sites that appear once are shown by default, but you optionally show others.\n\n\
                 You can change the map name, or toggle ORFs, the legend, or greyscale mode in the Other tab.",
         CITATION: "Credit the following:",
-        SOURCE_CODE: "Frontend: https://github.com/grapse/PlasMapper_Frontend\nBackend: https://github.com/Jacques857/PlasMapper_API",
+        SOURCE_CODE_FRONTEND: "https://github.com/grapse/PlasMapper_Frontend",
+        SOURCE_CODE_BACKEND: "https://github.com/Jacques857/PlasMapper_API",
         OPEN_LINK: "Browse Plasmid Database",
         OPEN_FILE: "Choose File",
         EXAMPLES: "Try our example plasmids:",
-        PASTE_SEQ: "Paste your DNA sequence here",
+        PASTE_SEQ: "Paste your plasmid DNA sequence here",
         SEQ_DETAILS: "FASTA or raw DNA sequence. Non-ACTG inputs will be ignored.",
         SEQ_WARNING: "Load times may be slow for sequences >200kb",
         SEQ_ERROR: "Sequences that exceed 500kb will be truncated to 500kb",

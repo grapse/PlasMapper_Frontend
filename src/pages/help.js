@@ -64,12 +64,14 @@ function PageContent(props){
                 <div class={style.holder}>
                     {language.HELP.map((v,i) => {
                         return(
+                            <>
+                            <div id={`tutorial-${i}`} class={style.spacer}></div>
                             <TutorialItem
-                                id={`tutorial-${i}`}
                                 title={v.title}
                                 text={v.content}
                                 image={images[i]}
                             />
+                            </>
                         )
                     })}
                     
