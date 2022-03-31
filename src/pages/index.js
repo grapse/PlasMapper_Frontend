@@ -7,7 +7,7 @@ import { stripInput } from '../utils/FeatureUtils';
 import { fetchSamplePlasmids } from "../utils/SamplePlasmids";
 import * as style from '../styles/index.module.css'
 
-import TextField from '@mui/material/TextField';
+import Button from "@mui/material/Button";
 
 import GlobalContext from "../context/optionContext";
 
@@ -36,6 +36,7 @@ function PageContent(props){
   const [firstLoad, setFirstLoad] = React.useState(false);
   const [data, setData] = React.useState([]);
   const {location} = props
+  const [plasmidName, setPlasmidName] = React.useState("Plasmid");
   const [startTab, setStartTab] = React.useState(0);
 
   React.useEffect(() => {
@@ -46,9 +47,10 @@ function PageContent(props){
     if(location.state?.nameSearch){
     console.log(location.state)
     setStartTab(2);
+    setPlasmidName(location.state.nameSearch);
     fetchSequence(location.state.nameSearch)
         .then(data => {
-                setSequence(data);
+                setSequence(stripInput(data, true));
                 annotateSequenceLoad(data);
             }
         )
@@ -60,102 +62,54 @@ function PageContent(props){
   },[location, firstLoad])
 
   /**
-   * Annotates the provided DNA sequence
-   */
-  const annotateSequence = () => {
-    {
-      console.log(sequence)
-      setLoading(true);
-      fetchFeatures(sequence)
-           .then(featureTemp => {
-                          setData(featureTemp)
-                          setLoading(false);
-                          document.getElementById('annotate').scrollIntoView();})
-           .catch(err => console.log(err))
-           
-    }
-  }
-  /**
-   * Annotates the example DNA sequence
-   */
-   const annotateExampleSequence = (i) => {
-    {
-      console.log(sequence)
-      setExampleLoading(i);
-      fetchFeatures(sequence)
-           .then(featureTemp => {
-                          setData(featureTemp)
-                          setExampleLoading(-1);
-                          document.getElementById('annotate').scrollIntoView();})
-           .catch(err => console.log(err))
-           
-    }
-  }
-  /**
    * Annotates the provided DNA sequence (from the search page)
    * @param  {str} seq The sequence provided by the search page
    */
   const annotateSequenceLoad = (seq) => {
     {
       console.log("search")
-      console.log(seq)
       setLoading(true);
       fetchFeatures(seq)
            .then(featureTemp => {
                           setData(featureTemp);
-                          setSequence(seq);
+                          setSequence(stripInput(seq,true));
                           setLoading(false);
-                          document.getElementById('annotate').scrollIntoView();})
+                          document.getElementById('annotate').scrollIntoView();
+                        }
+                          
+                          )
            .catch(err => console.log(err))
            
     }
   }
   
-  // TODO: Move to separate components
-  const TABS = [{name:"Enter Text",
-                content:<TextField
-                    style={{width:`100%`,backgroundColor:theme['--background'],color:theme['--text']}}
-                    id="outlined-multiline-static"
-                    label="Paste your sequence here!"
-                    multiline
-                    rows={4}
-                    onChange={e => setSequence(e.target.value)}
-                    defaultValue=""></TextField>},
-              {name:"Upload File",
-              content:<><div style={{color:theme['--text']}}>Upload Sequence File Here</div><input type="file" name="file" /></>},
-              {name:"Browse Plasmids", 
-              content:<Link style={{color:theme['--text']}} to={`/search`}>Click to Browse Database</Link>}]
   return(
-  <div style={{...theme}}>
-    <Seo title="Home" />
-    <BackgroundDrawing/>
-    <div style={{width:"100px", height:"150px"}}></div>
-    <p class={style.indexbody}>
-    <div class={style.logodiv}><p class={style.logotitle}>PlasMapper <span class={style.logosmall}>3.0</span></p>
-      <p class={style.catchphrase}>{language.CATCHPHRASE}</p></div>
-      <SequenceUpload annotate={annotateSequenceLoad} loading={loading}/>
-      {/* <label style={{color:theme['--text']}}>Try our example plasmids:</label>
-      <div class={style.examplecontainer} style={{color:theme['--text']}}>
-        {samplePlasmids.map((v, i) => {
-          return(<Button  
-            onClick={() => {annotateExampleSequence(i);}} 
-            onMouseEnter={() => {setExample(i); setSequence(v.sequence);}} onMouseLeave={() => {setExample(-1); setSequence("");}} class={style.indexexamplebutton} variant="contained">{v.name}  {(exampleLoading == i) ? <i class={`${style.rotate} bi bi-arrow-repeat`}></i> : <i style={{right:`12px`,position:`absolute`,transform:`rotate(${(example == i) ? `90deg` : `0deg`})`,transition: `.3s ease-in-out`}} class={"bi bi-chevron-right "}></i>}</Button>)
-        })}
-      </div>
-      <div style={{marginTop:`60px`}}></div>
-      <InputTabs start={startTab} tabs={TABS}></InputTabs>
-      <a >
-        <Button  
-        onClick={annotateSequence} 
-        onMouseEnter={() => setAnnotate(true)} onMouseLeave={() => setAnnotate(false)} class={style.indexbutton} variant="contained">Annotate!  {loading ? <i class={`${style.rotate} bi bi-arrow-repeat`}></i> : <i style={{right:`12px`,position:`absolute`,transform:`rotate(${annotate ? `90deg` : `0deg`})`,transition: `.3s ease-in-out`}} class={"bi bi-chevron-right "}></i>}</Button>
-      </a> */}
-      
-      <div style={{marginTop:`250px`}}></div>
-      <div id="annotate">
-        <Editor isEdit={true} data={data} sequence={stripInput(sequence)}></Editor>
-      </div>
-      
-    </p>
-  </div>
+    <div style={{...theme}}>
+      <Seo title="Home" />
+      <BackgroundDrawing/>
+      <div style={{width:"100px", height:"150px"}}></div>
+      <p class={style.indexbody}>
+      <div class={style.logodiv}><p class={style.logotitle}>PlasMapper <span class={style.logosmall}>3.0</span></p>
+        <p class={style.catchphrase}>{language.CATCHPHRASE}</p></div>
+        <SequenceUpload annotate={annotateSequenceLoad} loading={loading}/>
+        
+        <div style={{marginTop:`250px`}}></div>
+        <Link to={`editor`}
+              state={{
+                editorData:{
+                  name:plasmidName,
+                  data:data,
+                  sequence:sequence
+                }
+              }}
+              >
+          <Button >{"Open Page"}</Button>
+        </Link>
+        <div id="annotate">
+          <Editor isEdit={true} data={data} name={plasmidName} sequence={sequence} setSequence={setSequence}></Editor>
+        </div>
+        
+      </p>
+    </div>
 )}
 

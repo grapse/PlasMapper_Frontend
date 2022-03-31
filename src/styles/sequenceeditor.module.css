@@ -1,0 +1,130 @@
+.seqHolder{
+    margin:50px;
+    position:relative;
+    text-align:left;
+    font-family:Courier, monospace;
+    line-height: 4em;
+    word-break: break-all;
+    width: 70%;
+}
+
+.editor{
+    display: flex;
+    flex-direction: row;
+    text-align: left;
+    gap: 20px;
+}
+
+.reversePreview{
+    color: #888;
+    padding: 10px;
+    max-height: 7em;
+    overflow: auto;
+
+}
+
+.insertHolder{
+    min-width: 30%;
+    max-width: 30%;
+    display:flex;
+    padding-top: 30px;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.editorSequence{
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+}
+
+.alignHoriz{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+}
+
+.seqBaseHolder{
+    margin-top: var(--offset);
+    width: 100%;
+}
+.seqBaseHolderAbs{
+    position:absolute;
+    top: var(--offset);
+    width: 100%;
+}
+
+.seqBase{
+    position: relative;
+    background-color: var(--highlight);
+    cursor: pointer;
+    border: 1.5px solid var(--border);
+    border-radius: 3px;
+}
+
+.seqBaseSelected{
+    background-color: black;
+    color: white;
+}
+  
+.seqBase .tooltiptext {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s linear 300ms, opacity 300ms;
+  
+    width: 200px;
+    background-color: rgba(0,0,0,0.7);
+    color: #fff;
+    text-align: center;
+    font-size: 60%;
+    border-radius: 6px;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -100px;
+    
+    line-height: 1em;
+    text-align: center;
+    padding: 5px;
+
+    position: absolute;
+    z-index: 1;
+
+    display:flex;
+    flex-direction: row;
+}
+
+.addButton{
+    width: 10%;
+    background-color: black;
+}
+
+.holdFeatures{
+    width:80%;
+    display:flex;
+    flex-direction: column;
+}
+
+.seqBase:hover .tooltiptext {
+    visibility: visible;
+    opacity:1;
+    transition: visibility 0s linear 0s, opacity 300ms;
+}
+
+/* .seqBase::after{
+    content: attr(reverse);
+    top:1em;
+    width: 100%;
+    left: 0;
+    text-decoration: line-through;
+} */
+
+.seqPosition{
+    position:absolute;
+    width:100%;
+    top: var(--offset);
+    z-index: var(--order);
+}
+
+
+
