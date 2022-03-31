@@ -9,14 +9,17 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import TouchAppIcon from '@mui/icons-material/TouchApp';
-import InputAdornment from '@mui/material/InputAdornment';
 import OptionAccordion from "./accordion";
 import GlobalContext from "../context/optionContext";
+import Button from "@mui/material/Button";
 import '../styles/cgview.css';
+import InputAdornment from '@mui/material/InputAdornment';
+import SequenceEditor from "./sequenceEditor";
 import * as style from "../styles/editor.module.css"
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import PanToolIcon from '@mui/icons-material/PanTool';
 import { Typography } from "@mui/material";
+import DownloadIcon from '@mui/icons-material/Download';
 const CGV = require('cgview');
 
 const tabs = ["Features", "Add Feature", "Restriction Sites","Other"]
@@ -59,6 +62,8 @@ function Editor(props)
   {
     const {theme, setTheme, language, setLanguage} = React.useContext(GlobalContext);
     const {isEdit} = props;
+    const {sequence, data, name, setSequence} = props;
+    
     const [tab, setTab] = React.useState(0);
     const [initial, setInitial] = React.useState(true);
     const [localData, setLocalData] = React.useState([]);
@@ -73,10 +78,14 @@ function Editor(props)
     const [panel, setPanel] = React.useState(false);
     const {sequence, data, name} = props;
     const [plasmidName, setPlasmidName] = React.useState(props.name);
+    const [plasmidName, setPlasmidName] = React.useState(name || "Plasmid");
     const [isAddStart, setIsAddStart] = React.useState(false);
     const [isAddStop, setIsAddStop] = React.useState(false);
     const [legendItems, setLegendItems] = React.useState([]);
     const [isBw, setIsBw] = React.useState(false);
+
+    const [downloadHeight, setDownloadHeight] = React.useState(2000);
+    const [downloadWidth, setDownloadWidth] = React.useState(3000);
 
     function handleFeatureUpdate(index, val){
         setLocalData(
@@ -154,6 +163,11 @@ function Editor(props)
     }, [isBw])
 
     React.useEffect(() => {
+        // Change the name based on the inputted prop
+        setPlasmidName(name);
+    }, [name])
+
+    React.useEffect(() => {
         // If we are currently on the CGV tab, draw CGView
         const cgv = new CGV.Viewer('#my-viewer', {
             height: 500,
@@ -198,11 +212,9 @@ function Editor(props)
         }
         
         if(cgvDownload){
+            // Download the map
             setCgvDownload(false);
-            const height = 2000;
-            // Here we adjust the width to be proportional to the height
-            const width = cgv.width / cgv.height * height;
-            cgv.io.downloadImage(width, height, 'cgview_map.png');
+            cgv.io.downloadImage(downloadWidth, downloadHeight, 'cgview_map.png');
         }
 
     },[localData, cgvFormat, cgvDownload, panel, isAddStart, isAddStop, plasmidName, showLegend, showOrf, legendItems])
@@ -316,6 +328,24 @@ function Editor(props)
                             id="add-name" label="Plasmid Name" variant="standard" 
                             value={plasmidName}
                             />
+                         <TextField onChange={(e) => setDownloadHeight(e.target.value)} 
+                            id="add-height" label="Set Download Height" type="number"
+                            endAdornment={<InputAdornment position="end">px</InputAdornment>}
+                            value={downloadHeight}
+                            />
+                         <TextField onChange={(e) => setDownloadWidth(e.target.value)} 
+                            id="add-width" label="Set Download Width" type="number"
+                            endAdornment={<InputAdornment position="end">px</InputAdornment>}
+                            value={downloadWidth}
+                            />
+                            <Typography>{"Download"}</Typography>
+                        <IconButton
+                                onClick={() => setCgvDownload(true)}
+                                onMouseDown={handleMouseDown}
+                                edge="end"
+                                >
+                                {<DownloadIcon/>}
+                            </IconButton>
                         {/* <Typography>Legend</Typography>
                         <div class={style.legendMap}>
                             {legendItems.map((v,i) => {
@@ -345,6 +375,7 @@ function Editor(props)
                                     <div onClick={() => setCgvDownload(true)} class="cgv-btn" id="btn-download" title="Download Map PNG"></div>
                                     <div onClick={() => setCgvFormat((cgvFormat == 'circular') ? 'linear' : 'circular')} class="cgv-btn" id="btn-toggle-format" title="Toggle Linear/Circular Format"></div>
                                 </div>
+                                <SequenceEditor sequence={sequence.toUpperCase()} setSequence={setSequence} features={localData} setFeatures={setLocalData}/>
                             </>
                     </div>
                 </div>

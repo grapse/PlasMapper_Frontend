@@ -19,13 +19,11 @@
 .drawing{
     width:70%;
     position:relative;
-    height:600px;
     margin:0 auto;
 }
 .svgwrap{
     position:relative;
     width:800px;
-    height:500px;
 }
 .insertsvg {
     position:absolute;
