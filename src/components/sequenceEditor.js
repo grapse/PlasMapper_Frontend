@@ -1,6 +1,7 @@
 import * as React from "react"
 
 import * as style from '../styles/sequenceeditor.module.css'
+import { fetchFeatureTypes } from '../utils/FeatureUtils';
 
 import GlobalContext from "../context/optionContext";
 
@@ -13,6 +14,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CheckIcon from '@mui/icons-material/Check';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+
+const featureColors = fetchFeatureTypes(true);
+console.log(featureColors)
 
 /**
  * Get the average of a list of hex colors
@@ -34,15 +38,15 @@ function averageColors(colors, alpha){
 }
 
 // TODO: For testing purposes
-const pageLength = 1000;
+const pageLength = 500;
 const sample = fetchSamplePlasmids()[0].sequence;
 const TEST = sample.slice(0,1000);
 const TEST_FEATURE = [
-    {start: 50, stop: 100, name: "Feature 1", color:"#ff00ff", strand: "forward"},
-    {start: 110, stop: 200, name: "Feature 2", color:"#f2002f", strand: "reverse" },
-    {start: 250, stop: 270, name: "Feature 3", color:"#00ff00", strand: "forward"},
-    {start: 460, stop: 467, name: "Feature 4", color:"#0100f1", strand: "forward"},
-    {start: 450, stop: 470, name: "Feature 5", color:"#01fff1", strand: "forward"},
+    {start: 50, stop: 100, name: "Feature 1", legend:"Restriction Sites", strand: 1},
+    {start: 110, stop: 200, name: "Feature 2", legend:"Promoters", strand: -1 },
+    {start: 250, stop: 270, name: "Feature 3", legend:"Replication Origins", strand: 1},
+    {start: 460, stop: 467, name: "Feature 4", legend:"Selectable Markers", strand: 1},
+    {start: 450, stop: 470, name: "Feature 5", legend:"Genes", strand: 1},
 ]
 
 /**
@@ -69,8 +73,8 @@ export default function SequenceEditor(props){
 function DnaSpan(props){
     const {dna, features, start, stop, setSubstr, substr, reverse} = props;
     const [selected, setSelected] = React.useState(false);
-    const color = features.length > 0 ? averageColors(features.map(v => v.color), 0.3) : "";
-    const borderColor = features.length > 0 ? averageColors(features.map(v => v.color), 1) : "";
+    const color = features.length > 0 ? averageColors(features.map(v => featureColors[v.legend]), 0.3) : "";
+    const borderColor = features.length > 0 ? averageColors(features.map(v => featureColors[v.legend]), 1) : "";
 
     return(
         <span
@@ -120,9 +124,9 @@ const splitFeatures = ((sequence, pageStop, pageStart, setSubsequence, substr, f
 
     // Sort by the start point, and only keep features within current page
     let currentFeatures = features
-                            .filter(v => (v.start >= pageStart && v.start <= pageStop) 
+                            .filter(v => (v.start >= pageStart && v.start < pageStop) 
                                          || 
-                                         (v.stop >= pageStart && v.stop <= pageStop))
+                                         (v.stop > pageStart && v.stop <= pageStop))
 
     // Store all the starting and ending points
     let points = [];
@@ -141,7 +145,7 @@ const splitFeatures = ((sequence, pageStop, pageStart, setSubsequence, substr, f
         if(v.location > currentPos){
             // Do not add anything if exact same spot
             spans.push(<DnaSpan
-                            features={currentFeatureElements.filter(w => w.strand === "forward")}
+                            features={currentFeatureElements.filter(w => w.legend === "Restriction Sites" ||  w?.strand !== -1)}
                             substr={substr}
                             setSubstr={setSubsequence}
                             start={currentPos}
@@ -150,7 +154,7 @@ const splitFeatures = ((sequence, pageStop, pageStart, setSubsequence, substr, f
                             dna={sequence.substring(currentPos, v.location)}
                         />);
             reverseSpans.push(<DnaSpan
-                            features={currentFeatureElements.filter(w => w.strand === "reverse")}
+                            features={currentFeatureElements.filter(w => w.legend === "Restriction Sites" || w.strand === -1)}
                             substr={substr}
                             start={currentPos}
                             stop={v.location}
@@ -207,8 +211,8 @@ function PageContent(props){
      * The textual DNA editor
      */
     const {theme, language} = React.useContext(GlobalContext);
-    const [sequence, setSequence] = React.useState(stripInput(TEST, true));
-    const [features, setFeatures] = React.useState(TEST_FEATURE);
+    const {sequence, setSequence, features, setFeatures} = props
+
     const [reverse, setReverse] = React.useState();
     const [page, setPage]= React.useState(0);
     const [subsequence, setSubsequence] = React.useState(null);
@@ -224,7 +228,7 @@ function PageContent(props){
     }, [sequence, reverse])
 
     React.useEffect(() => {
-        // Making the reversed sequence
+        // Set the page
         setPageStart(page * pageLength);
         setPageStop(page * pageLength + pageLength);
 
@@ -278,6 +282,31 @@ function PageContent(props){
     return(
         <div class={style.editor}>
             <div class={style.insertHolder}>
+            <div class={style.alignHoriz}>
+                <IconButton
+                            onClick={() => page > 0 ? setPage(page - 1) : null}
+                            edge="end"
+                            >
+                            {<NavigateBeforeIcon/>}
+                        </IconButton>
+                <TextField
+                    label="Page"
+                    type="number"
+                    sx={{width:70}}
+                    value={page + 1}
+                    onChange={(e) => {
+                                let newNum = e.target.value;
+                                if(newNum > 0 && newNum <= Math.floor(sequence.length / pageLength) + 1){
+                                    setPage(newNum - 1)
+                                } }}
+                    />
+                <IconButton
+                            onClick={() => page < Math.floor(sequence.length / pageLength) ? setPage(page + 1) : null}
+                            edge="end"
+                            >
+                            {<NavigateNextIcon/>}
+                        </IconButton>
+            </div>
                 {"Click on an element to open it here!"}
                 {subsequence && 
                 <div class={style.editorSequence}>

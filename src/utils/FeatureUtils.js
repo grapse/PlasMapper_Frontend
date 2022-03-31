@@ -1,4 +1,4 @@
-export const fetchFeatureTypes = (() => {
+export const fetchFeatureTypes = ((getMap = false) => {
     /**
      * Fetch the data related to feature types
         promoters: Array of Feature Objects that represent promoters
@@ -103,7 +103,7 @@ export const fetchFeatureTypes = (() => {
         {
             id:'restrictionSites',
             display: 'Restriction Sites',
-            color:'#777',
+            color:'#777777',
             bwColor: '#000',
             decoration:'arc'
         },
@@ -116,6 +116,15 @@ export const fetchFeatureTypes = (() => {
         }
 
     ];
+
+    if(getMap){
+        const newObj = {}
+        features.forEach(v => {
+            newObj[v.display] = v.color;
+        })
+        return newObj
+    }
+
     return features;
 })
 

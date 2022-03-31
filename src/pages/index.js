@@ -153,7 +153,7 @@ function PageContent(props){
       
       <div style={{marginTop:`250px`}}></div>
       <div id="annotate">
-        <Editor isEdit={true} data={data} name={plasmidName} sequence={stripInput(sequence)}></Editor>
+        <Editor isEdit={true} data={data} name={plasmidName} sequence={stripInput(sequence)} setSequence={setSequence}></Editor>
       </div>
       
     </p>

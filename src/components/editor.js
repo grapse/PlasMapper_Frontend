@@ -69,7 +69,7 @@ function Editor(props)
     const [showOrf, setShowOrf] = React.useState(false);
     const [showLegend, setShowLegend] = React.useState(true);
     const [panel, setPanel] = React.useState(false);
-    const {sequence, data, name} = props;
+    const {sequence, data, name, setSequence} = props;
     const [plasmidName, setPlasmidName] = React.useState(name || "Plasmid");
     const [isAddStart, setIsAddStart] = React.useState(false);
     const [isAddStop, setIsAddStop] = React.useState(false);
@@ -328,7 +328,7 @@ function Editor(props)
                                     <div onClick={() => setCgvDownload(true)} class="cgv-btn" id="btn-download" title="Download Map PNG"></div>
                                     <div onClick={() => setCgvFormat((cgvFormat == 'circular') ? 'linear' : 'circular')} class="cgv-btn" id="btn-toggle-format" title="Toggle Linear/Circular Format"></div>
                                 </div>
-                                <SequenceEditor></SequenceEditor>
+                                <SequenceEditor sequence={sequence.toUpperCase()} setSequence={setSequence} features={localData} setFeatures={setLocalData}/>
                             </>
                     </div>
                 </div>
