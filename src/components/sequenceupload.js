@@ -44,6 +44,7 @@ function SequenceUpload(props)
     const [file, setFile] = React.useState("");
     const [sample, setSample] = React.useState(-1);
     const [sequence, setSequence] = React.useState("");
+    const [plasmidName, setPlasmidName] = React.useState("Plasmid");
     const [warning, setWarning] = React.useState(false);
 
     const MUItheme = createTheme({
@@ -121,6 +122,7 @@ function SequenceUpload(props)
                                               name={v.name}
                                               selected={sample === i}
                                               onClick={() => {
+                                                  setPlasmidName(v.name);
                                                   setSample(sample === i ? -1 : i);
                                                   setSequence(sample !== i ? v.sequence : "");
                                                   }}
@@ -130,7 +132,7 @@ function SequenceUpload(props)
                 </div>
                 <a >
                     <Button  
-                        onClick={() => annotate(sequence)} 
+                        onClick={() => {console.log("CLICKED EXAMPLE", plasmidName); annotate(plasmidName, sequence)}} 
                         variant="contained">
                         {`Annotate!`}
                     </Button>
