@@ -10,7 +10,7 @@
     box-shadow: 10px 10px 35px rgba(0,0,0,0.3);
 }
 .options{
-    width:40%;
+    width:30%;
 }
 .heading{
     color:#5149b0;
@@ -84,11 +84,13 @@
     display:flex;
     flex-direction:row;
     gap:20px;
+    flex-wrap:wrap;
     margin-bottom: 20px;
 }
 .option{
-    padding:5px;
+    padding:3px;
     color:#5149b0;
+    font-size: 0.8em;
     border-radius:5px;
     cursor:pointer;
 }

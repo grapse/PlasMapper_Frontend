@@ -8,7 +8,7 @@
     width:300px;
     box-shadow: 0px 0px 5px #888888;
     z-index:2;
-    padding:50px 25px 0 20px;
+    padding:50px 25px 50px 20px;
     display:flex;
     height:70vh;
     position: -webkit-sticky;
@@ -17,6 +17,7 @@
     gap:10px;
     flex-direction:column;
     border-radius:20px;
+    overflow: auto;
     margin:150px 10px 0 25px;
 }
 
@@ -43,7 +44,23 @@
 
 .sideholder{
     display:flex;
+    flex-wrap: wrap;
     gap:20px;
+}
+
+.imgholder{
+    max-height: 500px;
+    max-width: 100%;
+    min-width: 20%;
+}
+
+.helpimg{
+    max-height: 100%;
+    max-width: 100%;
+}
+
+.helptext{
+    min-width: 30%;
 }
 
 .helplink{

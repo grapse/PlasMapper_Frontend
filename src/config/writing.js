@@ -1,9 +1,19 @@
 /**
  * Configures the written prompts.
  * 
+ * To modify any text on the site:
+ *      - Find it in this file and edit it here. You will have to full reload the page if you curently have it open in development mode.
+ * 
  * To add a new language:
  *      - Add it to the languages list with a reference name (ref) and display name (name)
  *      - Add it to the default object by copying one of the existing ones and translating all the phrases
+ * 
+ * To modify the help page:
+ *      - Go to the array under the comment that says "HELP PAGE HERE"
+ *      - Add an entry in the same style as the others, with the following attributes:
+ *          -  title: The displayed title on the sidebar and page
+ *          -  content: The displayed text
+ *          -  image: (Optional) The displayed image (must be an image URL)
  */
 
 export const languages = [
@@ -32,6 +42,7 @@ export default({
         SEQ_WARNING: "Load times may be slow for sequences >200kb",
         SEQ_ERROR: "Sequences that exceed 500kb will be truncated to 500kb",
         FILE_SPEC: "Plaintext or FASTA only. DNA sequences only (no protein).",
+        // HELP PAGE HERE
         HELP: [
             {
                 title:"Choosing a Sequence",
