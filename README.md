@@ -3,7 +3,7 @@
 
 This is the front-end repository for the PlasMapper 3.0 webserver
 
-Setup:
+__Setup (development):__
 
 After cloning the repository:
 `npm install`
@@ -11,3 +11,9 @@ After cloning the repository:
 
 You may have to run this beforehand:
 `npm install -g gatsby-cli`
+
+__Setup (hosting):__
+
+Navigate to the frontend folder inside `project`
+Run `gatsby build`
+Run `sudo systemctl restart nginx`
