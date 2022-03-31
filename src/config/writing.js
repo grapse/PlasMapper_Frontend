@@ -16,7 +16,7 @@
  *          -  image: (Optional) The displayed image (must be an image URL)
  */
 
-export const languages = [
+ export const languages = [
     {name:"English", ref:"en"}    
 ]
 
@@ -42,10 +42,10 @@ export default({
         SEQ_WARNING: "Load times may be slow for sequences >200kb",
         SEQ_ERROR: "Sequences that exceed 500kb will be truncated to 500kb",
         FILE_SPEC: "Plaintext or FASTA only. DNA sequences only (no protein).",
-        // HELP PAGE HERE
         HELP: [
             {
                 title:"Choosing a Sequence",
+                image: "https://i.imgur.com/P4XguNh.png",
                 content:`The PlasMapper 3.0 server provides several ways to generate a plasmid map.\n
             1. If you don't already have a plasmid in mind, browse the plasmid database to find one.\n
             2. You can enter a plasmid DNA sequence as text. This can be pasted into the text box, where any characters other than 'a', 'A', 't', 'T', 'g', 'G', 'c', or 'C' will be removed before annotation.\n
@@ -55,12 +55,14 @@ export default({
             },
             {
                 title:"Using the Search Page",
+                image:    'https://i.imgur.com/IGz3tWY.png',
                 content:`The PlasMapper 3.0 database allows users to filter plasmids by sequence features, expression type, sequence length, restriction sites, supplier, and plasmid name.
 
                 A table of results will be displayed below the filtering options.`
             },
             {
                 title:"Search Preview",
+                image:'https://i.imgur.com/ecqq4QY.png',
                 content:`Click on any table row to open up a preview.\n
                         1. A visual preview of the features
                         2. The DNA sequence
@@ -68,41 +70,67 @@ export default({
             },
             {
                 title: "Plasmid Editor",
+                image: "https://i.imgur.com/qhJ6ebK.png",
                 content:   `There are many esthetic and feature related customizations that can be made in the plasmid editor.
 
                 On the left hand side, there are 4 tabs.`
             },
             {
                 title: "Features Tab",
+                image: "https://i.imgur.com/AutHsM0.png",
                 content:   `The "Features" tab allows users to quickly hide or reveal specific features by clicking the eye icon. Users can also open feature details by clicking on the feature name or dropdown arrow. From the feature details, users can edit a feature's display name, category, start/stop indices, and forward/reverse strand. Once changes have been made to a feature, click the hard drive/save icon to save changes.`
             },
             {
                 title: "Add Features Tab",
+                image: "https://i.imgur.com/l13LKE2.png",
                 content:   `The "Add Feature" tab allows users to add their own custom features to their plasmid maps. Simply fill out the feature details and then click the "Add Feature" button to update the map.`
             },
             {
                 title: "Restriction Sites Tab",
+                image: "https://i.imgur.com/NCg242y.png",
                 content:   `The "Restriction Sites" tab allows users to select which restriction sites will be shown on the map. By default, common restriction sites are shown. Simple check or uncheck any box to show or hide the corresponding restriction site. This tab also shows the number of occurrences of each restriction site in the given plasmid DNA sequence.`
             },
             {
                 title: "Other Tab",
-                content:   `The "Other" tab allows users to change miscellaneous esthetic properties of the plasmid map such as showing or hiding open reading frames (ORFs), showing or hiding the legend, toggling greyscale mode, or changing the display name of the plasmid.`
+                image: "https://i.imgur.com/z2fxdvz.png",
+                content:   `The "Other" tab allows users to change miscellaneous esthetic properties.
+                            1. Show/hide open reading frames
+                            2. Show/hide legend
+                            3. Toggle greyscale mode
+                            4. Change the name
+                            5. Set download dimensions
+                            6. Download map`
             },
             {
                 title: "Map View",
+                image: "https://i.imgur.com/RfSmver.png",
                 content:   `The map view on the right hand side of the page supports click and drag movement of the plasmid map around the viewport, clicking on a feature arrow to open that feature's details in the "Features" tab, scroll wheel zoom in/out, and customizing the legend colors by clicking on the colored box to the left of each legend entry.
 
                 Just under the map view, there is a button to download your plasmid map as a PNG file. There is also a button to toggle linear/circular plasmid map view.`
             },
+            
+            {
+                title: "Text Editor",
+                image: "https://i.imgur.com/ualO2qv.png" ,
+                content:   `Use the text editor to view and edit the sequence.\n
+                            1. The sequence is divided into segments based on the features. Click on one to open it up on the left.
+                            2. The sequence is split into pages of 1000 bp each. Use the arrows or type in a page to switch pages.
+                            3. You can edit the selected segment, on the selected strand using this. There is a preview of the complementary strand beneath.
+                            4. Click "Swap Strands" to change the strand you are editing.
+                            5. Click "Delete entire segment" to remove the segment you are editing.
+                            6. Click "Save changes" to save any edits you made to the segment. This will reflect in both the textual and visual editors.
+                            7. You can also insert novel features here. Use this box and click "Insert Before" to insert it directly before the selected segment, or "Insert After" to insert directly after.`
+            },
             {
                 title: "Header",
+                image: "https://i.imgur.com/Uq2BpPj.png",
                 content:   `The header bar contains several helpful links.
 
-                By clicking the PlasMapper 3.0 icon, a user is returned to the homepage of the server.\n
+                By clicking the PlasMapper 3.0 icon, a user is returned to the homepage of the server.
                 
-                By clicking the "Search" button, a user is redirected to the "Browse Plasmids" page.\n
+                By clicking the "Search" button, a user is redirected to the "Browse Plasmids" page.
                 
-                By clicking the "Help" button, a user is redirected to the help page you are currently viewing.\n
+                By clicking the "Help" button, a user is redirected to the help page you are currently viewing.
                 
                 By clicking the "About" button, a user is shown the details about the PlasMapper 3.0 server.\n
                 
@@ -119,4 +147,5 @@ export default({
         ],
     },
 })
+
 
