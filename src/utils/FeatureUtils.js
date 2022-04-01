@@ -137,6 +137,14 @@ export const getFeatureNames = (() => {
     return [...new Set(features)];
 })
 
+export const getExpressionTypes = (() => {
+    /**
+     * Static data of all the expression types.
+     * TODO: Might move elsewhere
+     */
+    const expressionTypes = ['Yeast Expression', 'Plant Expression', 'Bacterial Expression', 'Mammalian Expression', 'Insect Expression', 'Worm Expression']
+    return [...new Set(expressionTypes)];
+})
 
 /**
  *  Returns the DNA input of the user with excess information removed
