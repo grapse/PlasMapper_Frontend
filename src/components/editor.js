@@ -374,7 +374,7 @@ function Editor(props)
                             <>
                                 <span style={{"display":"flex", "flex-direction":"row", "margin-bottom":"2px"}}>
                                     <ZoomInIcon sx={{height:'0.75em', width:'0.75em', marginLeft:'5px'}}></ZoomInIcon>
-                                    <Typography sx={{fontSize:'small', marginLeft:'2px'}}>Zoom with mouse wheel</Typography>
+                                    <Typography sx={{fontSize:'small', marginLeft:'2px'}}>Zoom by scrolling</Typography>
                                     <PanToolIcon sx={{height:'0.75em', width:'0.75em', marginLeft:'10px'}}></PanToolIcon>
                                     <Typography sx={{fontSize:'small', marginLeft:'3px'}}>Drag to change position</Typography>
                                 </span>

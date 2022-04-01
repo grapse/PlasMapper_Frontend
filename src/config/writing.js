@@ -31,7 +31,7 @@ export default({
                 You can add features by clicking directly on the map.\n\n\
                 Only restriction sites that appear once are shown by default, but you optionally show others.\n\n\
                 You can change the map name, or toggle ORFs, the legend, or greyscale mode in the Other tab.",
-        CITATION: "Credit the following:",
+        CITATION: "Credit the following: (Insert paper once published)",
         SOURCE_CODE_FRONTEND: "https://github.com/grapse/PlasMapper_Frontend",
         SOURCE_CODE_BACKEND: "https://github.com/Jacques857/PlasMapper_API",
         OPEN_LINK: "Browse Plasmid Database",
