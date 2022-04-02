@@ -42,6 +42,16 @@ export default({
         SEQ_WARNING: "Load times may be slow for sequences >200kb",
         SEQ_ERROR: "Sequences that exceed 500kb will be truncated to 500kb",
         FILE_SPEC: "Plaintext or FASTA only. DNA sequences only (no protein).",
+        ABOUT: {
+            title:"About PlasMapper 3.0",
+            history:`PlasMapper 3.0 was inspired by PlasMapper 2.0 which was built in 2004.\n
+            Version 3.0 aims to modernize the look and feel of the website, while maintaining its overall purpose.\n
+            Many new features have been added in version 3.0, including the ability to filter a plasmid database and interact with the plasmid map in real time.`,
+            history_link:"https://sites.ualberta.ca/~stothard/papers/nar_plasmapper.pdf",
+            architecture:`PlasMapper 3.0 consists of a Python Django Rest Framework API and a React MUI frontend.\n
+            The plasmid database exists as a set of JSON files compiled specifically for PlasMapper 3.0.\n
+            Both the API and the frontend are served out of the David Wishart lab at the University of Alberta.`,
+        },
         HELP: [
             {
                 title:"Choosing a Sequence",
