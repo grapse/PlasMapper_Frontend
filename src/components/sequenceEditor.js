@@ -357,6 +357,7 @@ function PageContent(props){
             </div>
                 {subsequence ? 
                 <div class={style.editorSequence}>
+                
                     <TextField
                         label={`Edit ${subsequence.strand ? 'reverse' : 'forward'} strand`}
                         multiline
@@ -427,7 +428,20 @@ function PageContent(props){
                     </div>
                 </div>
                 :
-                "Click on a segment to open the editor here"
+                <div>
+                <FormControlLabel
+                control={
+                    <Switch checked={download} onChange={() => setDownload(!download)} name="download" />
+                }
+                label="Toggle Downloadable View"
+            />
+            <button onClick={() => {
+                exportComponentAsPNG(componentRef);
+                }}
+                disabled={!download}
+                >
+                Export As PNG
+            </button>{"Click on a segment to open the editor here"}</div>
                 }
             </div>
             <TextDisplay 
@@ -440,19 +454,7 @@ function PageContent(props){
                 handleSubsequenceUpdate={handleSubsequenceUpdate}
                 subsequence={subsequence}
             />
-            <FormControlLabel
-                control={
-                    <Switch checked={download} onChange={() => setDownload(!download)} name="download" />
-                }
-                label="Toggle Downloadable View"
-            />
-            <button onClick={() => {
-                exportComponentAsPNG(componentRef);
-                }}
-                disabled={!download}
-                >
-                Export As PNG
-            </button>
+            
         </div>
     )
 }
