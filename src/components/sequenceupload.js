@@ -102,6 +102,7 @@ function SequenceUpload(props)
                         classes:{input:style.input}
                         }}
                     multiline
+                    maxRows={3}
                     value={sequence}
                     onChange={(e) => changeSequence(e.target.value)}
                     />
