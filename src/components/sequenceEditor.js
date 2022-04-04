@@ -1,5 +1,7 @@
 import * as React from "react"
 
+import { exportComponentAsJPEG, exportComponentAsPDF, exportComponentAsPNG } from 'react-component-export-image';
+
 import * as style from '../styles/sequenceeditor.module.css'
 import { fetchFeatureTypes } from '../utils/FeatureUtils';
 
@@ -9,6 +11,8 @@ import {fetchSamplePlasmids} from "../utils/SamplePlasmids";
 import {stripInput} from "../utils/FeatureUtils";
 import IconButton from "@mui/material/IconButton";
 import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckIcon from '@mui/icons-material/Check';
@@ -38,7 +42,8 @@ function averageColors(colors, alpha){
 }
 
 // TODO: For testing purposes
-const pageLength = 500;
+const pageLength = 600;
+const rowLength = 60;
 // const sample = fetchSamplePlasmids()[0].sequence;
 // const TEST = sample.slice(0,1000);
 // const TEST_FEATURE = [
@@ -71,22 +76,32 @@ export default function SequenceEditor(props){
 }
 
 function DnaSpan(props){
-    const {dna, features, start, stop, setSubstr, substr, reverse} = props;
+    const {dna, features, start, stop, setSubstr, substr, reverse, download} = props;
     const [selected, setSelected] = React.useState(false);
-    const color = features.length > 0 ? averageColors(features.map(v => featureColors[v.legend]), 0.3) : "";
-    const borderColor = features.length > 0 ? averageColors(features.map(v => featureColors[v.legend]), 1) : "";
+    const color = features.length > 0 ? averageColors(features.map(v => featureColors[v.legend]), 0.3) : "rgba(255,255,255,0)";
+    const borderColor = features.length > 0 ? averageColors(features.map(v => featureColors[v.legend]), 1) : "rgba(255,255,255,0)";
 
     return(
         <span
             style={{"--highlight":color,
-                    "--border":borderColor}}
+                    "--border":borderColor,
+                    "--offset":reverse ? "-50%" : "100%", 
+                    "--line": reverse ? "underline" : "overline"}}
             class={`${style.seqBase} ${(substr?.start === start && substr?.strand === reverse) && style.seqBaseSelected}`}
-            onClick={() => {setSubstr({dna: dna, start: start, stop: stop, strand: reverse});
-                            setSelected(true);
+            onClick={() => {
+                            // Deselect if user clicks on same one again, else set to the selected strand
+                            if(substr?.start === start && substr?.strand === reverse){
+                                setSubstr(null);
+                                setSelected(false);
+                            }
+                            else{
+                                setSubstr({dna: dna, start: start, stop: stop, strand: reverse});
+                                setSelected(true);
+                            }
                             console.log(dna)}}
             >   
                 {features.length > 0 && 
-                <span class={style.tooltiptext}>
+                <span class={style.tooltiptext} style={{}}>
                     <div class={style.holdFeatures}>
                         {features.map(v => <span>{v.name}</span>)}
                     </div>
@@ -124,9 +139,12 @@ const splitFeatures = ((sequence, pageStop, pageStart, setSubsequence, substr, f
 
     // Sort by the start point, and only keep features within current page
     let currentFeatures = features
-                            .filter(v => (v.start >= pageStart && v.start < pageStop) 
+                            .filter(v => (v.start >= pageStart && v.start < pageStop && v.visible) 
                                          || 
-                                         (v.stop > pageStart && v.stop <= pageStop))
+                                         (v.stop > pageStart && v.stop <= pageStop && v.visible)
+                                         ||
+                                         (v.start <= pageStart && v.stop >= pageStop && v.visible))
+    console.log(currentFeatures);
 
     // Store all the starting and ending points
     let points = [];
@@ -195,15 +213,43 @@ const splitFeatures = ((sequence, pageStop, pageStart, setSubsequence, substr, f
     }
 
     return(
-        <>
+        <div class={style.seqHolder}>
+            <div class={style.seqBaseHolderAbs} style={{"--offset": "0em"}}>
+                {
+                    [...Array(Math.floor(pageLength/rowLength))].map((_,i) => {
+                        return(<span key={i}>{"----+----|----+----|----+----|----+----|----+----|----+----|"}</span>)
+                    })
+                }
+            </div>
             <div class={style.seqBaseHolderAbs} style={{"--offset": "-1em"}}>
                 {spans}
             </div>
-            <div class={style.seqBaseHolder} >
+            <div class={style.seqBaseHolder} style={{"--offset": "1em"}}>
                 {reverseSpans}
             </div>
-        </>
+        </div>
     )
+})
+
+const TextDisplay = React.forwardRef((props, ref) => {
+    const {page, sequence, pageStop, pageStart, handleSubsequenceUpdate, subsequence, features} = props;
+
+    return(
+        <div ref={ref} class={style.numberSeqHolder}>
+            <div class={style.numHolder}>
+                {[...Array(Math.floor(pageLength/rowLength))].map((_,i) => {
+                    return(<span key={i}>{`${(page*pageLength)+(i*rowLength)+1}\n`}</span>)
+                })}
+            </div>
+            {splitFeatures(sequence, pageStop, pageStart, handleSubsequenceUpdate, subsequence, features)}
+            <div class={style.numHolder}>
+                {[...Array(Math.floor(pageLength/rowLength))].map((_,i) => {
+                    return(<span key={i}>{`${(page*pageLength)+(i*rowLength)+60}\n`}</span>)
+                })}
+            </div>
+        </div>
+    )
+
 })
 
 function PageContent(props){
@@ -211,15 +257,17 @@ function PageContent(props){
      * The textual DNA editor
      */
     const {theme, language} = React.useContext(GlobalContext);
-    const {sequence, setSequence, features, setFeatures} = props
+    const componentRef = React.useRef();
+    const {sequence, setSequence, features, setFeatures} = props;
 
     const [reverse, setReverse] = React.useState();
     const [page, setPage]= React.useState(0);
     const [subsequence, setSubsequence] = React.useState(null);
     const [editSub, setEditSub] = React.useState("");
     const [insertSub, setInsertSub] = React.useState("");
-    const [pageStart, setPageStart] = React.useState(page * pageLength)
-    const [pageStop, setPageStop] = React.useState(page * pageLength + pageLength)
+    const [pageStart, setPageStart] = React.useState(page * pageLength);
+    const [pageStop, setPageStop] = React.useState(page * pageLength + pageLength);
+    const [download, setDownload] = React.useState(false);
 
     React.useEffect(() => {
         // Making the reversed sequence
@@ -237,7 +285,7 @@ function PageContent(props){
     function handleSubsequenceUpdate(sub){
         // Handle subsequence callback
         setSubsequence(sub)
-        setEditSub(sub.dna)
+        setEditSub(sub?.dna)
     }
 
     function insertSequence(dna, start, stop, reverse){
@@ -280,7 +328,7 @@ function PageContent(props){
     }
 
     return(
-        <div class={style.editor}>
+        <div class={`${style.editor} ${download ? style.isDownload : style.notDownload}`}>
             <div class={style.insertHolder}>
             <div class={style.alignHoriz}>
                 <IconButton
@@ -307,8 +355,7 @@ function PageContent(props){
                             {<NavigateNextIcon/>}
                         </IconButton>
             </div>
-                {"Click on an element to open it here!"}
-                {subsequence && 
+                {subsequence ? 
                 <div class={style.editorSequence}>
                     <TextField
                         label={`Edit ${subsequence.strand ? 'reverse' : 'forward'} strand`}
@@ -379,11 +426,33 @@ function PageContent(props){
                         {"Insert After"}
                     </div>
                 </div>
+                :
+                "Click on a segment to open the editor here"
                 }
             </div>
-            <div class={style.seqHolder}>
-                {splitFeatures(sequence, pageStop, pageStart, handleSubsequenceUpdate, subsequence, features)}
-            </div>
+            <TextDisplay 
+                ref={componentRef}
+                page={page}
+                features={features}
+                sequence={sequence}
+                pageStop={pageStop}
+                pageStart={pageStart}
+                handleSubsequenceUpdate={handleSubsequenceUpdate}
+                subsequence={subsequence}
+            />
+            <FormControlLabel
+                control={
+                    <Switch checked={download} onChange={() => setDownload(!download)} name="download" />
+                }
+                label="Toggle Downloadable View"
+            />
+            <button onClick={() => {
+                exportComponentAsPNG(componentRef);
+                }}
+                disabled={!download}
+                >
+                Export As PNG
+            </button>
         </div>
     )
 }

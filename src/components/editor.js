@@ -60,6 +60,7 @@ const featureData = fetchFeatureTypes();
 
 function Editor(props)  
   {
+    const targetRef = React.useRef();
     const {theme, setTheme, language, setLanguage} = React.useContext(GlobalContext);
     const {isEdit} = props;
     const {sequence, data, name, setSequence} = props;
@@ -84,6 +85,8 @@ function Editor(props)
 
     const [downloadHeight, setDownloadHeight] = React.useState(2000);
     const [downloadWidth, setDownloadWidth] = React.useState(3000);
+
+    const [width, setWidth] = React.useState(700);
 
     function handleFeatureUpdate(index, val){
         setLocalData(
@@ -167,7 +170,7 @@ function Editor(props)
         // If we are currently on the CGV tab, draw CGView
         const cgv = new CGV.Viewer('#my-viewer', {
             height: 500,
-            width: 800,
+            width: width,
             });
         cgv.on('click', (event) => {
             if (event.elementType === 'feature' && event.element.source === 'json-feature' && event.element?.tags.length) {
@@ -215,6 +218,11 @@ function Editor(props)
 
     },[localData, cgvFormat, cgvDownload, panel, isAddStart, isAddStop, plasmidName, showLegend, showOrf, legendItems])
 
+    React.useLayoutEffect(() => {
+        if (targetRef.current) {
+          setWidth(targetRef.current.offsetWidth);
+        }
+      }, []);
 
     // TODO: move tabs to separate components
     return(
@@ -357,7 +365,7 @@ function Editor(props)
                     </div>
                     }
                 </div>}
-                <div class={style.drawing}>
+                <div class={style.drawing} ref={targetRef}>
                     <div class={style.svgwrap}>
                             <>
                                 <span style={{"display":"flex", "flex-direction":"row", "margin-bottom":"2px"}}>
@@ -371,10 +379,10 @@ function Editor(props)
                                     <div onClick={() => setCgvDownload(true)} class="cgv-btn" id="btn-download" title="Download Map PNG"></div>
                                     <div onClick={() => setCgvFormat((cgvFormat == 'circular') ? 'linear' : 'circular')} class="cgv-btn" id="btn-toggle-format" title="Toggle Linear/Circular Format"></div>
                                 </div>
-                                <SequenceEditor sequence={sequence.toUpperCase()} setSequence={setSequence} features={localData} setFeatures={setLocalData}/>
                             </>
                     </div>
                 </div>
+                <SequenceEditor sequence={sequence} setSequence={setSequence} features={localData} setFeatures={setLocalData}/>
             </div>
         </>
     )

@@ -74,11 +74,23 @@ function Header(props)
     const [open, setOpen] = React.useState(0);
     const [pageProgress, setPageProgress] = React.useState(0);
     const [darkMode, setDarkMode] = React.useState(false);
+    const [isTimeout, setIsTimeout] = React.useState(true);
+  
+    React.useEffect(() => {
+      // Throttles scroll event
+      const timer = setTimeout(() => {
+        if(!isTimeout){
+            setIsTimeout(true);
+        }
+      }, 200);
+      // Remove on unmount
+      return () => clearTimeout(timer);
+    }, [isTimeout]);
 
     React.useEffect(() => {
       window.addEventListener('scroll', handleScroll);
       return () => {
-          // On unmount
+          // Remove on unmount
           window.removeEventListener('scroll', handleScroll);
       }
     }, [])
@@ -88,11 +100,14 @@ function Header(props)
      * @param  {scrollEvent} event The scroll event
      */
     const handleScroll = (event) => {
-      let scrollTop = window.scrollY;
-      let docHeight = document.body.offsetHeight;
-      let winHeight = window.innerHeight;
-      let scrollPercent = scrollTop / (docHeight - winHeight);
-      setPageProgress(CIRCUMFERENCE * scrollPercent);
+      if(isTimeout){
+        let scrollTop = window.scrollY;
+        let docHeight = document.body.offsetHeight;
+        let winHeight = window.innerHeight;
+        let scrollPercent = scrollTop / (docHeight - winHeight);
+        setPageProgress(CIRCUMFERENCE * scrollPercent);
+        setIsTimeout(false);
+      }
     }
 
     const handleChange = (event) => {
@@ -107,31 +122,31 @@ function Header(props)
         <Link to="/">
         <div class={style.svgholder}>
           <svg class={style.insertsvg} height="100%" viewBox="4 0 100 100">
-                                <defs>
-                                    <filter id="shadow">
-                                    <feDropShadow dx="0" dy="0" stdDeviation="0"
-                                        flood-color="black"/>
-                                    </filter>
-                                </defs>
-                                <circle r="22" fill="transparent"
-                                    stroke={theme['--plasmid1']}
-                                    stroke-width="9"
-                                    stroke-dasharray={`35 ${CIRCUMFERENCE}`}
-                                    transform={`translate(50,50) rotate(${pageProgress*2})`} >
-                                </circle>
-                                <circle r="9" fill="transparent"
-                                    stroke={theme['--plasmid2']}
-                                    stroke-width="9"
-                                    stroke-dasharray={`44 ${CIRCUMFERENCE}`}
-                                    transform={`translate(50,50) rotate(${180+pageProgress/2})`} />
-                                
-                                <circle r="35" fill="transparent"
-                                    stroke={theme['--plasmid3']}
-                                    stroke-width="9"
-                                    stroke-dasharray={`${20+pageProgress} ${CIRCUMFERENCE}`}
-                                    transform="translate(50,50) rotate(-90)" />
-                                
-                            </svg>
+              <defs>
+                  <filter id="shadow">
+                  <feDropShadow dx="0" dy="0" stdDeviation="0"
+                      flood-color="black"/>
+                  </filter>
+              </defs>
+              <circle r="22" fill="transparent"
+                  stroke={theme['--plasmid1']}
+                  stroke-width="9"
+                  stroke-dasharray={`35 ${CIRCUMFERENCE}`}
+                  transform={`translate(50,50) rotate(${pageProgress*2})`} >
+              </circle>
+              <circle r="9" fill="transparent"
+                  stroke={theme['--plasmid2']}
+                  stroke-width="9"
+                  stroke-dasharray={`44 ${CIRCUMFERENCE}`}
+                  transform={`translate(50,50) rotate(${180+pageProgress/2})`} />
+              
+              <circle r="35" fill="transparent"
+                  stroke={theme['--plasmid3']}
+                  stroke-width="9"
+                  stroke-dasharray={`${20+pageProgress} ${CIRCUMFERENCE}`}
+                  transform="translate(50,50) rotate(-90)" />
+              
+          </svg>
         </div>
         </Link>
           

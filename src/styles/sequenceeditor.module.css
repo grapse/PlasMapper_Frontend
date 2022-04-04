@@ -1,18 +1,32 @@
+.numberSeqHolder{
+    display: flex;
+    flex-direction: row;
+    font-family: Courier, monospace;
+    line-height: 5em;
+    font-size: 0.8em;
+    gap: 10px;
+    position:relative;
+    width: 65%;
+}
+
+.numHolder{
+    width: 5.5ch;
+    white-space:pre-line;
+}
+
 .seqHolder{
-    margin:50px;
     position:relative;
     text-align:left;
-    font-family:Courier, monospace;
-    line-height: 4em;
     word-break: break-all;
-    width: 70%;
+    width: 60.5ch;
 }
 
 .editor{
     display: flex;
     flex-direction: row;
     text-align: left;
-    gap: 20px;
+    gap: 30px;
+    flex-wrap:wrap;
 }
 
 .reversePreview{
@@ -24,8 +38,8 @@
 }
 
 .insertHolder{
-    min-width: 30%;
-    max-width: 30%;
+    min-width: min(300px, 90vw);
+    max-width: min(300px, 90vw);
     display:flex;
     padding-top: 30px;
     flex-direction: column;
@@ -47,19 +61,29 @@
 
 .seqBaseHolder{
     margin-top: var(--offset);
-    width: 100%;
+    width: 60.5ch;
 }
 .seqBaseHolderAbs{
     position:absolute;
     top: var(--offset);
-    width: 100%;
+    width: 60.5ch;
 }
 
 .seqBase{
     position: relative;
     background-color: var(--highlight);
     cursor: pointer;
-    border: 1.5px solid var(--border);
+    box-shadow:inset 0px 0px 0px 1.5px var(--border);
+    border-radius: 3px;
+}
+.isDownload .seqBase{
+    position: relative;
+    cursor: pointer;
+    box-shadow: none;
+    background-color: rgba(255,255,255,0);
+    text-decoration: var(--line);
+    text-decoration-thickness: 0.6em;
+    text-decoration-color: var(--border);
     border-radius: 3px;
 }
 
@@ -92,6 +116,32 @@
 
     display:flex;
     flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.isDownload .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+    width: 200px;
+    background-color: rgba(255,255,255,0.2);
+    color: #000;
+    text-align: center;
+    font-size: 60%;
+    border-radius: 6px;
+    bottom: var(--offset);
+    left: 50%;
+    margin-left: -100px;
+
+    line-height: 1em;
+    text-align: center;
+
+    position: absolute;
+    z-index: 1;
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 
 .addButton{
@@ -111,13 +161,6 @@
     transition: visibility 0s linear 0s, opacity 300ms;
 }
 
-/* .seqBase::after{
-    content: attr(reverse);
-    top:1em;
-    width: 100%;
-    left: 0;
-    text-decoration: line-through;
-} */
 
 .seqPosition{
     position:absolute;

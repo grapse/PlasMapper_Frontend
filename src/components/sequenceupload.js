@@ -8,6 +8,8 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { fetchSamplePlasmids } from "../utils/SamplePlasmids";
 import GlobalContext from "../context/optionContext";
+import { FileUploader } from "react-drag-drop-files";
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 
 const samplePlasmids = fetchSamplePlasmids();
 
@@ -60,8 +62,7 @@ function SequenceUpload(props)
 
     function handleFile(e){
         const fileReader = new FileReader();
-        fileReader.readAsText(e.target.files[0], "UTF-8");
-        console.log(e.target.files[0]);
+        fileReader.readAsText(e, "UTF-8");
         fileReader.onload = e => {
             changeSequence(e.target.result);
         }
@@ -97,25 +98,26 @@ function SequenceUpload(props)
                     style={{width:`100%`,backgroundColor:theme['--background']}}
                     id="outlined-multiline-static"
                     label={language.PASTE_SEQ}
-                    InputProps={{input:{color:"white"}}}
+                    InputProps={{
+                        classes:{input:style.input}
+                        }}
                     multiline
-                    rows={4}
                     value={sequence}
                     onChange={(e) => changeSequence(e.target.value)}
                     />
-                <Typography sx={{color:warning ? "red" : theme['--text']}}>{warning || language.SEQ_DETAILS}</Typography>
+                <Typography sx={{color:warning ? "red" : theme['--text'], fontSize: "1em"}}>{warning || language.SEQ_DETAILS}</Typography>
                 <Or/>
-                <div class={style.inputButton}>
-                    <input
-                        accept="text/*"
-                        id="raised-button-file"
-                        onChange={(e) => handleFile(e)}
-                        type="file"
-                    />
-                </div>
-                <Typography sx={{color:theme['--text']}}>{language.FILE_SPEC}</Typography>
+                <FileUploader
+                    children={
+                        <div class={style.downloadBox}><UploadFileIcon />{"Upload .txt or .fasta DNA File (no protein)"}</div>
+                    }
+                    types={['txt','fasta','fna','ffn','faa','frn','fa']}
+                    handleChange={(e) => handleFile(e)}
+                    name="file"
+                    id="raised-button-file"
+                />
                 <Or/>
-                <Typography sx={{color:theme['--text']}}>{language.EXAMPLES}</Typography>
+                <Typography sx={{color:theme['--text'], fontSize: "1em"}}>{language.EXAMPLES}</Typography>
                 <div class={style.buttonholder}>
                     {samplePlasmids.map((v,i) => {
                         return(<ExampleButton key={`sample-${i}`} 
@@ -130,13 +132,12 @@ function SequenceUpload(props)
                                               )
                     })}
                 </div>
-                <a >
-                    <Button  
-                        onClick={() => {console.log("CLICKED EXAMPLE", plasmidName); annotate(plasmidName, sequence)}} 
-                        variant="contained">
-                        {`Annotate!`}
-                    </Button>
-                </a>
+                <button  
+                    class={style.annotateButton}
+                    onClick={() => {console.log("CLICKED EXAMPLE", plasmidName); annotate(plasmidName, sequence)}} 
+                    >
+                    {`Annotate!`}
+                </button>
                 
             </div>
         </ThemeProvider>
