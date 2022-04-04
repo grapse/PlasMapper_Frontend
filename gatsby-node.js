@@ -14,7 +14,7 @@ exports.onCreateWebpackConfig = ({ stage, loaders, actions }) => {
       module: {
         rules: [
           {
-            test: /react-particle-animation/,
+            test: /react-component-export-image/,
             use: loaders.null(),
           },
         ],
