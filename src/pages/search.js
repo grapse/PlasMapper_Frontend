@@ -47,6 +47,7 @@ function SearchPage(){
             // Upon loading in, fetch the plasmid metadata database from backend
             fetchSearchData()
                 .then(data => {
+                    console.log(data[2]);
                         setPlasmids(data);
                         setFilteredPlasmids(data);
                         setFirstLoad(false);

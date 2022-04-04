@@ -67,7 +67,7 @@
 }
 
 .logosmall{
-  font-size:3rem;
+  font-size:2.7rem;
 }
 .logodiv{
   color:var(--title);
@@ -78,7 +78,7 @@
 .logotitle{
   font-family:'Poppins',serif;
   font-weight: 500;
-  font-size:3rem;
+  font-size:2.8rem;
 }
 
 @keyframes circle1anim{
@@ -169,5 +169,6 @@
     stroke-width: 3;
     right:-600px;
     position:absolute;
+    opacity: 0.5;
   }
 }

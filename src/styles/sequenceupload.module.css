@@ -4,8 +4,17 @@
     margin: 20px auto;
     display: flex;
     flex-direction: column;
-    padding:20px;
+    padding:10px;
     align-items:flex-start;
+    font-size: 0.8em;
+}
+
+.input{
+    color: var(--text);
+    width: 100%;
+    font-size: 0.8em;
+    overflow: auto;
+    max-height: 200px;
 }
 
 .linkref{
@@ -33,7 +42,7 @@
 .connect{
     width: 2px;
     background-color: var(--plasmid3);
-    height:20px;
+    height:12px;
     margin:auto;
 }
 
@@ -77,22 +86,36 @@
 
 .annotateButton{
     align-self: flex-end;
-    margin-top:27px;
+    margin-top:5px;
     width:150px;
     height:2.5rem;
     padding:5px;
     position:relative;
     margin-left: 445px;
     margin-right: 25px;
-    background:linear-gradient(45deg,var(--plasmid2),var(--plasmid3));
+    background-color:var(--plasmid3);
     border:none;
-    border-radius:2rem;
     font-weight:500;
     cursor:pointer;
     color:white;
+    border-top-right-radius: 20px 20px;
+    border-bottom-left-radius: 20px 20px;
+    transition: 0.2s ease-in-out;
 }
 
-.annotatebutton{
-    margin:20px;
-    align-self: flex-end;
+.annotateButton :hover{
+    background-color:white;
+}
+
+.downloadBox{
+    border: 3px var(--plasmid3) dashed;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: var(--plasmid3);
+    display: flex;
+    align-items:center;
+    justify-content: flex-start;
+    gap:15px;
+    width: min(580px, calc(90vw - 20px));
 }
