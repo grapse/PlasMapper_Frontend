@@ -8,7 +8,7 @@ import MiniEditor from '../components/minieditor'
 import { DataGrid } from '@mui/x-data-grid';
 import GlobalContext from "../context/optionContext";
 import { fetchSearchData, fetchSequence, incrementPopularity } from "../utils/FetchUtils";
-import { getFeatureNames, getCommonEnzymes } from "../utils/FeatureUtils";
+import { getFeatureNames, getCommonEnzymes, getExpressionTypes } from "../utils/FeatureUtils";
 import { TableColumns } from "../utils/SearchUtils";
 
 /**
@@ -22,6 +22,7 @@ import { TableColumns } from "../utils/SearchUtils";
 
 const featureNames = getFeatureNames();
 const commonEnzymes = getCommonEnzymes();
+const expressionTypes = getExpressionTypes();
 
 function SearchPage(){
     const {theme} = React.useContext(GlobalContext);
@@ -34,7 +35,7 @@ function SearchPage(){
     const [sequence, setSequence] = React.useState("");
     const [restrictionSearch, setRestrictionSearch] = React.useState([]);
     const [nameSearch, setNameSearch] = React.useState("");
-    const [expressionSearch, setExpressionSearch] = React.useState("");
+    const [expressionSearch, setExpressionSearch] = React.useState([]);
     const [featureSearch, setFeatureSearch] = React.useState([]);
     const [lengthMin, setLengthMin] = React.useState(0);
     const [lengthMax, setLengthMax] = React.useState(20000);
@@ -66,7 +67,9 @@ function SearchPage(){
             plasmids.filter(plasmid =>
                     `${plasmid.name}`.toLowerCase().indexOf(nameSearch.toLowerCase()) >= 0 
                     &&
-                    `${plasmid.expression}`.toLowerCase().indexOf(expressionSearch.toLowerCase()) >= 0 
+                    (expressionSearch.length > 0 ? 
+                        plasmid.expression.split(',').some(r => expressionSearch.includes(r)) 
+                    : true)
                     &&
                     (featureSearch.length > 0 ? 
                         plasmid.features.split(',').some(r => featureSearch.includes(r)) 
@@ -119,6 +122,7 @@ function SearchPage(){
                             onChange={(e) => setNameSearch(e.target.value)} 
                             value={nameSearch} id="input-name" 
                             label="Plasmid Name" 
+                            helperText="Ex: pCRCT"
                             size="small"
                             variant="standard" />
                 </div>
@@ -159,12 +163,20 @@ function SearchPage(){
                 <div
                             class={style.searchBar}
                 >
-                    <TextField inputProps={{ "data-testid": "search-expression" }} 
-                            onChange={(e) => setExpressionSearch(e.target.value)} 
-                            value={expressionSearch} id="input-expression" 
-                            label="Expression Type" 
+                    <Autocomplete 
+                            multiple
+                            inputProps={{ "data-testid": "search-expression" }} 
+                            disablePortal
                             size="small"
-                            variant="standard" />
+                            freeSolo
+                            onChange={(e, newVal) => setExpressionSearch(newVal)} 
+                            value={expressionSearch}
+                            id="input-feature" 
+                            options={expressionTypes}
+                            renderInput={(params) => 
+                                <TextField {...params} variant="standard" label="Expression Type" 
+                                />} 
+                            />
                 </div>
                 <div class={style.numberSearchBar}>
                     <TextField

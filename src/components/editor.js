@@ -58,6 +58,8 @@ const defaultTracks = [
 
 const featureData = fetchFeatureTypes();
 
+var cgvHandle = null;
+
 function Editor(props)  
   {
     const targetRef = React.useRef();
@@ -74,6 +76,13 @@ function Editor(props)
     const [addCategory, setAddCategory] = React.useState("User-defined");
     const [cgvFormat, setCgvFormat] = React.useState("circular");
     const [cgvDownload, setCgvDownload] = React.useState(false);
+    const [cgvReset, setCgvReset] = React.useState(() => {});
+    const [cgvZoomIn, setCgvZoomIn] = React.useState(() => {});
+    const [cgvZoomOut, setCgvZoomOut] = React.useState(() => {});
+    const [cgvMoveLeft, setCgvMoveLeft] = React.useState(() => {});
+    const [cgvMoveRight, setCgvMoveRight] = React.useState(() => {});
+    const [cgvToggleLabels, setCgvToggleLabels] = React.useState(() => {});
+    const [cgvInvertColors, setCgvInvertColors] = React.useState(() => {});
     const [showOrf, setShowOrf] = React.useState(false);
     const [showLegend, setShowLegend] = React.useState(true);
     const [panel, setPanel] = React.useState(false);
@@ -210,13 +219,16 @@ function Editor(props)
             cgv.draw();
         }
         
+        // Viewer buttons
         if(cgvDownload){
             // Download the map
             setCgvDownload(false);
             cgv.io.downloadImage(downloadWidth, downloadHeight, 'cgview_map.png');
         }
 
-    },[localData, cgvFormat, cgvDownload, panel, isAddStart, isAddStop, plasmidName, showLegend, showOrf, legendItems])
+        cgvHandle = cgv;
+
+    },[localData, cgvReset, cgvZoomIn, cgvZoomOut, cgvMoveLeft, cgvMoveRight, cgvToggleLabels, cgvInvertColors, cgvFormat, cgvDownload, panel, isAddStart, isAddStop, plasmidName, showLegend, showOrf, legendItems])
 
     React.useLayoutEffect(() => {
         if (targetRef.current) {
@@ -370,7 +382,7 @@ function Editor(props)
                             <>
                                 <span style={{"display":"flex", "flex-direction":"row", "margin-bottom":"2px"}}>
                                     <ZoomInIcon sx={{height:'0.75em', width:'0.75em', marginLeft:'5px'}}></ZoomInIcon>
-                                    <Typography sx={{fontSize:'small', marginLeft:'2px'}}>Zoom with mouse wheel</Typography>
+                                    <Typography sx={{fontSize:'small', marginLeft:'2px'}}>Zoom by scrolling</Typography>
                                     <PanToolIcon sx={{height:'0.75em', width:'0.75em', marginLeft:'10px'}}></PanToolIcon>
                                     <Typography sx={{fontSize:'small', marginLeft:'3px'}}>Drag to change position</Typography>
                                 </span>
@@ -378,6 +390,13 @@ function Editor(props)
                                 <div className={style.cgvButtons}>
                                     <div onClick={() => setCgvDownload(true)} class="cgv-btn" id="btn-download" title="Download Map PNG"></div>
                                     <div onClick={() => setCgvFormat((cgvFormat == 'circular') ? 'linear' : 'circular')} class="cgv-btn" id="btn-toggle-format" title="Toggle Linear/Circular Format"></div>
+                                    <div onClick={() => cgvHandle.reset()} class="cgv-btn" id="btn-reset" title="Reset Map"></div>
+                                    <div onClick={() => cgvHandle.zoomIn()} class="cgv-btn" id="btn-zoom-in" title="Zoom In"></div>
+                                    <div onClick={() => cgvHandle.zoomOut()} class="cgv-btn" id="btn-zoom-out" title="Zoom Out"></div>
+                                    <div onClick={() => cgvHandle.moveLeft()} class="cgv-btn" id="btn-move-left" title="Move Left/Counterclockwise"></div>
+                                    <div onClick={() => cgvHandle.moveRight()} class="cgv-btn" id="btn-move-right" title="Move Right/Clockwise"></div>
+                                    <div onClick={() => {cgvHandle.annotation.update({visible: !cgvHandle.annotation.visible}); cgvHandle.draw();}} class="cgv-btn" id="btn-toggle-labels" title="Toggle Labels"></div>
+                                    <div onClick={() => cgvHandle.invertColors()} class="cgv-btn" id="btn-invert-colors" title="Invert Map Colors"></div>
                                 </div>
                             </>
                     </div>
