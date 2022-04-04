@@ -1,7 +1,11 @@
 <!-- AUTO-GENERATED-CONTENT:START (STARTER) -->
 ## PlasMapper 3.0
 
-This is the front-end repository for the PlasMapper 3.0 webserver
+![image](https://user-images.githubusercontent.com/68175167/161480282-edcd6f6f-f22c-4318-97a1-81f74c0c50a7.png)
+
+This is the front-end repository for the PlasMapper 3.0 webserver.
+
+Please see [here](http://plasmapper.wishartlab.com/) for the full site.
 
 __Setup (development):__
 
