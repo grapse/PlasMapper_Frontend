@@ -85,7 +85,7 @@ function DnaSpan(props){
         <span
             style={{"--highlight":color,
                     "--border":borderColor,
-                    "--offset":reverse ? "-50%" : "100%", 
+                    "--offset":reverse ? "-100%" : "100%", 
                     "--line": reverse ? "underline" : "overline"}}
             class={`${style.seqBase} ${(substr?.start === start && substr?.strand === reverse) && style.seqBaseSelected}`}
             onClick={() => {
@@ -217,7 +217,7 @@ const splitFeatures = ((sequence, pageStop, pageStart, setSubsequence, substr, f
             <div class={style.seqBaseHolderAbs} style={{"--offset": "0em"}}>
                 {
                     [...Array(Math.floor(pageLength/rowLength))].map((_,i) => {
-                        return(<span key={i}>{"----+----|----+----|----+----|----+----|----+----|----+----|"}</span>)
+                        return(<span class={style.spacer} key={i}>{"----+----|----+----|----+----|----+----|----+----|----+----|"}</span>)
                     })
                 }
             </div>

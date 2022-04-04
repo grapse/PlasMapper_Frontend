@@ -82,9 +82,12 @@
     box-shadow: none;
     background-color: rgba(255,255,255,0);
     text-decoration: var(--line);
-    text-decoration-thickness: 0.6em;
     text-decoration-color: var(--border);
     border-radius: 3px;
+}
+
+.spacer{
+    color: #bebebe;
 }
 
 .seqBaseSelected{
