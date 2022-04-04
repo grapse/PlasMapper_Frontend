@@ -441,7 +441,10 @@ function PageContent(props){
                 disabled={!download}
                 >
                 Export As PNG
-            </button>{"Click on a segment to open the editor here"}</div>
+            </button>
+            <br/>
+            {"Click on a segment to open the editor here"}
+            </div>
                 }
             </div>
             <TextDisplay 
