@@ -3,7 +3,7 @@
     flex-direction: row;
     font-family: Courier, monospace;
     line-height: 5em;
-    font-size: 0.8em;
+    font-size: clamp(0.45em, 1.5vw, 0.8em);
     gap: 10px;
     position:relative;
     width: 65%;

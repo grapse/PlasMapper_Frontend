@@ -18,9 +18,15 @@
     font-weight:400;
 }
 .drawing{
-    width:65%;
+    width: min(90vw, 700px);
     position:relative;
     margin:0 auto;
+}
+.cgvbuttonholder{
+    display:flex;
+    flex-direction:row;
+    margin-bottom: 2px;
+    flex-wrap: wrap;
 }
 .svgwrap{
     position:relative;
@@ -77,6 +83,7 @@
 }
 .cgvButtons{
     display:flex;
+    flex-wrap: wrap;
     gap:10px;
     flex-direction: row;
 }

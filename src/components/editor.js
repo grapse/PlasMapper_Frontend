@@ -231,6 +231,7 @@ function Editor(props)
     },[localData, cgvReset, cgvZoomIn, cgvZoomOut, cgvMoveLeft, cgvMoveRight, cgvToggleLabels, cgvInvertColors, cgvFormat, cgvDownload, panel, isAddStart, isAddStop, plasmidName, showLegend, showOrf, legendItems])
 
     React.useLayoutEffect(() => {
+        // Set the width of the viewer based on the width of the screen
         if (targetRef.current) {
           setWidth(targetRef.current.offsetWidth);
         }
@@ -362,31 +363,19 @@ function Editor(props)
                                 >
                                 {<DownloadIcon/>}
                             </IconButton>
-                        {/* <Typography>Legend</Typography>
-                        <div class={style.legendMap}>
-                            {legendItems.map((v,i) => {
-                                return(
-                                    <TextField onChange={(e) => handleLegendUpdate(i,{name:e.target.value})} 
-                                    id="add-name" label="Legend Name" variant="standard" 
-                                    value={legendItems[i].name}
-                                    />
-                                )
-                            })} 
-                        </div> */}
-                        
                     </div>
                     }
                 </div>}
                 <div class={style.drawing} ref={targetRef}>
                     <div class={style.svgwrap}>
                             <>
-                                <span style={{"display":"flex", "flex-direction":"row", "margin-bottom":"2px"}}>
+                                <span class={style.cgvbuttonholder}>
                                     <ZoomInIcon sx={{height:'0.75em', width:'0.75em', marginLeft:'5px'}}></ZoomInIcon>
                                     <Typography sx={{fontSize:'small', marginLeft:'2px'}}>Zoom by scrolling</Typography>
                                     <PanToolIcon sx={{height:'0.75em', width:'0.75em', marginLeft:'10px'}}></PanToolIcon>
                                     <Typography sx={{fontSize:'small', marginLeft:'3px'}}>Drag to change position</Typography>
                                 </span>
-                                <div className={style.cgvMyViewer} id='my-viewer'><div></div></div>
+                                <div id='my-viewer'><div></div></div>
                                 <div className={style.cgvButtons}>
                                     <div onClick={() => setCgvDownload(true)} class="cgv-btn" id="btn-download" title="Download Map PNG"></div>
                                     <div onClick={() => setCgvFormat((cgvFormat == 'circular') ? 'linear' : 'circular')} class="cgv-btn" id="btn-toggle-format" title="Toggle Linear/Circular Format"></div>
