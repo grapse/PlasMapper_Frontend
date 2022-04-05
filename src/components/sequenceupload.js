@@ -110,7 +110,7 @@ function SequenceUpload(props)
                 <Or/>
                 <FileUploader
                     children={
-                        <div class={style.downloadBox}><UploadFileIcon />{"Upload .txt or .fasta DNA File (no protein)"}</div>
+                        <div class={style.downloadBox}><UploadFileIcon />{"Drag & drop or click to upload .txt or .fasta DNA File (no protein)"}</div>
                     }
                     types={['txt','fasta','fna','ffn','faa','frn','fa']}
                     handleChange={(e) => handleFile(e)}

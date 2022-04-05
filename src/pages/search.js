@@ -10,6 +10,8 @@ import GlobalContext from "../context/optionContext";
 import { fetchSearchData, fetchSequence, incrementPopularity } from "../utils/FetchUtils";
 import { getFeatureNames, getCommonEnzymes, getExpressionTypes } from "../utils/FeatureUtils";
 import { TableColumns } from "../utils/SearchUtils";
+import Switch from '@mui/material/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 /**
  * Makes the rows to display the preview table.
@@ -41,6 +43,7 @@ function SearchPage(){
     const [lengthMax, setLengthMax] = React.useState(20000);
     const [detailDrawer, setDetailDrawer] = React.useState(false);
     const [filterDrawer, setFilterDrawer] = React.useState(false);
+    const [filterAnd, setFilterAnd] = React.useState(false);
 
     React.useEffect(() => {
         if(firstLoad){
@@ -63,29 +66,57 @@ function SearchPage(){
         
 
         // Filter the data based on user-selected filters
-        setFilteredPlasmids(
-            plasmids.filter(plasmid =>
-                    `${plasmid.name}`.toLowerCase().indexOf(nameSearch.toLowerCase()) >= 0 
-                    &&
-                    (expressionSearch.length > 0 ? 
-                        plasmid.expression.split(',').some(r => expressionSearch.includes(r)) 
-                    : true)
-                    &&
-                    (featureSearch.length > 0 ? 
-                        plasmid.features.split(',').some(r => featureSearch.includes(r)) 
-                    : true)
-                    &&
-                    (restrictionSearch.length > 0 ? 
-                        plasmid.restriction.split(',').some(r => restrictionSearch.includes(r)) 
-                    : true)
-                    &&
-                    (plasmid.sequenceLength > lengthMin)
-                    &&
-                    (plasmid.sequenceLength < lengthMax)
-                )
-        )
+        if(filterAnd){
+            // AND search
+            setFilteredPlasmids(
+                plasmids.filter(plasmid =>
+                        `${plasmid.name}`.toLowerCase().indexOf(nameSearch.toLowerCase()) >= 0 
+                        &&
+                        (expressionSearch.length > 0 ? 
+                            expressionSearch.every( r => plasmid.expression.split(',').includes(r)) 
+                        : true)
+                        &&
+                        (featureSearch.length > 0 ? 
+                            featureSearch.every( r => plasmid.features.split(',').includes(r)) 
+                        : true)
+                        &&
+                        (restrictionSearch.length > 0 ? 
+                            restrictionSearch.every( r => plasmid.restriction.split(',').includes(r)) 
+                        : true)
+                        &&
+                        (plasmid.sequenceLength > lengthMin)
+                        &&
+                        (plasmid.sequenceLength < lengthMax)
+                    )
+            )
+            
+        }
+        else{
+            // OR search
+            setFilteredPlasmids(
+                plasmids.filter(plasmid =>
+                        `${plasmid.name}`.toLowerCase().indexOf(nameSearch.toLowerCase()) >= 0 
+                        &&
+                        (expressionSearch.length > 0 ? 
+                            plasmid.expression.split(',').some(r => expressionSearch.includes(r)) 
+                        : true)
+                        &&
+                        (featureSearch.length > 0 ? 
+                            plasmid.features.split(',').some(r => featureSearch.includes(r)) 
+                        : true)
+                        &&
+                        (restrictionSearch.length > 0 ? 
+                            plasmid.restriction.split(',').some(r => restrictionSearch.includes(r)) 
+                        : true)
+                        &&
+                        (plasmid.sequenceLength > lengthMin)
+                        &&
+                        (plasmid.sequenceLength < lengthMax)
+                    )
+            )
+        }
     },
-    [firstLoad, nameSearch, featureSearch, lengthMax, lengthMin, expressionSearch]
+    [firstLoad, nameSearch, featureSearch, lengthMax, lengthMin, expressionSearch, restrictionSearch, filterAnd]
     )
 
     /**
@@ -126,6 +157,14 @@ function SearchPage(){
                             size="small"
                             variant="standard" />
                 </div>
+                <FormControlLabel 
+                    control={<Switch
+                                checked={filterAnd}
+                                onChange={() => setFilterAnd(!filterAnd)}
+                                inputProps={{ 'aria-label': 'controlled' }}
+                                />} 
+                    label={`${filterAnd ? "AND" : "OR"} search`} />
+                
                 <div
                             class={style.searchBar}
                 >
