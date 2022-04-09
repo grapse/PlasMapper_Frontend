@@ -134,6 +134,7 @@
     white-space:pre-line;
     margin-bottom: 20px;
     color:var(--mid);
+    font-family: Consolas, 'Courier New', Courier, monospace;
 }
 .sidebarholder{
     padding:35px;

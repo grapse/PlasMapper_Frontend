@@ -361,6 +361,9 @@ function PageContent(props){
                     <TextField
                         label={`Edit ${subsequence.strand ? 'reverse' : 'forward'} strand`}
                         multiline
+                        InputProps={{
+                            classes:{input:style.inputSeq}
+                        }}
                         rows={5}
                         value={editSub}
                         onChange={(e) => setEditSub(stripInput(e.target.value, true))}

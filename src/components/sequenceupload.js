@@ -99,7 +99,7 @@ function SequenceUpload(props)
                     id="outlined-multiline-static"
                     label={language.PASTE_SEQ}
                     InputProps={{
-                        classes:{input:style.input}
+                        classes:{input:style.inputSeq}
                         }}
                     multiline
                     maxRows={3}
