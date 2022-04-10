@@ -4,7 +4,6 @@ import { Link } from "gatsby";
 import LinkIcon from '@mui/icons-material/Link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { fetchSamplePlasmids } from "../utils/SamplePlasmids";
 import GlobalContext from "../context/optionContext";
@@ -135,7 +134,7 @@ function SequenceUpload(props)
                 </div>
                 <button  
                     class={style.annotateButton}
-                    onClick={() => {console.log("CLICKED EXAMPLE", plasmidName); annotate(plasmidName, sequence)}} 
+                    onClick={() => {annotate(plasmidName, sequence)}} 
                     >
                     {`Annotate!`}
                 </button>

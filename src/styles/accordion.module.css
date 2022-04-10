@@ -16,7 +16,8 @@
 
 .accordionItem{
     flex: 5;
-
+    text-align: left;
+    max-width: 100%;
 }
 
 .optionHolder{
@@ -24,7 +25,9 @@
     gap:10px;
     flex-direction: column;
     justify-content:flex-start;
+    width: 100%;
     padding:10px;
+    text-overflow: ellipsis;
 }
 
 .location{

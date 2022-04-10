@@ -27,3 +27,16 @@
     color:var(--plasmid3);
     text-decoration: underline;
 }
+
+.linkText:hover{
+    color:var(--plasmid2)
+}
+
+.link{
+    color:var(--plasmid3);
+    text-decoration: underline;
+}
+
+.link:hover{
+    color:var(--plasmid2)
+}

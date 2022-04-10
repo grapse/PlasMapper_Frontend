@@ -70,6 +70,8 @@
     font-size: 0.9em;
     transition: 0.2s ease-in-out;
     padding:8px;
+    background-color: var(--background);
+    color: var(--text);
 }
 
 .exampleButton:hover{
@@ -94,18 +96,27 @@
     position:relative;
     margin-left: 445px;
     margin-right: 25px;
+    border: none;
     background-color:var(--plasmid3);
-    border:none;
     font-weight:500;
     cursor:pointer;
     color:white;
     border-top-right-radius: 20px 20px;
     border-bottom-left-radius: 20px 20px;
-    transition: 0.2s ease-in-out;
+    transition: background-color 0.2s ease-in-out;
 }
 
-.annotateButton :hover{
-    background-color:white;
+@keyframes annotate {
+    0%   {background-color: var(--plasmid3);}
+    25%  {background-color: var(--plasmid2);}
+    50%  {background-color: var(--plasmid1);}
+    75%  {background-color: var(--plasmid4);}
+    100% {background-color: var(--plasmid5);}
+  }
+
+.annotateButton:hover{
+    background-color: var(--plasmid1);
+    animation: annotate 3s linear infinite alternate;
 }
 
 .downloadBox{

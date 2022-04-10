@@ -3,7 +3,7 @@ import Layout from "../components/layout"
 import Seo from "../components/seo"
  
 import Editor from "../components/editor";
-import { stripInput } from '../utils/FeatureUtils';
+import { stripInput, getFastaName } from '../utils/FeatureUtils';
 import { fetchSamplePlasmids } from "../utils/SamplePlasmids";
 import * as style from '../styles/index.module.css'
 
@@ -63,7 +63,7 @@ function PageContent(props){
   },[location, firstLoad])
 
   /**
-   * Annotates the provided DNA sequence (from the search page)
+   * Annotates the provided DNA sequence 
    * @param  {str} seq The sequence provided by the search page
    */
   const annotateSequenceLoad = (name, seq) => {
@@ -75,6 +75,9 @@ function PageContent(props){
            .then(featureTemp => {
                           setData(featureTemp);
                           setSequence(stripInput(seq,true));
+                          if(seq[0] === ">"){
+                            setPlasmidName(getFastaName(seq) || "Plasmid");
+                          }
                           setLoading(false);
                           document.getElementById('annotate').scrollIntoView();
                         }
