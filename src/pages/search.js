@@ -81,7 +81,7 @@ function SearchPage(){
                         : true)
                         &&
                         (restrictionSearch.length > 0 ? 
-                            restrictionSearch.every( r => plasmid.restriction.split(',').includes(r)) 
+                            restrictionSearch.every( r => plasmid.features.split(',').includes(r)) 
                         : true)
                         &&
                         (plasmid.sequenceLength > lengthMin)
@@ -106,7 +106,7 @@ function SearchPage(){
                         : true)
                         &&
                         (restrictionSearch.length > 0 ? 
-                            plasmid.restriction.split(',').some(r => restrictionSearch.includes(r)) 
+                            plasmid.features.split(',').some(r => restrictionSearch.includes(r)) 
                         : true)
                         &&
                         (plasmid.sequenceLength > lengthMin)
@@ -192,6 +192,8 @@ function SearchPage(){
                             disablePortal
                             size="small"
                             freeSolo
+                            onChange={(e, newVal) => setRestrictionSearch(newVal)} 
+                            value={restrictionSearch}
                             id="input-feature" 
                             options={commonEnzymes.map(v => v.name)}
                             renderInput={(params) => 

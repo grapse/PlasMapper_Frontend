@@ -1,0 +1,16 @@
+.link{
+    color: var(--plasmid3);
+    text-decoration: underline;
+}
+
+.link:hover{
+    color: var(--plasmid2);
+}
+
+.footer{
+    text-align: center;
+    margin-top: 200px;
+    font-size: 0.8em;
+    color: var(--text);
+    padding: 30px;
+}

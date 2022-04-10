@@ -164,6 +164,18 @@ export const stripInput = ((input, upperCase = false) => {
     return upperCase ? stripped.toUpperCase() : stripped.toLowerCase();
 })
 
+/**
+ * Extracts the plasmid name from the FASTA header
+ * @param  {str} input The FASTA input
+ */
+export const getFastaName = ((input) => {
+    if(input[0] === '>'){
+        let stripped = input.split('\n')[0].substring(1,64);
+        return stripped;
+    }
+    return false;
+})
+
 export const getCommonEnzymes = (() => {
     const str = ` HpaII CCGG (1/3)
     ApoI RAATTY (1/5)

@@ -63,7 +63,6 @@ export default function OptionAccordion(props){
                         >
                         {v.visible ? <VisibilityIcon/> : <VisibilityOffIcon/>}
                     </IconButton>
-                   
                     <div class={style.accordionItem}>
                         <Accordion   expanded={panel === i} 
                                 onChange={() => handleClickOption(i)}
@@ -73,8 +72,9 @@ export default function OptionAccordion(props){
                             <AccordionSummary
                                 expandIcon={<ExpandMoreIcon />}
                                 id="panel2bh-header"
+                                sx={{width:"100%"}}
                                 >
-                                <Typography >{v.name}</Typography>
+                                <Typography sx={{width:"80%"}} noWrap>{v.name}</Typography>
                             </AccordionSummary>
                             <AccordionDetails class={style.optionHolder}>
                                 <TextField defaultValue={v.name} 
@@ -82,6 +82,7 @@ export default function OptionAccordion(props){
                                            label="Name" 
                                            variant="standard" 
                                            size="small"
+                                           sx={{width:"80%"}} noWrap
                                            onChange={(event) => setCurrentName(event.target.value)}
                                            InputProps={{endAdornment: 
                                                 <InputAdornment position="end">
@@ -102,10 +103,11 @@ export default function OptionAccordion(props){
                                     labelId="category-label"
                                     id="add-category"
                                     defaultValue={v.legend}
+                                    sx={{width:"80%"}} noWrap
                                     label="Category"
                                     onChange={(e) => handleFeatureUpdate(i, {legend:e.target.value})}
                                 >
-                                {featureData.map((v1,i1) => {return <MenuItem value={v1.display}>{v1.display}</MenuItem>})}
+                                {featureData.map((v1,i1) => {return <MenuItem key={i1} value={v1.display}>{v1.display}</MenuItem>})}
                                 </Select>
                             </FormControl>
                             <div class={style.location}>

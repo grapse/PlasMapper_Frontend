@@ -27,9 +27,13 @@ function PageContent(props){
                 <div className={style.titleText}>{language.ABOUT.title}</div>
                 <div className={style.headerText}>History</div>
                 <div className={style.bodyText}>{language.ABOUT.history}</div>
-                <a className={style.linkText} href={language.ABOUT.history_link}>PlasMapper 2.0 Publication<CustomLinkIcon/></a>
+                <a className={style.linkText} href={language.ABOUT.history_link} target="_blank" rel="noopener noreferrer">PlasMapper 2.0 Publication<CustomLinkIcon/></a>
                 <div className={style.headerText}>Architecture</div>
                 <div className={style.bodyText}>{language.ABOUT.architecture}</div>
+                <div className={style.headerText}>Credits</div>
+                <div className={style.bodyText}>{language.ABOUT.credits1}<a class={style.link} href={"https://mui.com/"} target="_blank" rel="noopener noreferrer">{"Material UI"}<CustomLinkIcon/></a></div>
+                <div className={style.bodyText}>{language.ABOUT.credits2}<a class={style.link} href={"https://js.cgview.ca/"} target="_blank" rel="noopener noreferrer">{"CGView.js"}<CustomLinkIcon/></a></div>
+                <div className={style.bodyText}>{language.ABOUT.credits3}</div>
             </div>
         </>
     );

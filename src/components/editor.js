@@ -18,11 +18,18 @@ import SequenceEditor from "./sequenceEditor";
 import * as style from "../styles/editor.module.css"
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import PanToolIcon from '@mui/icons-material/PanTool';
+import MouseIcon from '@mui/icons-material/Mouse';
+import PaletteIcon from '@mui/icons-material/Palette';
 import { Typography } from "@mui/material";
 import DownloadIcon from '@mui/icons-material/Download';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 const CGV = require('cgview');
 
 const tabs = ["Features", "Add Feature", "Restriction Sites","Other"]
+const initialDownloadHeight = 500;
+const maxDownload = 10000;
+const minDownload = 500;
+const maxFileSize = 1000000;
 
 const orfTracks = [
     {
@@ -96,12 +103,35 @@ function Editor(props)
     const [downloadWidth, setDownloadWidth] = React.useState(3000);
 
     const [width, setWidth] = React.useState(700);
+    const [height, setHeight] = React.useState(initialDownloadHeight);
 
+    const [fileWarning, setFileWarning] = React.useState(false);
+
+    /**
+     * Updates the feature at a specified index with the specified values
+     * @param  {int} index The index of the feature to update
+     * @param  {obj} val The attribute(s) to be updated in the feature
+     */
     function handleFeatureUpdate(index, val){
         setLocalData(
             localData.map(
                 (v,i) => {
                     return i === index ? {...v, ...val} : v
+                }
+            )
+        );
+    }
+
+    /**
+     * Updates the visibility of a specified restriction site
+     * @param  {str} enzyme The name of the restriction site
+     * @param  {bool} visible The visibility to change it to
+     */
+     function handleRestrictionUpdate(enzyme, visible){
+        setLocalData(
+            localData.map(
+                (v,i) => {
+                    return v.legend === "Restriction Sites" && v.name === enzyme ? {...v, visible: visible} : v
                 }
             )
         );
@@ -160,7 +190,6 @@ function Editor(props)
         if (initial === true){
             setLocalData(data);
             setLegendItems(featureData.map((v,i) => {return {name:v.display,swatchColor:v.color,bwColor:v.bwColor,decoration:v.decoration}}))
-            console.log("changed");
         }
 
     }, [data])
@@ -177,33 +206,30 @@ function Editor(props)
 
     React.useEffect(() => {
         // If we are currently on the CGV tab, draw CGView
+        const myNode = document.getElementById("my-viewer");
+        myNode.removeChild(myNode.childNodes[0]);
         const cgv = new CGV.Viewer('#my-viewer', {
-            height: 500,
+            height: height,
             width: width,
             });
         cgv.on('click', (event) => {
             if (event.elementType === 'feature' && event.element.source === 'json-feature' && event.element?.tags.length) {
                 // console.log(event.element.tags[0]);
                 let curIndex = event.element.tags[0];
-                console.log(curIndex);
-                console.log(event.element);
                 // handleFeatureUpdate(curIndex, {...localData[curIndex], name:"test"})
                 handleClickOption(curIndex);
             }
             else if(event.elementType === 'backbone' && isAddStart){
-                console.log("start")
                 setIsAddStart(false);
                 setAddStart(event.bp);
             }
             else if(event.elementType === 'backbone' && isAddStop){
-                console.log("stop")
                 setIsAddStop(false);
                 setAddStop(event.bp);
             }
         });
         cgv.io.loadJSON(json);
-        const myNode = document.getElementById("my-viewer");
-        myNode.removeChild(myNode.childNodes[0]);
+        
         cgv.settings.update({ format: cgvFormat });
 
         if (isBw == true){
@@ -211,8 +237,6 @@ function Editor(props)
             var orfLegendItem = cgv.legend.items()[cgv.legend.items().length - 1];
             orfLegendItem["swatchColor"] = "#001";
             cgv.legend.updateItems(orfLegendItem);
-            console.log("NEW", orfLegendItem);
-            console.log("NEW2", cgv.legend.items());
             cgv.draw();
             }, 1000)
         } else{
@@ -228,16 +252,74 @@ function Editor(props)
 
         cgvHandle = cgv;
 
-    },[localData, cgvReset, cgvZoomIn, cgvZoomOut, cgvMoveLeft, cgvMoveRight, cgvToggleLabels, cgvInvertColors, cgvFormat, cgvDownload, panel, isAddStart, isAddStop, plasmidName, showLegend, showOrf, legendItems])
+    },[localData, cgvReset, cgvZoomIn, cgvZoomOut, cgvMoveLeft, cgvMoveRight, cgvToggleLabels, cgvInvertColors, cgvFormat, cgvDownload, panel, isAddStart, isAddStop, plasmidName, showLegend, showOrf, legendItems, height, width])
 
     React.useLayoutEffect(() => {
         // Set the width of the viewer based on the width of the screen
         if (targetRef.current) {
           setWidth(targetRef.current.offsetWidth);
+          setDownloadWidth(targetRef.current.offsetWidth*2);
+          setDownloadHeight(initialDownloadHeight*2);
         }
       }, []);
 
-    // TODO: move tabs to separate components
+    /**
+     * Downloads the current map in JSON format in case the user wants to come back later
+     */
+    function downloadJSON(){
+        let json = {}
+        json.name = plasmidName;
+        json.sequence = sequence;
+        json.features = localData;
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL( new Blob([JSON.stringify(json)], { type:`application/json` }) );
+        a.download = `${plasmidName}-json.json`;
+        a.click();
+    }
+
+    /**
+     * Uploads a JSON file to the current map
+     * @param  {file} file The file to upload
+     */
+    function uploadJSON(file){
+        if(file.type !== "application/json"){
+            setFileWarning("File must be a JSON file");
+            return;
+        }
+        if(file.size > maxFileSize){
+            setFileWarning("File is over 1mb. File may be incorrect.");
+            return;
+        }
+        setFileWarning(false);
+
+        try{
+            const fileReader = new FileReader();
+            fileReader.readAsText(file, "UTF-8");
+            fileReader.onload = file => {
+                try{
+                    let uploadedFile = JSON.parse(file.target.result);
+                    console.log(uploadedFile);
+                    if(Object.keys(uploadedFile).length !== 3 || !uploadedFile.name || !uploadedFile.sequence || !uploadedFile.features){
+                        setFileWarning("File format error. File must be a JSON file with the following keys: name, sequence, features");
+                        return;
+                    }
+                    setPlasmidName(uploadedFile.name);
+                    setSequence(uploadedFile.sequence);
+                    setLocalData(uploadedFile.features);
+                }
+                catch(err){
+                    setFileWarning("File is not a valid JSON file");
+                    return;
+                }
+            }
+        }
+        catch(err){
+            setFileWarning("File is not a valid JSON file");
+            return;
+        }
+        
+    }
+
     return(
         <>  
             <h1 class={style.heading}>Editor</h1>
@@ -247,17 +329,13 @@ function Editor(props)
                     tabs.map((v,i) => <div class={`${style.option} ${tab === i && style.select}`} 
                                            key={i} onClick={() => setTab(i)}>{v}</div>)}
                 </div>}
-                    {tab === 0 ? <OptionAccordion localData={localData} 
+                    {[<OptionAccordion localData={localData} 
                                      handleClickOption={handleClickOption}
                                      panel={panel}
                                      handleFeatureUpdate={handleFeatureUpdate}></OptionAccordion>
-                    :
-                    tab === 1 ?
+                    ,
                     <div class={style.newFeature}>
-                        <button onClick={() => {
-                                                setLocalData([...localData,{name:addName,start:addStop < addStart ? addStop : addStart,stop:addStop < addStart ? addStart : addStop,legend:addCategory,source:"json-feature",tags:localData.length,visible:true,strand:addStop < addStart ? -1 : 1}])}}
-                                >Add Feature
-                        </button>
+                        
                         <TextField onChange={(e) => setAddName(e.target.value)} 
                                    id="add-name" label="Name" variant="standard" 
                                    value={addName}
@@ -299,29 +377,35 @@ function Editor(props)
                                 id="add-category"
                                 value={addCategory}
                                 label="Category"
+                                size="small"
                                 onChange={(e) => setAddCategory(e.target.value)}
                             >
                             {featureData.map((v,i) => {return <MenuItem value={v.display}>{v.display}</MenuItem>})}
                             </Select>
                         </FormControl>
+                        <button     
+                                class={style.addFeatureButton}
+                                onClick={() => {
+                                                setLocalData([...localData,{name:addName,start:addStop < addStart ? addStop : addStart,stop:addStop < addStart ? addStart : addStop,legend:addCategory,source:"json-feature",tags:localData.length,visible:true,strand:addStop < addStart ? -1 : 1}])}}
+                                >Add
+                        </button>
                     
                     </div>
-                    :
-                    tab === 2 ?
+                    ,
                     <div class={style.restrictionGrid}>
                         {localData.map((v,i) => {return(
-                            v.legend === "Restriction Sites" &&
+                            v.legend === "Restriction Sites" && v?.firstSite &&
                             <div class={v.count === 1 ? "" : style.restrictionInvisible}>
                                 <div>{v.name}</div>
                                 <div>{v.count}</div>
                                 <Checkbox
                                     checked={v.visible}
-                                    onChange={(e) => handleFeatureUpdate(i,{visible:!v.visible})}
+                                    onChange={(e) => handleRestrictionUpdate(v.name,!v.visible)}
                                 />
                             </div>
                         )})}
                     </div>
-                    :
+                     ,
                     <div class={style.optionOther}>
                         <FormControlLabel control={
                             <Checkbox
@@ -345,25 +429,58 @@ function Editor(props)
                             id="add-name" label="Plasmid Name" variant="standard" 
                             value={plasmidName}
                             />
-                         <TextField onChange={(e) => setDownloadHeight(e.target.value)} 
+                         <TextField onChange={(e) => {
+                                let newVal = e.target.value;
+                                if(newVal < minDownload){newVal = minDownload}
+                                if(newVal > maxDownload){newVal = maxDownload}
+                                setDownloadHeight(newVal);
+                                setHeight(width/(downloadWidth/newVal));
+                                }} 
                             id="add-height" label="Set Download Height" type="number"
                             endAdornment={<InputAdornment position="end">px</InputAdornment>}
                             value={downloadHeight}
                             />
-                         <TextField onChange={(e) => setDownloadWidth(e.target.value)} 
+                         <TextField onChange={(e) => {
+                                let newVal = e.target.value;
+                                if(newVal < minDownload){newVal = minDownload}
+                                if(newVal > maxDownload){newVal = maxDownload}
+                                setDownloadWidth(newVal);
+                                setHeight(width/(newVal/downloadHeight));
+                                }} 
                             id="add-width" label="Set Download Width" type="number"
                             endAdornment={<InputAdornment position="end">px</InputAdornment>}
                             value={downloadWidth}
                             />
-                            <Typography>{"Download"}</Typography>
-                        <IconButton
-                                onClick={() => setCgvDownload(true)}
-                                onMouseDown={handleMouseDown}
-                                edge="end"
-                                >
-                                {<DownloadIcon/>}
-                            </IconButton>
-                    </div>
+                        <div class={style.downloadHolder}>
+                            <Typography >{"Download PNG"}</Typography>
+                            <IconButton
+                                    onClick={() => setCgvDownload(true)}
+                                    onMouseDown={handleMouseDown}
+                                    edge="end"
+                                    >
+                                    {<DownloadIcon/>}
+                                </IconButton>
+                        </div>
+                        <div class={style.downloadHolder}>
+                            <Typography >{"Download JSON"}</Typography>
+                            <IconButton
+                                    onClick={() => downloadJSON()}
+                                    onMouseDown={handleMouseDown}
+                                    edge="end"
+                                    >
+                                    {<DownloadIcon/>}
+                                </IconButton>
+                        </div>
+                        <div class={style.downloadHolder}>
+                            <Typography >{"Upload JSON"}</Typography>
+                            <input
+                                type="file"
+                                accept="application/json"
+                                onChange={(e) => uploadJSON(e.target.files[0])}
+                                />
+                        </div>
+                        {fileWarning && <Typography sx={{color:"red"}}>{fileWarning}</Typography>}
+                    </div>].map((v,i) => tab === i && v)
                     }
                 </div>}
                 <div class={style.drawing} ref={targetRef}>
@@ -374,6 +491,8 @@ function Editor(props)
                                     <Typography sx={{fontSize:'small', marginLeft:'2px'}}>Zoom by scrolling</Typography>
                                     <PanToolIcon sx={{height:'0.75em', width:'0.75em', marginLeft:'10px'}}></PanToolIcon>
                                     <Typography sx={{fontSize:'small', marginLeft:'3px'}}>Drag to change position</Typography>
+                                    <PaletteIcon sx={{height:'0.75em', width:'0.75em', marginLeft:'10px'}}></PaletteIcon>
+                                    <Typography sx={{fontSize:'small', marginLeft:'3px'}}>Click legend to change colours</Typography>
                                 </span>
                                 <div id='my-viewer'><div></div></div>
                                 <div className={style.cgvButtons}>

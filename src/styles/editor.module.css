@@ -11,7 +11,7 @@
     box-shadow: 10px 10px 35px rgba(0,0,0,0.3);
 }
 .options{
-    width:30%;
+    width:min(400px, 90%);
 }
 .heading{
     color:#5149b0;
@@ -151,4 +151,28 @@
 
 .openlink :hover{
     color:var(--plasmid2);
+}
+
+.addFeatureButton{
+    background-color:var(--plasmid3);
+    color:white;
+    border: none;
+    cursor: pointer;
+    width: 50%;
+    padding: 5px;
+    align-self: center;
+    border-radius: 5px;
+    transition: background-color 0.3s ease-out;
+}
+
+.addFeatureButton:hover{
+    background-color:var(--plasmid2);
+}
+
+.downloadHolder{
+    display:flex;
+    flex-direction:row;
+    gap:10px;
+    justify-content:center;
+    align-items: center;
 }

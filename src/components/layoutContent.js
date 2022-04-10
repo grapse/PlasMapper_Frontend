@@ -1,24 +1,23 @@
 import * as React from "react"
  
 import "../styles/layout.css"
+import * as style from "../styles/footer.module.css"
  
 import GlobalContext from "../context/optionContext"
  
 function LayoutContent({children}){
-  const {theme} = React.useContext(GlobalContext);
+  const {theme, language} = React.useContext(GlobalContext);
 
   return(
     <div
-        style={{background: theme['--tint']}}
+        style={{...theme}}
         >
           <main>{children}</main>
           <footer
-            style={{
-              textAlign:'center',
-              marginTop: `400px`,fontSize:`0.7em`
-            }}
+            class={style.footer}
           >
-            © {new Date().getFullYear()}, University of Alberta
+            {language.FOOTER}<a class={style.link} target="_blank" rel="noopener noreferrer" href={"http://feedback.wishartlab.com/?site=plasmapper"}>here</a>
+            <div>{language.FOOTER_CREDIT}</div>
           </footer>
     </div>
   )
@@ -26,5 +25,5 @@ function LayoutContent({children}){
  
 
  
- export default LayoutContent
+export default LayoutContent
  

@@ -66,16 +66,16 @@ export const fetchFeatures = (async(sequence) => {
                                 })
                             ]
             }
-            const restrictionSites = convert?.restriction.map((v,i) => {
-                let start = v.locations[0][0];
-                let stop = v.locations[0][1];
-                let newFeature = {name:v.name,start:start,stop:stop,legend:"Restriction Sites",source:"json-feature",visible:v.count === 1,count:v.count};
-                if(stop < start){
-                    newFeature.strand = -1;
-                }
-                return newFeature;
+            const restrictionSites = [];
+            convert?.restriction.map((v,i) => {
+                v?.locations.map((w, j) => {
+                    let newFeature = {name:v.name,start:w[0],stop:w[1],legend:"Restriction Sites",source:"json-feature",visible:v.count === 1,count:v.count, firstSite: j === 0};
+                    if(w[1] < w[0]){
+                        newFeature.strand = -1;
+                    }
+                    restrictionSites.push(newFeature);
+                })
             })
-            console.log("here")
             featureTemp = [...featureTemp, ...restrictionSites];
             return featureTemp;
         })
