@@ -44,15 +44,15 @@ function PageContent(props){
      * Only used if the user clicked in from the search page
      * Makes it so it automatically annotates and scrolls to plasmid editor
      */
-    console.log(location);
-    if(location?.state?.nameSearch){
-      console.log(location.state)
+    console.log(props?.location);
+    if(props?.location?.state?.nameSearch){
+      console.log(props.location.state)
       setStartTab(2);
-      setPlasmidName(location.state.nameSearch);
-      fetchSequence(location.state.nameSearch)
+      setPlasmidName(props.location.state.nameSearch);
+      fetchSequence(props.location.state.nameSearch)
           .then(data => {
                   setSequence(stripInput(data, true));
-                  annotateSequenceLoad(location.state.nameSearch, data);
+                  annotateSequenceLoad(props.location.state.nameSearch, data);
               }
           )
           .catch(err =>{
@@ -102,17 +102,7 @@ function PageContent(props){
         <SequenceUpload annotate={annotateSequenceLoad} loading={loading} name={plasmidName}/>
         
         <div style={{marginTop:`250px`}}></div>
-        <Link to={`editor`}
-              state={{
-                editorData:{
-                  name:plasmidName,
-                  data:data,
-                  sequence:sequence
-                }
-              }}
-              >
-          <Button >{"Open Page"}</Button>
-        </Link>
+        
         <div id="annotate">
           <Editor isEdit={true} data={data} name={plasmidName} sequence={sequence} setSequence={setSequence}></Editor>
         </div>
