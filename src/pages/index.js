@@ -4,14 +4,10 @@ import Seo from "../components/seo"
  
 import Editor from "../components/editor";
 import { stripInput, getFastaName } from '../utils/FeatureUtils';
-import { fetchSamplePlasmids } from "../utils/SamplePlasmids";
 import * as style from '../styles/index.module.css'
-
-import Button from "@mui/material/Button";
 
 import GlobalContext from "../context/optionContext";
 
-import { Link } from "gatsby"
 import BackgroundDrawing from "../components/background";
 
 import { fetchFeatures, fetchSequence } from "../utils/FetchUtils";
@@ -44,9 +40,7 @@ function PageContent(props){
      * Only used if the user clicked in from the search page
      * Makes it so it automatically annotates and scrolls to plasmid editor
      */
-    console.log(props?.location);
     if(props?.location?.state?.nameSearch){
-      console.log(props.location.state)
       setStartTab(2);
       setPlasmidName(props.location.state.nameSearch);
       fetchSequence(props.location.state.nameSearch)
@@ -60,9 +54,7 @@ function PageContent(props){
               }
           );
     }
-    else{
-      console.log("No search")
-    }
+    
   },[location, firstLoad])
 
   /**
@@ -71,13 +63,13 @@ function PageContent(props){
    */
   const annotateSequenceLoad = (name, seq) => {
     {
-      console.log("search")
       setPlasmidName(name);
       setLoading(true);
       fetchFeatures(seq)
            .then(featureTemp => {
                           setData(featureTemp);
                           setSequence(stripInput(seq,true));
+                          // If FASTA, set the map title to the header
                           if(seq[0] === ">"){
                             setPlasmidName(getFastaName(seq) || "Plasmid");
                           }
@@ -100,13 +92,10 @@ function PageContent(props){
       <div class={style.logodiv}><p class={style.logotitle}>PlasMapper <span class={style.logosmall}>3.0</span></p>
         <p class={style.catchphrase}>{language.CATCHPHRASE}</p></div>
         <SequenceUpload annotate={annotateSequenceLoad} loading={loading} name={plasmidName}/>
-        
         <div style={{marginTop:`250px`}}></div>
-        
         <div id="annotate">
           <Editor isEdit={true} data={data} name={plasmidName} sequence={sequence} setSequence={setSequence}></Editor>
         </div>
-        
       </p>
     </div>
 )}

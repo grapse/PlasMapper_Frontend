@@ -1,13 +1,12 @@
 import * as React from "react"
 
-import { exportComponentAsJPEG, exportComponentAsPDF, exportComponentAsPNG } from 'react-component-export-image';
+import { exportComponentAsPNG } from 'react-component-export-image';
 
 import * as style from '../styles/sequenceeditor.module.css'
 import { fetchFeatureTypes } from '../utils/FeatureUtils';
 
 import GlobalContext from "../context/optionContext";
 
-import {fetchSamplePlasmids} from "../utils/SamplePlasmids";
 import {stripInput} from "../utils/FeatureUtils";
 import IconButton from "@mui/material/IconButton";
 import TextField from '@mui/material/TextField';
@@ -20,11 +19,14 @@ import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
 const featureColors = fetchFeatureTypes(true);
-console.log(featureColors)
+const pageLength = 600;
+const rowLength = 60;
 
 /**
  * Get the average of a list of hex colors
  * @param  {array} colors The list of hex colors
+ * @param  {float} alpha  The transperency of the color
+ * @return {string}       The average color in rgba format
  */
 function averageColors(colors, alpha){
     let r = 0;
@@ -41,22 +43,11 @@ function averageColors(colors, alpha){
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
-// TODO: For testing purposes
-const pageLength = 600;
-const rowLength = 60;
-// const sample = fetchSamplePlasmids()[0].sequence;
-// const TEST = sample.slice(0,1000);
-// const TEST_FEATURE = [
-//     {start: 50, stop: 100, name: "Feature 1", legend:"Restriction Sites", strand: 1},
-//     {start: 110, stop: 200, name: "Feature 2", legend:"Promoters", strand: -1 },
-//     {start: 250, stop: 270, name: "Feature 3", legend:"Replication Origins", strand: 1},
-//     {start: 460, stop: 467, name: "Feature 4", legend:"Selectable Markers", strand: 1},
-//     {start: 450, stop: 470, name: "Feature 5", legend:"Genes", strand: 1},
-// ]
 
 /**
- * Reverses the DNA strand
+ * Reverses the DNA strand to obtain the reverse complement
  * @param  {str} seq The single-stranded sequence
+ * @return {str}     The reverse complement
  */
 const reverseSequence = (seq) => {
     const code = {
@@ -75,6 +66,9 @@ export default function SequenceEditor(props){
   )
 }
 
+/**
+ * The component that composes the textual sequence editor.
+ */
 function DnaSpan(props){
     const {dna, features, start, stop, setSubstr, substr, reverse, download} = props;
     const [selected, setSelected] = React.useState(false);
@@ -111,28 +105,36 @@ function DnaSpan(props){
     )
 
 }
-// `
-// Map all features into two "points" each - the start and the stop
-// Sort these by their location on the sequence
-// Allocate an array to keep current feature data
-// Allocate an (html) element to keep the series of spans, and another for the reverse
 
-// For each point:
-//     To the html element, append a sequence span from the previous point to this one, 
-//                                                          with the feature data array
-//     Do the same, but for the reverse strand
-//     If it is a "start" point:
-//         Push the associated feature to the feature array
-//     If it is a "stop" point:
-//         Pop the associated feature from the array
 
-// Return the forward and reverse html elements
-
-// `
-
+/**
+ * Splits the sequence into a series of spans, each representing a single segment, split by features
+ * Algorithm:
+ *        Map all features into two "points" each - the start and the stop
+ *        Sort these by their location on the sequence
+ *        Allocate an array to keep current feature data
+ *        Allocate an (html) element to keep the series of spans, and another for the reverse
+ *
+ *        For each point:
+ *          To the html element, append a sequence span from the previous point to this one, 
+ *                                                      with the feature data array
+ *          Do the same, but for the reverse strand
+ *          If it is a "start" point:
+ *            Push the associated feature to the feature array
+ *          If it is a "stop" point:
+ *                Pop the associated feature from the array
+ *
+ *       Return the forward and reverse html elements
+ *  
+ * @param {str} sequence  The sequence
+ * @param {int} pageStop  The stop of the page on the sequence
+ * @param {int} pageStart The start of the page on the sequence
+ * @param {function} setSubsequence function to set the selected subsequence
+ * @param {obj} substr    The current selected subsequence
+ * @param {arr} features  The list of features for the entire sequence
+ * @returns               The html elements for the forward and reverse strands
+ */
 const splitFeatures = ((sequence, pageStop, pageStart, setSubsequence, substr, features) => {
-
-
     // Store the spans
     let spans = []
     let reverseSpans = []
@@ -230,6 +232,9 @@ const splitFeatures = ((sequence, pageStop, pageStart, setSubsequence, substr, f
     )
 })
 
+/**
+ * Displays the numbering of the sequence
+ */
 const TextDisplay = React.forwardRef((props, ref) => {
     const {page, sequence, pageStop, pageStart, handleSubsequenceUpdate, subsequence, features} = props;
 
@@ -287,6 +292,13 @@ function PageContent(props){
         setEditSub(sub?.dna)
     }
 
+    /**
+     * 
+     * @param {str} dna The DNA sequence to be inserted
+     * @param {*} start The start of the insert location
+     * @param {*} stop The end of the insert location
+     * @param {bool} reverse Whether it is on the reverse strand
+     */
     function insertSequence(dna, start, stop, reverse){
         if(reverse){
             dna = reverseSequence(dna);
@@ -297,7 +309,8 @@ function PageContent(props){
         setSequence(`${sequence.substring(0,start)}${dna}${sequence.substring(stop)}`)
 
         // Modify the features accordingly
-        // If insertion
+
+        // If insertion, the start and stop are exactly the same
         if(start === stop){
             setFeatures(
                 features.map((v,i) => {
@@ -312,14 +325,14 @@ function PageContent(props){
         else{
             setFeatures(
                 features
-                .filter((v,i) => {
-                    return(dna.length === 0 ? (v.start !== start || v.stop !== stop) : true);
-                })
-                .map((v,i) => {
-                    return({...v, 
-                            start: (v.start >= stop) ? v.start + insertDiff : v.start, 
-                            stop: (v.stop > start) ? v.stop + insertDiff : v.stop,
-                })
+                    .filter((v,i) => {
+                        return(dna.length === 0 ? (v.start !== start || v.stop !== stop) : true);
+                    })
+                    .map((v,i) => {
+                        return({...v, 
+                                start: (v.start >= stop) ? v.start + insertDiff : v.start, 
+                                stop: (v.stop > start) ? v.stop + insertDiff : v.stop,
+                    })
                 })
             )
         }
@@ -355,7 +368,6 @@ function PageContent(props){
             </div>
                 {subsequence ? 
                 <div class={style.editorSequence}>
-                
                     <TextField
                         label={`Edit ${subsequence.strand ? 'reverse' : 'forward'} strand`}
                         multiline
@@ -371,7 +383,6 @@ function PageContent(props){
                         value={editSub}
                         onChange={(e) => setEditSub(stripInput(e.target.value, true))}
                         />
-                    
                     {`Preview ${!subsequence.strand ? 'reverse' : 'forward'} strand`}
                     <div class={style.reversePreview}>
                         {reverseSequence(editSub)}
@@ -406,7 +417,6 @@ function PageContent(props){
                         {"Save changes"}
                     </div>
                     {"Or insert a sequence:"}
-                    
                     <TextField
                         label={`Edit Insertion`}
                         multiline
@@ -471,7 +481,6 @@ function PageContent(props){
                 handleSubsequenceUpdate={handleSubsequenceUpdate}
                 subsequence={subsequence}
             />
-            
         </div>
     )
 }

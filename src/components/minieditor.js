@@ -1,5 +1,4 @@
 import * as React from "react"
-
 import { Link } from "gatsby";
 import '../styles/cgview.css';
 import {fetchFeatures} from '../utils/FetchUtils';
@@ -15,13 +14,10 @@ function CustomLinkIcon(){
 function MiniEditor(props)  
   {
     const {theme} = React.useContext(GlobalContext);
-    const [tab, setTab] = React.useState(0);
-    const [initial, setInitial] = React.useState(true);
     const [localData, setLocalData] = React.useState([]);
     
     const [cgvFormat, setCgvFormat] = React.useState("circular");
-    const [cgvDownload, setCgvDownload] = React.useState(false);
-    const {sequence, data, nameSearch} = props;
+    const {sequence, nameSearch} = props;
     
     const json = {
         "cgview": {
@@ -49,17 +45,13 @@ function MiniEditor(props)
       }
 
     React.useEffect(() => {
-        // If it is currently getting fed a new plasmid
-        if (initial === true){
-            fetchFeatures(sequence)
-                .then(featureTemp => {
-                    setLocalData(featureTemp);
-                    console.log("changed");
-                }
-                )
-                .catch(err => console.log(err))
-        }
-
+      // If it is currently getting fed a new plasmid
+      fetchFeatures(sequence)
+          .then(featureTemp => {
+              setLocalData(featureTemp);
+          }
+          )
+          .catch(err => console.log(err))
     }, [])
 
     React.useEffect(() => {
@@ -74,20 +66,9 @@ function MiniEditor(props)
             cgv.settings.update({ format: cgvFormat });
 
             cgv.draw()
-            if(cgvDownload){
-                setCgvDownload(false);
-                const height = 2000;
-                // Here we adjust the width to be proportional to the height
-                const width = cgv.width / cgv.height * height;
-                cgv.io.downloadImage(width, height, 'cgview_map.png');
-            }
-
-    },[localData, cgvFormat, cgvDownload])
-
-
+    },[localData, cgvFormat])
 
     return(
-        <>  
           <div class={style.sidebarholder} style={{...theme}}>
                   <div id='my-viewer'><div></div></div>
                   <div>{`Sequence:`}</div>
@@ -96,7 +77,6 @@ function MiniEditor(props)
                   </div>
                   <Link to={`/`} state={{ nameSearch: nameSearch }} class={style.openlink}>Open in Editor<CustomLinkIcon/></Link>
           </div>
-        </>
     )
 }
 
