@@ -15,10 +15,9 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 
 /**
  * Makes the rows to display the preview table.
- * Definition of the rows are in SearchUtils
+ * Definition of the rows is in SearchUtils
  */
-
- const formRows = ((data) => {
+const formRows = ((data) => {
     return data.map((v, i) => {return({id:i, ...v})});
 })
 
@@ -33,7 +32,6 @@ function SearchPage(){
     const [plasmids, setPlasmids] = React.useState([]);
     const [filteredPlasmids, setFilteredPlasmids] = React.useState([]);
     const [currentPlasmid, setCurrentPlasmid] = React.useState("");
-    const [modalState, setModalState] = React.useState(-1);
     const [sequence, setSequence] = React.useState("");
     const [restrictionSearch, setRestrictionSearch] = React.useState([]);
     const [nameSearch, setNameSearch] = React.useState("");
@@ -42,7 +40,6 @@ function SearchPage(){
     const [lengthMin, setLengthMin] = React.useState(0);
     const [lengthMax, setLengthMax] = React.useState(20000);
     const [detailDrawer, setDetailDrawer] = React.useState(false);
-    const [filterDrawer, setFilterDrawer] = React.useState(false);
     const [filterAnd, setFilterAnd] = React.useState(false);
 
     React.useEffect(() => {
@@ -61,8 +58,6 @@ function SearchPage(){
                     }
                 );
         }
-
-        
 
         // Filter the data based on user-selected filters
         if(filterAnd){
@@ -162,7 +157,6 @@ function SearchPage(){
                                 
                                 />} 
                     label={`${filterAnd ? "AND" : "OR"} search`} />
-                
                 <div
                             class={style.searchBar}
                 >
@@ -240,9 +234,7 @@ function SearchPage(){
                         }}
                         />
                 </div>
-                    
                 </div>
-               
             <div class={style.searchbody}>
                 <div style={{height:"12px"}}></div>
                 <div style={{padding:"20px", marginTop:"40px", background:"linear-gradient(#e3dff2, #f1f1f1)"}}>

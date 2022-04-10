@@ -19,8 +19,6 @@ import '../styles/cgview.css';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import * as style from "../styles/accordion.module.css"
 
-const strands = ["Forward", "Reverse"]
-
 const featureData = fetchFeatureTypes();
 
 export default function OptionAccordion(props){
@@ -130,7 +128,6 @@ export default function OptionAccordion(props){
                                     {<SwapHorizIcon/>}
                                 </IconButton>
                             </div>
-                            
                             </AccordionDetails>
                         </Accordion>
                     </div>

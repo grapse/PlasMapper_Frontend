@@ -61,16 +61,15 @@ function PageContent(props){
                     {language.HELP.map((v,i) => {
                         return(
                             <>
-                            <div id={`tutorial-${i}`} class={style.spacer}></div>
-                            <TutorialItem
-                                title={v.title}
-                                text={v.content}
-                                image={v?.image}
-                            />
+                                <div id={`tutorial-${i}`} class={style.spacer}></div>
+                                <TutorialItem
+                                    title={v.title}
+                                    text={v.content}
+                                    image={v?.image}
+                                />
                             </>
                         )
                     })}
-                    
                 </div>
         </div>
     )

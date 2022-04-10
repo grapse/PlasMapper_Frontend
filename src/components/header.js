@@ -4,7 +4,6 @@ import { Link, navigate } from "gatsby"
 import * as style from "../styles/header.module.css"
 import Modal from '@mui/material/Modal'
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import GlobalContext from "../context/optionContext";
 import colors from "../config/colors";
@@ -65,7 +64,7 @@ const CIRCUMFERENCE = 219.91;
 
 function Header(props) 
   {
-    const {theme, setTheme, language, setLanguage} = React.useContext(GlobalContext);
+    const {theme, setTheme, language} = React.useContext(GlobalContext);
 
     const NAVITEMS = [
       {name:"Source Code",info:[language.SOURCE_CODE_FRONTEND, language.SOURCE_CODE_BACKEND]},
@@ -145,7 +144,6 @@ function Header(props)
                   stroke-width="9"
                   stroke-dasharray={`${20+pageProgress} ${CIRCUMFERENCE}`}
                   transform="translate(50,50) rotate(-90)" />
-              
           </svg>
         </div>
         </Link>

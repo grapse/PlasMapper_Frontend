@@ -131,7 +131,6 @@ export const fetchFeatureTypes = ((getMap = false) => {
 export const getFeatureNames = (() => {
     /**
      * Static data of all the feature names.
-     * TODO: Might move elsewhere
      */
     const features = ['lac_promoter', 'AmpR_promoter', 'tetO', 'pBR322_origin', 'f1_origin', 'Ampicillin', 'Gal4_dna_binding_domain2', 'lacZ_a', 'chicken_beta_actin_promoter', 'AmpR_promoter', 'CAG_enhancer', 'pBR322_origin', 'f1_origin', 'Ampicillin', 'mCherry', 'mStrawberry', 'mOrange', 'pAmCherry', 'mOrange2', 'mTangerine', 'mRaspberry', 'mHoneydew', 'mRFP1', 'mPlum', 'mBanana', 'woodchuck_hepatitis_virus_post_transcriptional_regulatory_element', 'right_AAV-2_inverted_terminal_repeat_adenovirus', 'right_AAV-2_inverted_terminal_repeat_adenovirus', 'left_AAV-2_inverted_terminal_repeat_adenovirus', 'left_AAV-2_inverted_terminal_repeat_adenovirus', 'chicken_beta_actin_promoter', 'chicken_beta_actin_promoter', 'AmpR_promoter', 'CAG_enhancer', 'CAG_enhancer', 'CAG_enhancer', 'CAG_enhancer', 'pBR322_origin', 'Ampicillin', 'CMV_immearly_promoter', 'SV40_promoter2', 'SV40_promoter', 'EM7_promoter', 'lac_promoter', 'AmpR_promoter', 'bGH_PA_terminator', 'CAG_enhancer', 'HIV-1_rev_response_element(RRE)', 'SV40_enhancer', 'pBR322_origin', 'f1_origin', 'SV40_origin', 'Ampicillin', 'bleo', 'cyclization_recombinase_nuclear_localization_signal', 'woodchuck_hepatitis_virus_post_transcriptional_regulatory_element', 'zeocin_resistance_ORF', 'HIV-1_5_long_terminal_repeat', 'HIV-1_5_long_terminal_repeat', 'truncated_HIV-1_3_prime_long_terminal_repeat', 'truncated_HIV-1_3_prime_long_terminal_repeat', 'HIV-1_psi_pack', 'AmpR_promoter', 'tetR', 'pBR322_origin', 'Ampicillin', 'lac_promoter', 'AmpR_promoter', 'pBR322_origin', 'Ampicillin', 'lacZ_a', 'lac_promoter', 'AmpR_promoter', 'pBR322_origin', 'Ampicillin', 'lacZ_a', 'lac_promoter', 'AmpR_promoter', 'pBR322_origin', 'Ampicillin', 'lac_promoter', 'AmpR_promoter', 'pBR322_origin', 'Ampicillin', 'lac_promoter', 'AmpR_promoter', 'pBR322_origin', 'Ampicillin', 'lacZ_a', 'lac_promoter', 'AmpR_promoter', 'pBR322_origin', 'Ampicillin', 'lacZ_a', 'CMV_immearly_promoter', 'SV40_promoter2', 'SV40_promoter', 'EM7_promoter', 'lac_promoter', 'AmpR_promoter']
     return [...new Set(features)];
@@ -140,9 +139,8 @@ export const getFeatureNames = (() => {
 export const getExpressionTypes = (() => {
     /**
      * Static data of all the expression types.
-     * TODO: Might move elsewhere
      */
-    const expressionTypes = ['Yeast Expression', 'Plant Expression', 'Bacterial Expression', 'Mammalian Expression', 'Insect Expression', 'Worm Expression']
+    const expressionTypes = ['Yeast Expression', 'Plant Expression', 'Bacterial Expression', 'Mammalian Expression', 'Insect Expression', 'Worm Expression', 'CRISPR']
     return [...new Set(expressionTypes)];
 })
 

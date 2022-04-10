@@ -4,6 +4,7 @@ const featureData = fetchFeatureTypes();
 
 /**
  * Calls the increment popularity endpoint with a given plasmid name
+ * @param {str} name The name of the plasmid to increment
  */
  export const incrementPopularity = (async(name) => {
     return api.post(`plasmids/popularity`, {"name":name})
@@ -30,7 +31,7 @@ export const fetchSearchData = (async() => {
 })
 
 /**
- * Fetches the json metadata for the plasmid database
+ * Fetches a plasmid sequence given a plasmid name
  * @param {str} name The name of the plasmid
  * @returns {str} data The fetched plasmid sequence
  */
@@ -59,6 +60,7 @@ export const fetchFeatures = (async(sequence) => {
             convert.user = [];
             convert.restrictionSites = [];
             let totalFeatures = -1;
+            // Add the non-restriction site features that have been returned
             for (let i = 0; i < featureData.length; i++){
                 featureTemp = [...featureTemp,...convert[featureData[i].id].map((v) => {
                                     totalFeatures += 1;
@@ -66,6 +68,7 @@ export const fetchFeatures = (async(sequence) => {
                                 })
                             ]
             }
+            // Add the returned restriction sites, hiding any that appear more than once by default
             const restrictionSites = [];
             convert?.restriction.map((v,i) => {
                 v?.locations.map((w, j) => {
@@ -76,6 +79,7 @@ export const fetchFeatures = (async(sequence) => {
                     restrictionSites.push(newFeature);
                 })
             })
+            // Combine the compiled features and restriction sites and return
             featureTemp = [...featureTemp, ...restrictionSites];
             return featureTemp;
         })

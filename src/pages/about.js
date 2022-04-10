@@ -16,7 +16,7 @@ function AboutPage(){
 
 function CustomLinkIcon(){
     return(<LinkIcon sx={{transform:"rotate(-30deg)", "vertical-align": "middle", "margin-left": "5px"}}/>)
-  }
+}
 
 function PageContent(props){
     const {theme, language} = React.useContext(GlobalContext);

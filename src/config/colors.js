@@ -1,5 +1,8 @@
 /**
  * Configures the default app colors for light and dark modes
+ * 
+ * New modes can be added by copying one of the existing modes and modifying it.
+ * 
  */
 
 export default({

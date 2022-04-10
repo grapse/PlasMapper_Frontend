@@ -11,18 +11,15 @@ import Select from '@mui/material/Select';
 import TouchAppIcon from '@mui/icons-material/TouchApp';
 import OptionAccordion from "./accordion";
 import GlobalContext from "../context/optionContext";
-import Button from "@mui/material/Button";
 import '../styles/cgview.css';
 import InputAdornment from '@mui/material/InputAdornment';
 import SequenceEditor from "./sequenceEditor";
 import * as style from "../styles/editor.module.css"
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import PanToolIcon from '@mui/icons-material/PanTool';
-import MouseIcon from '@mui/icons-material/Mouse';
 import PaletteIcon from '@mui/icons-material/Palette';
 import { Typography } from "@mui/material";
 import DownloadIcon from '@mui/icons-material/Download';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
 const CGV = require('cgview');
 
 const tabs = ["Features", "Add Feature", "Restriction Sites","Other"]
