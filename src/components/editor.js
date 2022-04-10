@@ -96,7 +96,7 @@ function Editor(props)
     const [plasmidName, setPlasmidName] = React.useState(name || "Plasmid");
     const [isAddStart, setIsAddStart] = React.useState(false);
     const [isAddStop, setIsAddStop] = React.useState(false);
-    const [legendItems, setLegendItems] = React.useState([]);
+    const [legendItems, setLegendItems] = React.useState(featureData.map((v,i) => {return {name:v.display,swatchColor:v.color,bwColor:v.bwColor,decoration:v.decoration}}));
     const [isBw, setIsBw] = React.useState(false);
 
     const [downloadHeight, setDownloadHeight] = React.useState(2000);
@@ -106,6 +106,34 @@ function Editor(props)
     const [height, setHeight] = React.useState(initialDownloadHeight);
 
     const [fileWarning, setFileWarning] = React.useState(false);
+
+    let allLegendItems = localData.map(w => w.legend);
+    let allLegendItemsSet = new Set(allLegendItems);
+    const json = {
+        "cgview": {
+        "version": "1.1.0",
+        "name": plasmidName,
+        "captions": [
+            {
+                "backgroundColor": "rgba(255,255,255,0.4)",
+                "font": "sans-serif,plain,18",
+                "fontColor": "rgba(163,107,6,1)",
+                "name": plasmidName,
+                "position": "bottom-center",
+                "textAlignment": "left"
+            }],
+        "sequence": {
+            seq:sequence
+        },
+        "features": localData,
+        "legend": {
+            // Maps the preset feature data from above into the legend
+            "items": legendItems.filter(v => allLegendItemsSet.has(v.name)),
+            "visible" : showLegend
+        },
+        "tracks": showOrf ? orfTracks : defaultTracks
+        }
+    }
 
     /**
      * Updates the feature at a specified index with the specified values
@@ -145,46 +173,6 @@ function Editor(props)
         event.preventDefault();
     };
 
-    const handleLegendUpdate = (index, val) => {
-        setLegendItems(
-            legendItems.map(
-                (v,i) => {
-                    return i === index ? {v, ...val} : v
-                }
-            )
-        )
-    }
-
-    let test = localData.map(w => w.legend);
-    let test2 = new Set(test);
-
-    const json = {
-        "cgview": {
-          "version": "1.1.0",
-          "name": plasmidName,
-          "captions": [
-            {
-                "backgroundColor": "rgba(255,255,255,0.4)",
-                "font": "sans-serif,plain,18",
-                "fontColor": "rgba(163,107,6,1)",
-                "name": plasmidName,
-                "position": "bottom-center",
-                "textAlignment": "left"
-            }],
-          "sequence": {
-            seq:sequence
-          },
-          "features": localData,
-          "legend": {
-              // Maps the preset feature data from above into the legend
-            "items": legendItems.filter(v => test2.has(v.name)),
-            "visible" : showLegend
-          },
-          "tracks": showOrf ? orfTracks : defaultTracks
-        }
-      }
-
-
     React.useEffect(() => {
         // If it is currently getting fed a new plasmid
         if (initial === true){
@@ -206,8 +194,6 @@ function Editor(props)
 
     React.useEffect(() => {
         // If we are currently on the CGV tab, draw CGView
-        const myNode = document.getElementById("my-viewer");
-        myNode.removeChild(myNode.childNodes[0]);
         const cgv = new CGV.Viewer('#my-viewer', {
             height: height,
             width: width,
@@ -229,6 +215,8 @@ function Editor(props)
             }
         });
         cgv.io.loadJSON(json);
+        const myNode = document.getElementById("my-viewer");
+        myNode.removeChild(myNode.childNodes[0]);
         
         cgv.settings.update({ format: cgvFormat });
 
@@ -303,6 +291,7 @@ function Editor(props)
                         setFileWarning("File format error. File must be a JSON file with the following keys: name, sequence, features");
                         return;
                     }
+                    setLegendItems(featureData.map((v,i) => {return {name:v.display,swatchColor:v.color,bwColor:v.bwColor,decoration:v.decoration}}));
                     setPlasmidName(uploadedFile.name);
                     setSequence(uploadedFile.sequence);
                     setLocalData(uploadedFile.features);
