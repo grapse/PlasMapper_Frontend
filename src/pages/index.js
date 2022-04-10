@@ -44,8 +44,8 @@ function PageContent(props){
      * Only used if the user clicked in from the search page
      * Makes it so it automatically annotates and scrolls to plasmid editor
      */
-    console.log(location.state);
-    if(typeof location.state !== "undefined" && location.state.nameSearch){
+    console.log(location);
+    if(location?.state?.nameSearch){
       console.log(location.state)
       setStartTab(2);
       setPlasmidName(location.state.nameSearch);
