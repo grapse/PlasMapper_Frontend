@@ -94,7 +94,7 @@ function MiniEditor(props)
                   <div class={style.sequence}>
                       {sequence}
                   </div>
-                  <Link to={`/`} state={{ nameSearch: "pCRCT" }} class={style.openlink}>{"Open in Editor"}<CustomLinkIcon/></Link>
+                  <Link to={`/`} state={{ nameSearch: nameSearch }} class={style.openlink}>Open in Editor<CustomLinkIcon/></Link>
           </div>
         </>
     )
