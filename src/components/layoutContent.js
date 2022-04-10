@@ -10,7 +10,7 @@ function LayoutContent({children}){
 
   return(
     <div
-        style={{...theme}}
+        style={{...theme, backgroundColor: theme['--tint']}}
         >
           <main>{children}</main>
           <footer
