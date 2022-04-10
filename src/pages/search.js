@@ -50,7 +50,6 @@ function SearchPage(){
             // Upon loading in, fetch the plasmid metadata database from backend
             fetchSearchData()
                 .then(data => {
-                    console.log(data[2]);
                         setPlasmids(data);
                         setFilteredPlasmids(data);
                         setFirstLoad(false);
@@ -127,7 +126,6 @@ function SearchPage(){
     function openModal(name, idx){
         fetchSequence(name)
             .then(data => {
-                    console.log("data",data)
                     setSequence(data)
                     setCurrentPlasmid(name)
                     setDetailDrawer(true)
@@ -149,7 +147,7 @@ function SearchPage(){
                 <div
                             class={style.searchBar}
                 >
-                    <TextField inputProps={{ "data-testid": "search-name" }} 
+                    <TextField  
                             onChange={(e) => setNameSearch(e.target.value)} 
                             value={nameSearch} id="input-name" 
                             label="Plasmid Name" 
@@ -161,7 +159,7 @@ function SearchPage(){
                     control={<Switch
                                 checked={filterAnd}
                                 onChange={() => setFilterAnd(!filterAnd)}
-                                inputProps={{ 'aria-label': 'controlled' }}
+                                
                                 />} 
                     label={`${filterAnd ? "AND" : "OR"} search`} />
                 
@@ -170,7 +168,6 @@ function SearchPage(){
                 >
                     <Autocomplete 
                             multiple
-                            inputProps={{ "data-testid": "search-feature" }} 
                             disablePortal
                             size="small"
                             freeSolo
@@ -188,7 +185,6 @@ function SearchPage(){
                 >
                     <Autocomplete 
                             multiple
-                            inputProps={{ "data-testid": "search-restriction" }} 
                             disablePortal
                             size="small"
                             freeSolo
@@ -206,7 +202,6 @@ function SearchPage(){
                 >
                     <Autocomplete 
                             multiple
-                            inputProps={{ "data-testid": "search-expression" }} 
                             disablePortal
                             size="small"
                             freeSolo

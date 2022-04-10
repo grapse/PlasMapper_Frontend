@@ -437,7 +437,9 @@ function Editor(props)
                                 setHeight(width/(downloadWidth/newVal));
                                 }} 
                             id="add-height" label="Set Download Height" type="number"
-                            endAdornment={<InputAdornment position="end">px</InputAdornment>}
+                            InputProps={{endAdornment: 
+                                <InputAdornment position="end">px</InputAdornment>
+                                    }}
                             value={downloadHeight}
                             />
                          <TextField onChange={(e) => {
@@ -448,7 +450,9 @@ function Editor(props)
                                 setHeight(width/(newVal/downloadHeight));
                                 }} 
                             id="add-width" label="Set Download Width" type="number"
-                            endAdornment={<InputAdornment position="end">px</InputAdornment>}
+                            InputProps={{endAdornment: 
+                                <InputAdornment position="end">px</InputAdornment>
+                                    }}
                             value={downloadWidth}
                             />
                         <div class={style.downloadHolder}>
