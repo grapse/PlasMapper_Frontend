@@ -98,12 +98,12 @@ function DnaSpan(props){
                                 setSubstr({dna: dna, start: start, stop: stop, strand: reverse});
                                 setSelected(true);
                             }
-                            console.log(dna)}}
+                            }}
             >   
                 {features.length > 0 && 
                 <span class={style.tooltiptext} style={{}}>
                     <div class={style.holdFeatures}>
-                        {features.map(v => <span>{v.name}</span>)}
+                        {features.map((v,i) => <span key={`${i}-f`}>{v.name}</span>)}
                     </div>
                 </span>}
                 {dna}
@@ -144,7 +144,6 @@ const splitFeatures = ((sequence, pageStop, pageStart, setSubsequence, substr, f
                                          (v.stop > pageStart && v.stop <= pageStop && v.visible)
                                          ||
                                          (v.start <= pageStart && v.stop >= pageStop && v.visible))
-    console.log(currentFeatures);
 
     // Store all the starting and ending points
     let points = [];
@@ -293,7 +292,6 @@ function PageContent(props){
             dna = reverseSequence(dna);
         }
         const insertDiff = dna.length - (stop - start);
-        console.log(insertDiff)
 
         // Insert the DNA
         setSequence(`${sequence.substring(0,start)}${dna}${sequence.substring(stop)}`)

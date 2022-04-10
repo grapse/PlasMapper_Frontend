@@ -44,22 +44,24 @@ function PageContent(props){
      * Only used if the user clicked in from the search page
      * Makes it so it automatically annotates and scrolls to plasmid editor
      */
-    console.log("here")
     if(location.state?.nameSearch){
-    console.log(location.state)
-    setStartTab(2);
-    setPlasmidName(location.state.nameSearch);
-    fetchSequence(location.state.nameSearch)
-        .then(data => {
-                setSequence(stripInput(data, true));
-                annotateSequenceLoad(location.state.nameSearch, data);
-            }
-        )
-        .catch(err =>{
-                console.log(err);
-            }
-        );
-  }
+      console.log(location.state)
+      setStartTab(2);
+      setPlasmidName(location.state.nameSearch);
+      fetchSequence(location.state.nameSearch)
+          .then(data => {
+                  setSequence(stripInput(data, true));
+                  annotateSequenceLoad(location.state.nameSearch, data);
+              }
+          )
+          .catch(err =>{
+                  console.log(err);
+              }
+          );
+    }
+    else{
+      console.log("No search")
+    }
   },[location, firstLoad])
 
   /**

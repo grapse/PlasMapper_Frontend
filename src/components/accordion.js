@@ -74,7 +74,7 @@ export default function OptionAccordion(props){
                                 id="panel2bh-header"
                                 sx={{width:"100%"}}
                                 >
-                                <Typography sx={{width:"80%"}} noWrap>{v.name}</Typography>
+                                <Typography sx={{width:"80%"}} >{v.name}</Typography>
                             </AccordionSummary>
                             <AccordionDetails class={style.optionHolder}>
                                 <TextField defaultValue={v.name} 
@@ -82,7 +82,7 @@ export default function OptionAccordion(props){
                                            label="Name" 
                                            variant="standard" 
                                            size="small"
-                                           sx={{width:"80%"}} noWrap
+                                           sx={{width:"80%"}} 
                                            onChange={(event) => setCurrentName(event.target.value)}
                                            InputProps={{endAdornment: 
                                                 <InputAdornment position="end">
@@ -103,7 +103,7 @@ export default function OptionAccordion(props){
                                     labelId="category-label"
                                     id="add-category"
                                     defaultValue={v.legend}
-                                    sx={{width:"80%"}} noWrap
+                                    sx={{width:"80%"}} 
                                     label="Category"
                                     onChange={(e) => handleFeatureUpdate(i, {legend:e.target.value})}
                                 >
