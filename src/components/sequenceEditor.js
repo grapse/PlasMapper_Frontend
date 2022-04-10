@@ -362,8 +362,13 @@ function PageContent(props){
                         label={`Edit ${subsequence.strand ? 'reverse' : 'forward'} strand`}
                         multiline
                         InputProps={{
-                            classes:{input:style.inputSeq}
-                        }}
+                            style: {
+                                fontFamily: "Consolas, 'Courier New', Courier, monospace",
+                                color: theme['--text'],
+                                fontSize: "0.9rem",
+                                backgroundColor: theme['--background'],
+                                }
+                            }}
                         rows={5}
                         value={editSub}
                         onChange={(e) => setEditSub(stripInput(e.target.value, true))}
@@ -409,6 +414,14 @@ function PageContent(props){
                         multiline
                         rows={5}
                         value={insertSub}
+                        InputProps={{
+                            style: {
+                                fontFamily: "Consolas, 'Courier New', Courier, monospace",
+                                color: theme['--text'],
+                                fontSize: "0.9rem",
+                                backgroundColor: theme['--background'],
+                                }
+                            }}
                         onChange={(e) => setInsertSub(stripInput(e.target.value, true))}
                         />
                     <div class={style.alignHoriz}>

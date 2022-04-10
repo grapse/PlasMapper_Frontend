@@ -94,13 +94,18 @@ function SequenceUpload(props)
                 </Link>
                 <Or/>
                 <TextField
-                    style={{width:`100%`,backgroundColor:theme['--background']}}
+                    style={{width:`100%`}}
                     id="outlined-multiline-static"
                     label={language.PASTE_SEQ}
-                    InputProps={{
-                        classes:{input:style.inputSeq}
-                        }}
                     multiline
+                    InputProps={{
+                        style: {
+                            fontFamily: "Consolas, 'Courier New', Courier, monospace",
+                            color: theme['--text'],
+                            fontSize: "0.9rem",
+                            backgroundColor: theme['--background'],
+                        }
+                    }}
                     maxRows={3}
                     value={sequence}
                     onChange={(e) => changeSequence(e.target.value)}
