@@ -26,7 +26,7 @@ function PageContent(props){
     /**
      * Gets location data from main page
      */
-    if(location.state?.editorData){
+    if(typeof location.state !== "undefined"){
         console.log(location.state)
         setData(location.state.editorData.data);
         setSequence(location.state.editorData.sequence);
