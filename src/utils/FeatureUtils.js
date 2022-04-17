@@ -174,47 +174,63 @@ export const getFastaName = ((input) => {
     return false;
 })
 
+/**
+ * Returns the information relating to a select number of common restriction enzymes
+ */
 export const getCommonEnzymes = (() => {
-    const str = ` HpaII CCGG (1/3)
-    ApoI RAATTY (1/5)
-    SacI GAGCTC (5/1)
-    EcoRI GAATTC (1/5)
-    AlwNI CAGNNNCTG (6/3)
-    AluI AGCT (2/2)
-    AccI GTMKAC (2/4)
-    MboI GATC (0/4)
-    Sau3AI GATC (0/4)
-    SfiI GGCCNNNNNGGCC (8/5)
-    HincII GTYRAC (3/3)
-    NruI TCGCGA (3/3)
-    BglI GCCNNNNNGGC (7/4)
-    AvrI CYCGRG (1/1)
-    XmaI CCCGGG (1/5)
-    DraI TTTAAA (3/3)
-    PvuII CAGCTG (3/3)
-    HindIII AAGCTT (1/5)
-    KpnI GGTACC (5/1)
-    NarI GGCGCC (2/4)
-    BglII AGATCT (1/5)
-    HpaI GTTAAC (3/3)
-    StuI AGGCCT (3/3)
-    NcoI CCATGG (1/5)
-    NdeI CATATG (2/4)
-    Bsp24I GACNNNNNNTGG (1/1)
-    BclI TGATCA (1/5)
-    SmaI CCCGGG (3/3)
-    AvaI CYCGRG (1/5)
-    AvaII GGWCC (1/4)
-    PstI CTGCAG (5/1)
-    SphI GCATGC (5/1)
-    ApaI GGGCCC (5/1)
-    EcoRV GATATC (3/3)
-    BamHI GGATCC (1/5)
-    HaeIII GGCC (2/2)
-    NotI GCGGCCGC (2/6)
-    XhoI CTCGAG (1/5)
-    ClaI ATCGAT (2/4)
-    XbaI TCTAGA (1/5)`
+    const enzymes = [ { name: 'HpaII', reg: 'ccgg', len: 4 },
+    { name: 'ApoI', reg: '[ag]aatt[ct]', len: 6 },
+    { name: 'SacI', reg: 'gagctc', len: 6 },
+    { name: 'EcoRI', reg: 'gaattc', len: 6 },
+    { name: 'AlwNI', reg: 'cag[actg][actg][actg]ctg', len: 9 },
+    { name: 'AluI', reg: 'agct', len: 4 },
+    { name: 'AccI', reg: 'gt[ac][gt]ac', len: 6 },
+    { name: 'MboI', reg: 'gatc', len: 4 },
+    { name: 'Sau3AI', reg: 'gatc', len: 4 },
+    { name: 'SfiI',
+      reg: 'ggcc[actg][actg][actg][actg][actg]ggcc',
+      len: 13 },
+    { name: 'HincII', reg: 'gt[ct][ag]ac', len: 6 },
+    { name: 'NruI', reg: 'tcgcga', len: 6 },
+    { name: 'BglI',
+      reg: 'gcc[actg][actg][actg][actg][actg]ggc',
+      len: 11 },
+    { name: 'AvrI', reg: 'c[ct]cg[ag]g', len: 6 },
+    { name: 'XmaI', reg: 'cccggg', len: 6 },
+    { name: 'DraI', reg: 'tttaaa', len: 6 },
+    { name: 'PvuII', reg: 'cagctg', len: 6 },
+    { name: 'HindIII', reg: 'aagctt', len: 6 },
+    { name: 'KpnI', reg: 'ggtacc', len: 6 },
+    { name: 'NarI', reg: 'ggcgcc', len: 6 },
+    { name: 'BglII', reg: 'agatct', len: 6 },
+    { name: 'HpaI', reg: 'gttaac', len: 6 },
+    { name: 'StuI', reg: 'aggcct', len: 6 },
+    { name: 'NcoI', reg: 'ccatgg', len: 6 },
+    { name: 'NdeI', reg: 'catatg', len: 6 },
+    { name: 'Bsp24I',
+      reg: 'gac[actg][actg][actg][actg][actg][actg]tgg',
+      len: 12 },
+    { name: 'BclI', reg: 'tgatca', len: 6 },
+    { name: 'SmaI', reg: 'cccggg', len: 6 },
+    { name: 'AvaI', reg: 'c[ct]cg[ag]g', len: 6 },
+    { name: 'AvaII', reg: 'gg[at]cc', len: 5 },
+    { name: 'PstI', reg: 'ctgcag', len: 6 },
+    { name: 'SphI', reg: 'gcatgc', len: 6 },
+    { name: 'ApaI', reg: 'gggccc', len: 6 },
+    { name: 'EcoRV', reg: 'gatatc', len: 6 },
+    { name: 'BamHI', reg: 'ggatcc', len: 6 },
+    { name: 'HaeIII', reg: 'ggcc', len: 4 },
+    { name: 'NotI', reg: 'gcggccgc', len: 8 },
+    { name: 'XhoI', reg: 'ctcgag', len: 6 },
+    { name: 'ClaI', reg: 'atcgat', len: 6 },
+    { name: 'XbaI', reg: 'tctaga', len: 6 } ]
+    return enzymes;
+})
+
+/**
+ * @param  {array} enzymes The enzymes to be converted
+ */
+export const getEnzymes = ((enzymes) => {
     const restrictionSymbols = {
         A:"a",
         C:"c",
@@ -232,8 +248,24 @@ export const getCommonEnzymes = (() => {
         V:"[acg]",
         D:"[agt]"
     }
-    return str.split('\n').map(v => {
-        var parts = v.trim().split(' ');
+    return enzymes.map(v => {
+        var parts = v.trim().toLowerCase().split(' ');
         const re = parts[1].split('').map(v => restrictionSymbols[v]).join('');
         return {name:parts[0],reg:re,len:parts[1].length}});
+})
+
+/**
+ * Searches for the given restriction sites in the DNA sequence
+ * @param  {str} sequence The DNA sequence to be checked
+ * @param  {} enzymes The enzymes to check for
+ */
+export const checkEnzymes = ((sequence, enzymes = getCommonEnzymes()) => {
+    var features = [];
+    for (var i = 0; i < enzymes.length; i++){
+        var tryMatch = sequence.match(new RegExp(enzymes[i].reg));
+        if(tryMatch){
+            features = [...features,{name:enzymes[i].name,start:tryMatch.index,stop:tryMatch.index + enzymes[i].len,source:"json-feature", legend:"Restriction Sites", show:true}]
+        }
+    }
+    return features;
 })
