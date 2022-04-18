@@ -1,8 +1,5 @@
-/**
- * 
- * 
- """
-allEnzymes = [{ name: 'BseX3I', reg: 'cggccg', len: 6 },
+export const getAllEnzymes = (() =>{
+const enzymes =  [{ name: 'BseX3I', reg: 'cggccg', len: 6 },
   { name: 'AseII', reg: 'cc[cg]gg', len: 5 },
   { name: 'MspR9I', reg: 'cc[actg]gg', len: 5 },
   { name: 'SacI', reg: 'gagctc', len: 6 },
@@ -408,7 +405,6 @@ allEnzymes = [{ name: 'BseX3I', reg: 'cggccg', len: 6 },
   { name: 'SlaI', reg: 'ctcgag', len: 6 },
   { name: 'SduI', reg: 'g[agt]gc[act]c', len: 6 },
   { name: 'BfaI', reg: 'ctag', len: 4 },
-  { name: 'Bsp24I', reg: '', len: 6 },
   { name: 'Cac8I', reg: 'gc[actg][actg]gc', len: 6 },
   { name: 'TaaI', reg: 'ac[actg]gt', len: 5 },
   { name: 'PflFI', reg: 'gac[actg][actg][actg]gtc', len: 9 },
@@ -520,7 +516,5 @@ allEnzymes = [{ name: 'BseX3I', reg: 'cggccg', len: 6 },
   { name: 'Bsp19I', reg: 'ccatgg', len: 6 },
   { name: 'Eco32I', reg: 'gatatc', len: 6 }
   ]
-
-"""
- * 
- */
+  return enzymes;
+})

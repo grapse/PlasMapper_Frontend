@@ -236,9 +236,8 @@ function SearchPage(){
                 </div>
                 </div>
             <div class={style.searchbody}>
-                <div style={{height:"12px"}}></div>
-                <div style={{padding:"20px", marginTop:"40px", background:"linear-gradient(#e3dff2, #f1f1f1)"}}>
-                <div style={{fontWeight:"400px", fontSize:"2.5em", textAlign:"left", marginTop:"30px", marginLeft:"30px"}}>Browse Plasmids</div>
+                <div style={{padding:"20px", background:"linear-gradient(#e3dff2, #f1f1f1)"}}>
+                <div class={style.bigTitle}>Browse Plasmids</div>
                 <p style={{fontSize:"1.2em", margin:"35px", textAlign:"left"}}>Quickly find the plasmid you are looking for in our database by filtering for various fields.<br></br>Click on a column header to view more options for that column, including sorting.</p>
                 
                 </div>
@@ -253,7 +252,7 @@ function SearchPage(){
                         })
                     : 
                     <DataGrid
-                            sx={{height:52*100+200,backgroundColor:"white",margin:"0 90px"}}
+                            sx={{height:52*100+200,backgroundColor:"white",margin:"clamp(10px, 5%, 100px)"}}
                             rows={formRows(filteredPlasmids)}
                             columns={TableColumns}
                             pageSize={100}

@@ -257,7 +257,7 @@ export const getEnzymes = ((enzymes) => {
 /**
  * Searches for the given restriction sites in the DNA sequence
  * @param  {str} sequence The DNA sequence to be checked
- * @param  {} enzymes The enzymes to check for
+ * @param  {array} enzymes The enzymes to check for
  */
 export const checkEnzymes = ((sequence, enzymes = getCommonEnzymes()) => {
     var features = [];
@@ -267,5 +267,66 @@ export const checkEnzymes = ((sequence, enzymes = getCommonEnzymes()) => {
             features = [...features,{name:enzymes[i].name,start:tryMatch.index,stop:tryMatch.index + enzymes[i].len,source:"json-feature", legend:"Restriction Sites", show:true}]
         }
     }
+    return features;
+})
+
+/**
+ * Counts the restriction sites in the DNA sequence
+ * @param  {str} sequence The DNA sequence to be checked
+ * @param  {array} enzymes The enzymes to count
+ */
+ export const countEnzymes = ((sequence, enzymes) => {
+    return enzymes.map((v,i) =>{ 
+        let a = new RegExp(v.reg.toUpperCase(), 'g');
+        return({...v, count:sequence.match(a)?.length || 0})
+    });
+})
+
+/**
+ * Converts a single enzyme
+ * @param  {str} enzyme The enzyme to be converted
+ */
+ const getRegExp = ((enzyme) => {
+    const restrictionSymbols = {
+        A:"a",
+        C:"c",
+        T:"t",
+        G:"g",
+        N:"[actg]",
+        M:"[ac]",
+        R:"[ag]",
+        W:"[at]",
+        Y:"[ct]",
+        S:"[cg]",
+        K:"[gt]",
+        H:"[act]",
+        B:"[cgt]",
+        V:"[acg]",
+        D:"[agt]"
+    }
+    return enzyme.split('').map(v => restrictionSymbols[v]).join('');
+})
+
+export const getNewEnzyme = ((sequence, newName, newMatch) => {
+    let newRegExp = getRegExp(newMatch.toUpperCase());
+    return countEnzymes(sequence, [{name:newName, reg:newRegExp, len:newRegExp.length}])[0];
+})
+
+export const getAllMatches = ((sequence, enzymes) => {
+    let features = []
+    enzymes.forEach((w,j) => {
+        let re = new RegExp(w.reg.toUpperCase(), 'g');
+        let matches = [];
+        let match;
+        while ((match = re.exec(sequence)) != null) {
+            matches = [...matches, match];
+        }
+        console.log(matches);
+        if(matches){
+            matches.forEach((v,i) => {
+                features = [...features,{name:w.name, count:w.count, firstSite: i === 0,start:v.index,stop:v.index + w.len,source:"json-feature", legend:"Restriction Sites", visible:true}]
+            })
+        }
+    });
     return features;
 })

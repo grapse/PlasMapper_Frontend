@@ -138,7 +138,7 @@
     white-space: pre-line;
     box-shadow: 10px 10px 25px rgba(0,0,0,0.5);
     padding:100px 50px;
-    width:600px;
+    width: min(600px, 90vw);
   }
 .catchphrase{
     color:#ee615f;
