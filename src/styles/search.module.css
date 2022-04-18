@@ -1,7 +1,5 @@
 .searchbody {
-    margin-top:500px;
     text-align:center;
-    margin:auto;
     position:relative;
     width:calc(100vw - 300px);
   }
@@ -30,6 +28,14 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.bigTitle{
+    font-size:2em;
+    font-weight:500;
+    text-align: left;
+    margin: 30px;
+    margin-top: 50px;
 }
 
 .searchBar{
@@ -66,3 +72,29 @@
   top: 0;
     flex-direction:column;
 }
+@media only screen and (max-width: 600px) {
+    .searchHolder{
+        flex-direction:column;
+    }
+    .filterBar{
+        width:100%;
+        display:flex;
+        height:auto;
+        flex-direction:row;
+        flex-wrap:wrap;
+        position:relative;
+    }
+    .searchbody {
+        text-align:center;
+        position:relative;
+        width:100%;
+      }
+    .searchBar{
+        margin:10px;
+        border-radius: 10px;
+        padding:10px;
+        padding-bottom:15px;
+        width: 80vw;
+    }
+    
+  }

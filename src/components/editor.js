@@ -1,12 +1,15 @@
 import * as React from "react"
-import { fetchFeatureTypes } from '../utils/FeatureUtils';
+import { fetchFeatureTypes, getAllMatches, countEnzymes, getNewEnzyme } from '../utils/FeatureUtils';
+import {getAllEnzymes} from '../utils/AllEnzymes';
 import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from "@mui/material/IconButton";
+import Modal from '@mui/material/Modal';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import FormControl from '@mui/material/FormControl';
+import Box from '@mui/material/Box';
 import Select from '@mui/material/Select';
 import TouchAppIcon from '@mui/icons-material/TouchApp';
 import OptionAccordion from "./accordion";
@@ -27,6 +30,7 @@ const initialDownloadHeight = 500;
 const maxDownload = 10000;
 const minDownload = 500;
 const maxFileSize = 1000000;
+const maxEnzymes = 40;
 
 const orfTracks = [
     {
@@ -61,13 +65,194 @@ const defaultTracks = [
   ]
 
 const featureData = fetchFeatureTypes();
+const allEnzymes = getAllEnzymes();
 
 var cgvHandle = null;
+
+/**
+ * Handles the restriction site tool
+ */
+function RestrictionAdd(props){
+    const {setLocalData, sequence} = props;
+    const {theme} = React.useContext(GlobalContext);
+
+    const [nameSearch, setNameSearch] = React.useState("");
+    const [originalEnzymes, setOriginalEnzymes] = React.useState(allEnzymes);
+    const [filteredEnzymes, setFilteredEnzymes] = React.useState(allEnzymes);
+    const [addList, setAddList] = React.useState([]);
+    const [checked, setChecked] = React.useState({});
+    const [open, setOpen] = React.useState(false);
+    const [counted, setCounted] = React.useState(false);
+    const [max, setMax] = React.useState(2);
+    const [min, setMin] = React.useState(1);
+    const [enzymes, setEnzymes] = React.useState([]);
+
+    const [newName, setNewName] = React.useState("");
+    const [newMatch, setNewMatch] = React.useState("");
+
+    const [warning, setWarning] = React.useState(false);
+
+    React.useEffect(() => {
+        if(open){
+            countSites();
+            setCounted(true);
+            setAddList([]);
+            setChecked({});
+            setNewMatch("");
+            setNewName("");
+            setNameSearch("");
+            setMax(2);
+            setMin(1);
+            setWarning(false);
+        }
+    },[open])
+
+    React.useEffect(() => {
+        setFilteredEnzymes(
+            originalEnzymes.filter(enzyme =>
+                    (nameSearch ? `${enzyme.name}`.toLowerCase().indexOf(nameSearch.toLowerCase()) >= 0 : true)
+                    &&
+                    (counted ? enzyme?.count <= max : true)
+                    &&
+                    (counted ? enzyme?.count >= min : true)
+                )
+        )
+    },[nameSearch, max, min, counted])
+
+    const handleUpdateList = (data) => {
+        if (addList.length >= maxEnzymes){
+            setWarning(`You can only add up to ${maxEnzymes} enzymes at a time!`);
+            return;
+        }
+        else{
+            setAddList([...addList, data])
+            setChecked({...checked, [data.name]: true});
+            setWarning(false);
+        }
+    };
+
+    const handleRemoveList = (data) => {
+        setAddList(addList.filter(item => item.name !== data.name));
+        setChecked({...checked, [data.name]: false});
+        setWarning(false);
+    };
+
+    const countSites = () => {
+        const countSites = countEnzymes(sequence, originalEnzymes);
+        setCounted(true);
+        setOriginalEnzymes(countSites);
+        setFilteredEnzymes(countSites);
+        setNameSearch("");
+        setMin(1);
+    }
+
+    const updateEnzymes = () => {
+        if(!/^[actgnmrwyskhbvd]+$/.test(newMatch.toLowerCase())){
+            setWarning("The pattern must use the following: A, C, T, G, N (any), M (a|c), R (a|g), W (a|t), S (c|g), Y (c|t), K (g|t), V (a|c|g), H (a|c|t), D (a|g|t), B (c|g|t)");
+            return;
+        }
+        if(newName.length > 32 || newMatch.length > 32){
+            setWarning("The name and pattern must be less than 32 characters long");
+            return;
+        }
+        let newEnzyme = getNewEnzyme(sequence, newName, newMatch);
+        setOriginalEnzymes([...originalEnzymes, newEnzyme]);
+    }
+
+    const addSites = () => {
+        let newMatches = getAllMatches(sequence, addList);
+        console.log(newMatches);
+        setLocalData(newMatches);
+        setOpen(false);
+    }
+
+    return(
+        <div class={style.restrictionAdder}>
+        <button onClick={() => setOpen(true)}>Add Enzymes</button>
+            <Modal  style={{...theme}} open={open} onClose={() => setOpen(false)} aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description">
+                <Box class={style.modal + " " + style.restrictionAdder}>
+                <div class={`${style.restrictionOptions} ${style.restrictionOptionsAdd}`}>
+                    <div class={style.addRow}>
+                        <Typography>{"Add these enzymes:"}</Typography>
+                    </div>
+                    <div class={style.addRow}>
+                        {warning && <Typography sx={{color:"red"}}>{warning}</Typography>}
+                    </div>
+                    {addList.map((v,i) => {return(
+                        <div class={style.restrictionItem} key={i}>
+                            <Checkbox size="small"
+                                checked={true}
+                                onChange={(e) => handleRemoveList(v)}
+                            />
+                            <div>{v.name}{counted && <span>{` (${v.count})`}</span>}</div>
+                        </div>
+                    )})}
+                </div>
+                <div class={style.addRow}>
+                    <TextField onChange={(e) => setNewName(e.target.value)} 
+                        value={newName} id="input-enzyme" 
+                        label="Add Enzyme Name" 
+                        size="small"
+                        variant="standard" />
+                    <TextField onChange={(e) => setNewMatch(e.target.value)} 
+                        value={newMatch} id="input-enzyme" 
+                        label="Add Cutting Pattern" 
+                        size="small"
+                        variant="standard" />
+                    <button disabled={newMatch.length < 3 || newName.length < 1} onClick={() => updateEnzymes()}>Add Custom</button>
+                </div>
+                <div class={style.addRow}>
+                    <TextField onChange={(e) => setNameSearch(e.target.value)} 
+                        value={nameSearch} id="input-enzyme" 
+                        label="Search Enzyme Name" 
+                        size="small"
+                        variant="standard" />
+                    {counted ?
+                    <>
+                        <TextField
+                            type="number"
+                            label="Min"
+                            value={min}
+                            onChange={(e) => setMin(e.target.value)}
+                        />
+                        <TextField
+                            type="number"
+                            label="Max"
+                            value={max}
+                            onChange={(e) => setMax(e.target.value)}
+                        />
+                    </>
+                    :
+                    <div>{"Counting..."}</div>
+                    }
+                </div>
+                <div class={style.restrictionOptions}>
+                    {filteredEnzymes.map((v,i) => {return(
+                        <div class={style.restrictionItem} key={i}>
+                            <Checkbox size="small"
+                                disabled={v?.count < 1}
+                                checked={checked?.[v.name] ? true : false}
+                                onChange={(e) => checked[v.name] ? handleRemoveList(v) : handleUpdateList(v)}
+                            />
+                            <div>{v.name}{counted && <span>{` (${v.count})`}</span>}</div>
+                        </div>
+                    )})}
+                </div>
+                <div class={style.addRow}>
+                    <button onClick={() => setOpen(false)}>Cancel</button>
+                    <button disabled={addList.length < 1} onClick={() => addSites()}>Add Selected</button>
+                </div>
+                </Box>
+            </Modal>
+        </div>
+    )
+}
 
 function Editor(props)  
   {
     const targetRef = React.useRef();
-    const {theme, setTheme, language, setLanguage} = React.useContext(GlobalContext);
+    const {theme} = React.useContext(GlobalContext);
     const {isEdit} = props;
     const {sequence, data, name, setSequence} = props;
     
@@ -103,6 +288,8 @@ function Editor(props)
     const [height, setHeight] = React.useState(initialDownloadHeight);
 
     const [fileWarning, setFileWarning] = React.useState(false);
+
+    const [restrictionDetails, setRestrictionDetails] = React.useState(true);
 
     let allLegendItems = localData.map(w => w.legend);
     let allLegendItemsSet = new Set(allLegendItems);
@@ -148,6 +335,16 @@ function Editor(props)
     }
 
     /**
+     * Updates the features array with new features
+     * @param  {array} newFeatures The new features to be added
+     */
+    function addNewFeatures(newFeatures){
+        setLocalData(
+            [...localData, ...newFeatures]
+        );
+    }
+
+    /**
      * Updates the visibility of a specified restriction site
      * @param  {str} enzyme The name of the restriction site
      * @param  {bool} visible The visibility to change it to
@@ -164,6 +361,7 @@ function Editor(props)
     
     function handleClickOption(option){
         setPanel(panel === option ? false : option)
+        setTab(0);
     }
 
     const handleMouseDown = (event) => {
@@ -197,9 +395,7 @@ function Editor(props)
             });
         cgv.on('click', (event) => {
             if (event.elementType === 'feature' && event.element.source === 'json-feature' && event.element?.tags.length) {
-                // console.log(event.element.tags[0]);
                 let curIndex = event.element.tags[0];
-                // handleFeatureUpdate(curIndex, {...localData[curIndex], name:"test"})
                 handleClickOption(curIndex);
             }
             else if(event.elementType === 'backbone' && isAddStart){
@@ -283,7 +479,6 @@ function Editor(props)
             fileReader.onload = file => {
                 try{
                     let uploadedFile = JSON.parse(file.target.result);
-                    console.log(uploadedFile);
                     if(Object.keys(uploadedFile).length !== 3 || !uploadedFile.name || !uploadedFile.sequence || !uploadedFile.features){
                         setFileWarning("File format error. File must be a JSON file with the following keys: name, sequence, features");
                         return;
@@ -366,7 +561,7 @@ function Editor(props)
                                 size="small"
                                 onChange={(e) => setAddCategory(e.target.value)}
                             >
-                            {featureData.map((v,i) => {return <MenuItem value={v.display}>{v.display}</MenuItem>})}
+                            {featureData.map((v,i) => {return <MenuItem key={i} value={v.display}>{v.display}</MenuItem>})}
                             </Select>
                         </FormControl>
                         <button     
@@ -378,10 +573,12 @@ function Editor(props)
                     
                     </div>
                     ,
+                    <>
+
                     <div class={style.restrictionGrid}>
                         {localData.map((v,i) => {return(
                             v.legend === "Restriction Sites" && v?.firstSite &&
-                            <div class={v.count === 1 ? "" : style.restrictionInvisible}>
+                            <div key={i} class={v.count === 1 ? "" : style.restrictionInvisible}>
                                 <div>{v.name}</div>
                                 <div>{v.count}</div>
                                 <Checkbox
@@ -391,6 +588,8 @@ function Editor(props)
                             </div>
                         )})}
                     </div>
+                    {restrictionDetails && <RestrictionAdd sequence={sequence} setLocalData={addNewFeatures}/>}
+                    </>
                      ,
                     <div class={style.optionOther}>
                         <FormControlLabel control={

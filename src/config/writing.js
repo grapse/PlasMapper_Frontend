@@ -104,10 +104,20 @@ export default({
             },
             {
                 title: "Restriction Sites Tab",
-                image: "https://i.imgur.com/NCg242y.png",
+                image: "https://i.imgur.com/3WQCk5f.png",
                 content:   `The "Restriction Sites" tab allows users to select which restriction sites will be shown on the map.
-                 By default, restriction sites that appear once are shown. 
-                 Simply check or uncheck any box to show or hide the corresponding restriction site. This tab also shows the number of occurrences of each restriction site in the given plasmid DNA sequence.`
+                 By default, restriction sites that appear once are shown, out of a selection of 40 common restriction enzymes.
+                 Simply check or uncheck any box to show or hide the corresponding restriction site. This tab also shows the number of occurrences of each restriction site in the given plasmid DNA sequence.
+
+                 PlasMapper 3.0 has an extended selection of 400+ other enzymes, and the ability to add your own, in the case that the one you are looking for is not in the list.
+                 After clicking on the "Add Enzymes" button, you can do the following:
+                 1. Add a custom enzyme by entering a name and matching pattern. You are limited to using the following code:
+                    A, C, T, G, N (any), M (a|c), R (a|g), W (a|t), S (c|g), Y (c|t), K (g|t), V (a|c|g), H (a|c|t), D (a|g|t), B (c|g|t)
+                 2. Filter the available enzymes (including any you add) by searching by name or number of times it appears in the sequence.
+                 For example, if you would like to only see enzymes that have 2 restriction sites, set both the "Min" and "Max" fields to 2.
+                 3. Click on any of the results to add them to the bar on the top. Enzymes that have 0 sites on the sequence will be disabled.
+                 4. Click on the "Add Selected" button to add all the selected enzymes to the map.
+                 `
             },
             {
                 title: "Other Tab",
